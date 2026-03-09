@@ -26,13 +26,15 @@ flutter pub get
 
 ## Documentation
 
-Comprehensive API docs and usage guides will be published as the 0.1.x series evolves.
+Full English API documentation is available for all public members. The source code comments and example applications have been translated to English to improve accessibility.
 
 ## Roadmap
 
-- Stabilize Flutter 3.10+ compatibility
-- Improve test coverage and CI reliability
-- Refresh docs and examples for maintained releases
+- [x] Stabilize Flutter 3.10+ compatibility
+- [x] Refresh docs and examples for maintained releases
+- [x] Improve CI reliability and main branch integration
+- [ ] Increase unit test coverage for complex animation scenarios
+- [ ] Add more modern indicator styles (iOS 17+, Material 3)
 
 ## Contributing
 
