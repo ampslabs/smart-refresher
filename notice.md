@@ -1,0 +1,25 @@
+# 注意地方
+
+## RefreshController
+* RefreshController不支持多次new,请保持和SmartRefresher同样的生命周期。
+* RefreshController只能对应一个SmartRefresher,不要尝试给把RefreshController赋予多个SmartRefresher,很常见应用场景就是TabBarView和PageView
+
+## SmartRefresher
+* 当你想要关闭掉下拉和上拉的功能,可利用enablePullUp和enablePullDown这两个属性
+* 不要把你想要追加指示器的ScrollView组件放到一个组件的子树下,由于实现机制,不是利用NotificationListener这类组件来实现的
+* 当child不是继承ScrollView时,要注意盒子约束,在SmartRefresher下高度是unbounded
+* 不支持SingleChildScrollView,直接在SmartRefresher child存放即可,SmartRefresher里child为非ScrollView时,当作SingleChildScrollView来使用。
+* 当想在ScrollView增加背景时,记住别在child节点给ListView或者GridView包装Container,请在SmartRefresher外部包装Container
+
+## Behind刷新样式
+* 这种样式的实现事实上就是采用高度的动态变化来实现的,试试外围多利用Align属性,会有不同的滑动效果。
+
+## 底部指示器
+* 对于不满足一页隐藏的问题,虽然内部采取通过precedingScrollExtent来判断前面有多少个距离,但是这种方法也是不可取的,有一种情况就是某一个sliver只占用scrollExtent而不占用
+  layoutExtent的情况。所以假如你内部slivers有这种sliver,我内部判断是不合法的,需要你手动去判断。设置hideWhenNotFull为false,然后用布尔值决定。
+
+## NestedScrollView(非必要情况避免使用)
+* 如何去获取内部的scrollController?通过refreshController.scrollController获取
+
+## CustomScrollView
+* 对于UnFollow刷新风格,当你slivers第一个元素带有SliverAppbar,Sliverheader时,会出现很奇怪的现象,不知道怎么描述,就是SliverAppBar位置会随着指示器位置的变化而变化。对于这种情况,你可以尝试在slivers第一个元素追加SliverToBoxAdapter。
