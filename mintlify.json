@@ -1,0 +1,58 @@
+{
+  "name": "smart_refresher",
+  "logo": {
+    "light": "/logo/logo.svg",
+    "dark": "/logo/logo.svg"
+  },
+  "favicon": "/favicon.png",
+  "colors": {
+    "primary": "#00C853",
+    "light": "#5AF158",
+    "dark": "#009624"
+  },
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:support@ampslabs.com"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "GitHub",
+    "url": "https://github.com/ampslabs/smart-refresher"
+  },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "introduction",
+        "quickstart",
+        "configuration"
+      ]
+    },
+    {
+      "group": "Indicators",
+      "pages": [
+        "indicators/classic",
+        "indicators/material",
+        "indicators/waterdrop",
+        "indicators/bezier",
+        "indicators/two-level"
+      ]
+    },
+    {
+      "group": "Advanced",
+      "pages": [
+        "custom-indicators"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/ampslabs/smart-refresher"
+  }
+}
