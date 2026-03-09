@@ -1,5 +1,6 @@
-## 0.1.1 (Unreleased)
+## 0.1.0
 
+- **Initial Fork Release**: Rebranded package as `smart_refresher` and initialized maintained fork release line.
 - **Documentation & Localization**:
   - Added comprehensive English documentation comments to all public members.
   - Translated all source code comments and header timestamps from Chinese to English.
@@ -12,9 +13,4 @@
 - **Infrastructure**:
   - Updated CI configuration to trigger on pushes to the `main` branch.
   - Fixed various analyzer warnings and improved codebase consistency.
-
-## 0.1.0
-
-- Rebranded package as `smart_refresher` and initialized maintained fork release line.
-- Updated package metadata, SDK constraints, and project maintenance documentation.
-- Added linting, CI workflow, contributing guide, and issue templates.
+  - Added `SECURITY.md` and Mintlify-style documentation in `doc/`.
