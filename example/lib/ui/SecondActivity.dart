@@ -1,7 +1,7 @@
 /*
  * Author: Jpeng
  * Email: peng8350@gmail.com
- * Time: 2019/3/29 下午4:27
+ * Time: 2019/3/29 4:27 PM
  */
 
 import 'package:flutter/material.dart';
@@ -36,14 +36,14 @@ class _SecondActivityState extends State<SecondActivity> {
         leading: GestureDetector(
             child: Container(
               child: Row(
-                children: <Widget>[Icon(Icons.keyboard_arrow_left), Text("返回")],
+                children: <Widget>[Icon(Icons.keyboard_arrow_left), const Text("Back")],
               ),
             ),
             onTap: () {
               Navigator.of(context).pop();
             }),
       ),
-      body: Text("测试跳转返回"),
+      body: const Center(child: Text("Test Jump Back")),
     );
   }
 }

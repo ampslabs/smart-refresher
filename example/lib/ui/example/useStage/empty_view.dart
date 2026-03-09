@@ -1,23 +1,21 @@
 /*
  * Author: Jpeng
  * Email: peng8350@gmail.com
- * Time:  2019-06-24 17:13
+ * Time:  2019-06-24 5:13 PM
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:smart_refresher/smart_refresher.dart';
 
 /*
-   when listView have no data,sometime we should return a view that indicate empty state
-   there are two ways to do ,see follow
+   When a ListView has no data, we should often return a view that indicates an empty state.
+   There are two ways to achieve this, as shown below.
  */
 class RefreshWithEmptyView extends StatefulWidget {
   const RefreshWithEmptyView({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _RefreshWithEmptyViewState();
   }
 }
@@ -28,12 +26,12 @@ class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
       RefreshController(initialRefresh: false);
 
   Widget buildEmpty() {
-    // there are two ways
-    // this way is more converient,but it doesn't reference ListView some attribute
-    // If you don't need some attribute like physics,cacheExtent,just default
-    // you can return emptyWidget directly,else return ListView
-    // from 1.5.2,you needn't  compute the height by LayoutBuilder,If your boxConstaints is double.infite,
-    // SmartRefresher can convert the height to the viewport mainExtent
+    // There are two ways:
+    // This way is more convenient, but it doesn't inherit ListView attributes.
+    // If you don't need attributes like physics or cacheExtent, you can return the empty widget directly.
+    // Otherwise, return a ListView.
+    // Since 1.5.2, you don't need to compute the height via LayoutBuilder. If BoxConstraints are infinite,
+    // SmartRefresher automatically converts the height to the viewport's main extent.
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -41,10 +39,10 @@ class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
           "images/empty1.png",
           fit: BoxFit.cover,
         ),
-        Text("没数据,请下拉刷新")
+        const Text("No data, please pull down to refresh")
       ],
     );
-    /* second way
+    /* Second way:
     return ListView(
       children: [
         Image.asset(
@@ -52,16 +50,14 @@ class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
           fit: BoxFit.cover,
         )
       ],
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       cacheExtent: 100.0,
     );
-
-     */
+    */
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SmartRefresher(
       controller: _refreshController,
       enablePullUp: data.isNotEmpty,
@@ -70,7 +66,7 @@ class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
         await Future.delayed(const Duration(milliseconds: 2000));
         if (mounted) {
           setState(() {
-            data.add("new");
+            data.add("new data item");
           });
         }
         _refreshController.refreshCompleted();
@@ -78,7 +74,11 @@ class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
       child: data.isEmpty
           ? buildEmpty()
           : ListView.builder(
-              itemBuilder: (c, i) => Text(data[i]),
+              itemBuilder: (c, i) => Card(
+                child: Center(
+                  child: Text(data[i]),
+                ),
+              ),
               itemCount: data.length,
               itemExtent: 100.0,
             ),

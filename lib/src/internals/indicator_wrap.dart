@@ -1,7 +1,7 @@
 /*
     Author: JPeng
     Email: peng8350@gmail.com
-    createTime:2018-05-14 15:39
+    createTime:2018-05-14 3:39 PM
  */
 
 // ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
@@ -13,26 +13,32 @@ import 'dart:math' as math;
 import '../smart_refresher.dart';
 import 'slivers.dart';
 
+/// A callback that returns a [Future] with no value.
 typedef VoidFutureCallBack = Future<void> Function();
 
+/// A callback that provides the current scroll offset.
 typedef OffsetCallBack = void Function(double offset);
 
+/// A callback that provides the current mode change.
 typedef ModeChangeCallBack<T> = void Function(T? mode);
 
-/// a widget  implements ios pull down refresh effect and Android material RefreshIndicator overScroll effect
+/// An abstract widget that implements the pull-to-refresh effect.
+///
+/// This provides the base for various refresh header styles.
 abstract class RefreshIndicator extends StatefulWidget {
-  /// refresh display style
+  /// The display style of the refresh header.
   final RefreshStyle? refreshStyle;
 
-  /// the visual extent indicator
+  /// The height of the indicator's visual extent.
   final double height;
 
-  //layout offset
+  /// The layout offset of the indicator.
   final double offset;
 
-  /// the stopped time when refresh complete or fail
+  /// The duration the indicator remains visible after the refresh is complete or fails.
   final Duration completeDuration;
 
+  /// Creates a [RefreshIndicator].
   const RefreshIndicator(
       {super.key,
       this.height = 60.0,
@@ -41,17 +47,20 @@ abstract class RefreshIndicator extends StatefulWidget {
       this.refreshStyle = RefreshStyle.Follow});
 }
 
-/// a widget  implements  pull up load
+/// An abstract widget that implements the pull-up loading effect.
+///
+/// This provides the base for various loading footer styles.
 abstract class LoadIndicator extends StatefulWidget {
-  /// load more display style
+  /// The display style of the loading footer.
   final LoadStyle loadStyle;
 
-  /// the visual extent indicator
+  /// The height of the indicator's visual extent.
   final double height;
 
-  /// callback when user click footer
+  /// A callback triggered when the user clicks the footer.
   final VoidCallback? onClick;
 
+  /// Creates a [LoadIndicator].
   const LoadIndicator(
       {super.key,
       this.onClick,
@@ -59,75 +68,9 @@ abstract class LoadIndicator extends StatefulWidget {
       this.height = 60.0});
 }
 
-/// Internal Implementation of Head Indicator
+/// The state for a [RefreshIndicator].
 ///
-/// you can extends RefreshIndicatorState for custom header,if you want to active complex animation effect
-///
-/// here is the most simple example
-///
-/// ```dart
-///
-/// class RunningHeaderState extends RefreshIndicatorState<RunningHeader>
-///    with TickerProviderStateMixin {
-///  AnimationController _scaleAnimation;
-///  AnimationController _offsetController;
-///  Tween<Offset> offsetTween;
-///
-///  @override
-///  void initState() {
-///    // TODO: implement initState
-///    _scaleAnimation = AnimationController(vsync: this);
-///    _offsetController = AnimationController(
-///        vsync: this, duration: Duration(milliseconds: 1000));
-///    offsetTween = Tween(end: Offset(0.6, 0.0), begin: Offset(0.0, 0.0));
-///    super.initState();
-///  }
-///
-///  @override
-///  void onOffsetChange(double offset) {
-///    // TODO: implement onOffsetChange
-///    if (!floating) {
-///      _scaleAnimation.value = offset / 80.0;
-///    }
-///    super.onOffsetChange(offset);
-///  }
-///
-///  @override
-///  void resetValue() {
-///    // TODO: implement handleModeChange
-///    _scaleAnimation.value = 0.0;
-///    _offsetController.value = 0.0;
-///  }
-///
-///  @override
-///  void dispose() {
-///    // TODO: implement dispose
-///    _scaleAnimation.dispose();
-///    _offsetController.dispose();
-///    super.dispose();
-///  }
-///
-///  @override
-///  Future<void> endRefresh() {
-///    // TODO: implement endRefresh
-///    return _offsetController.animateTo(1.0).whenComplete(() {});
-///  }
-///
-///  @override
-/// Widget buildContent(BuildContext context, RefreshStatus mode) {
-///    // TODO: implement buildContent
-///    return SlideTransition(
-///      child: ScaleTransition(
-///        child: (mode != RefreshStatus.idle || mode != RefreshStatus.canRefresh)
-///            ? Image.asset("images/custom_2.gif")
-///            : Image.asset("images/custom_1.jpg"),
-///        scale: _scaleAnimation,
-///      ),
-///      position: offsetTween.animate(_offsetController),
-///    );
-///  }
-/// }
-/// ```
+/// Extend this class to implement custom header indicators with complex animations.
 abstract class RefreshIndicatorState<T extends RefreshIndicator>
     extends State<T>
     with IndicatorStateMixin<T, RefreshStatus>, RefreshProcessor {
@@ -149,13 +92,11 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   @override
   void _handleOffsetChange() {
-    // TODO: implement _handleOffsetChange
     super._handleOffsetChange();
     final double overscrollPast = _calculateScrollOffset();
     onOffsetChange(overscrollPast);
   }
 
-  // handle the  state change between canRefresh and idle canRefresh  before refreshing
   @override
   void _dispatchModeByOffset(double offset) {
     if (mode == RefreshStatus.twoLeveling) {
@@ -170,19 +111,14 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       return;
     }
     if (floating) return;
-    // no matter what activity is done, when offset ==0.0 and !floating,it should be set to idle for setting ifCanDrag
     if (offset == 0.0) {
       mode = RefreshStatus.idle;
     }
 
-    // If FrontStyle overScroll,it shouldn't disable gesture in scrollable
     if (_position!.extentBefore == 0.0 &&
         widget.refreshStyle == RefreshStyle.Front) {
       _position!.context.setIgnorePointer(false);
     }
-    // Sometimes different devices return velocity differently, so it's impossible to judge from velocity whether the user
-    // has invoked animateTo (0.0) or the user is dragging the view.Sometimes animateTo (0.0) does not return velocity = 0.0
-    // velocity < 0.0 may be spring up,>0.0 spring down
     if ((configuration!.enableBallisticRefresh && activity!.velocity < 0.0) ||
         activity is DragScrollActivity ||
         activity is DrivenScrollActivity) {
@@ -207,11 +143,8 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       } else if (refresher!.enableTwoLevel && !refresher!.enablePullDown) {
         mode = RefreshStatus.idle;
       }
-    }
-    //mostly for spring back
-    else if (activity is BallisticScrollActivity) {
+    } else if (activity is BallisticScrollActivity) {
       if (RefreshStatus.canRefresh == mode) {
-        // refreshing
         floating = true;
         update();
         readyToRefresh().then((_) {
@@ -220,7 +153,6 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         });
       }
       if (mode == RefreshStatus.canTwoLevel) {
-        // enter twoLevel
         floating = true;
         update();
         if (!mounted) return;
@@ -252,12 +184,6 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
               .setCanDrag(configuration!.enableScrollWhenRefreshCompleted);
         }
         update();
-        /*
-          handle two Situation:
-          1.when user dragging to refreshing, then user scroll down not to see the indicator,then it will not spring back,
-          the _onOffsetChange didn't callback,it will keep failed or success state.
-          2. As FrontStyle,when user dragging in 0~100 in refreshing state,it should be reset after the state change
-          */
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (!mounted) {
             return;
@@ -291,13 +217,17 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         activity!.resetActivity();
-        _position!
-            .animateTo(0.0,
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.linear)
-            .whenComplete(() {
+        if (_position!.pixels == 0.0) {
           mode = RefreshStatus.twoLeveling;
-        });
+        } else {
+          _position!
+              .animateTo(0.0,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.linear)
+              .whenComplete(() {
+            mode = RefreshStatus.twoLeveling;
+          });
+        }
         if (refresher!.onTwoLevel != null) refresher!.onTwoLevel!(true);
       });
     } else if (mode == RefreshStatus.twoLevelClosing) {
@@ -311,18 +241,17 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     onModeChange(mode);
   }
 
-  // the method can provide a callback to implements some animation
   @override
   Future<void> readyToRefresh() {
     return Future.value();
   }
 
-  // it mean the state will enter success or fail
   @override
   Future<void> endRefresh() {
     return Future.delayed(widget.completeDuration);
   }
 
+  /// Whether the indicator needs to be reversed based on scroll direction.
   bool needReverseAll() {
     return true;
   }
@@ -351,9 +280,11 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   }
 }
 
+/// The state for a [LoadIndicator].
+///
+/// Extend this class to implement custom footer indicators.
 abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     with IndicatorStateMixin<T, LoadStatus>, LoadingProcessor {
-  // use to update between one page and above one page
   bool _isHide = false;
   bool _enableLoading = false;
   LoadStatus? _lastMode = LoadStatus.idle;
@@ -365,6 +296,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     return overScrollPastEnd;
   }
 
+  /// Triggers the loading state.
   void enterLoading() {
     setState(() {
       floating = true;
@@ -379,11 +311,11 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   }
 
   @override
-  Future endLoading() {
-    // TODO: implement endLoading
+  Future<void> endLoading() {
     return Future.delayed(const Duration());
   }
 
+  /// Resets the loading state after completion.
   void finishLoading() {
     if (!floating) {
       return;
@@ -393,7 +325,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         return;
       }
 
-      // this line for patch bug temporary:indicator disappears fastly when load more complete
       if (mounted) Scrollable.of(context).position.correctBy(0.00001);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _position?.outOfRange == true) {
@@ -438,8 +369,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     if (mode == LoadStatus.idle ||
         mode == LoadStatus.failed ||
         mode == LoadStatus.noMore) {
-      // #292,#265,#208
-      // stop the slow bouncing when load more too fast
       if (_position!.activity!.velocity < 0 &&
           _lastMode == LoadStatus.loading &&
           !_position!.outOfRange &&
@@ -503,7 +432,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
   void _listenScrollEnd() {
     if (!_position!.isScrollingNotifier.value) {
-      // when user release gesture from screen
       if (_isHide || mode == LoadStatus.loading || mode == LoadStatus.noMore) {
         return;
       }
@@ -533,21 +461,18 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _lastMode = mode;
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _position?.isScrollingNotifier.removeListener(_listenScrollEnd);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SliverLoading(
         hideWhenNotFull: configuration!.hideFooterWhenNotFull,
         floating: widget.loadStyle == LoadStyle.ShowAlways
@@ -578,38 +503,43 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   }
 }
 
-/// mixin in IndicatorState,it will get position and remove when dispose,init mode state
-///
-/// help to finish the work that the header indicator and footer indicator need to do
+/// A mixin that manages the scroll position and refresh mode for header and footer indicators.
 mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
+  /// The [SmartRefresher] that contains this indicator.
   SmartRefresher? refresher;
 
+  /// The refresh configuration inherited from ancestors.
   RefreshConfiguration? configuration;
+
+  /// The state of the [SmartRefresher] that contains this indicator.
   SmartRefresherState? refresherState;
 
   bool _floating = false;
 
+  /// Whether the indicator is currently in a floating state.
   set floating(bool floating) => _floating = floating;
 
+  /// Whether the indicator is currently in a floating state.
   bool get floating => _floating;
 
+  /// Sets the current mode of the indicator.
   set mode(V? mode) {
     if (_mode != null && mode != null) {
       _mode!.value = mode;
     }
   }
 
+  /// The current mode of the indicator.
   V? get mode => _mode?.value;
 
   RefreshNotifier<V>? _mode;
 
+  /// The current scroll activity.
   ScrollActivity? get activity => _position!.activity;
 
-  // it doesn't support get the ScrollController as the listener, because it will cause "multiple scrollview use one ScrollController"
-  // error,only replace the ScrollPosition to listen the offset
   ScrollPosition? _position;
 
-  // update ui
+  /// Triggers a UI update.
   void update() {
     if (mounted) setState(() {});
   }
@@ -625,6 +555,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
     _dispatchModeByOffset(overscrollPast);
   }
 
+  /// Disposes of the listeners attached to the mode and scroll position.
   void disposeListener() {
     _mode?.removeListener(_handleModeChange);
     _position?.removeListener(_handleOffsetChange);
@@ -655,7 +586,6 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   @override
   void initState() {
-    // TODO: implement initState
     if (V == RefreshStatus) {
       SmartRefresher.of(context)?.controller.headerMode?.value =
           RefreshStatus.idle;
@@ -665,24 +595,18 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    //1.3.7: here need to careful after add asSliver builder
     disposeListener();
     super.dispose();
   }
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     _updateListener();
     super.didChangeDependencies();
   }
 
   @override
   void didUpdateWidget(T oldWidget) {
-    // TODO: implement didUpdateWidget
-    // needn't to update _headerMode,because it's state will never change
-    // 1.3.7: here need to careful after add asSliver builder
     _updateListener();
     super.didUpdateWidget(oldWidget);
   }
@@ -697,47 +621,50 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   void _dispatchModeByOffset(double offset);
 
+  /// Builds the content of the indicator.
   Widget buildContent(BuildContext context, V mode);
 }
 
-/// head Indicator exposure interface
+/// A mixin that provides the exposure interface for refresh header indicators.
 mixin RefreshProcessor {
-  /// out of edge offset callback
+  /// Callback when the scroll offset changes.
   void onOffsetChange(double offset) {}
 
-  /// mode change callback
+  /// Callback when the refresh mode changes.
   void onModeChange(RefreshStatus? mode) {}
 
-  /// when indicator is ready into refresh,it will call back and waiting for this function finish,then callback onRefresh
-  Future readyToRefresh() {
+  /// Triggered when the indicator is ready to enter the refresh state.
+  Future<void> readyToRefresh() {
     return Future.value();
   }
 
-  // when indicator is ready to dismiss layout ,it will callback and then spring back after finish
-  Future endRefresh() {
+  /// Triggered when the indicator is ready to dismiss its layout.
+  Future<void> endRefresh() {
     return Future.value();
   }
 
-  // when indicator has been spring back,it  need to reset value
+  /// Resets the indicator's internal values.
   void resetValue() {}
 }
 
-/// footer Indicator exposure interface
+/// A mixin that provides the exposure interface for loading footer indicators.
 mixin LoadingProcessor {
+  /// Callback when the scroll offset changes.
   void onOffsetChange(double offset) {}
 
+  /// Callback when the loading mode changes.
   void onModeChange(LoadStatus? mode) {}
 
-  /// when indicator is ready into refresh,it will call back and waiting for this function finish,then callback onRefresh
-  Future readyToLoad() {
+  /// Triggered when the indicator is ready to enter the loading state.
+  Future<void> readyToLoad() {
     return Future.value();
   }
 
-  // when indicator is ready to dismiss layout ,it will callback and then spring back after finish
-  Future endLoading() {
+  /// Triggered when the indicator is ready to dismiss its layout.
+  Future<void> endLoading() {
     return Future.value();
   }
 
-  // when indicator has been spring back,it  need to reset value
+  /// Resets the indicator's internal values.
   void resetValue() {}
 }

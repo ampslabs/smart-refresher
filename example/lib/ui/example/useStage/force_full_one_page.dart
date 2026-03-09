@@ -1,19 +1,17 @@
 /*
  * Author: Jpeng
  * Email: peng8350@gmail.com
- * Time:  2019-10-17 20:30
+ * Time:  2019-10-17 8:30 PM
  */
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter/widgets.dart' as prefix0;
 import 'package:smart_refresher/smart_refresher.dart';
 
-/// This example aim to fix the viewport not enough one page,there must be exist some problems that you don't hope that.
-/// relevant issue:#183,#166*
+/// This example aims to fix issues when the viewport content is less than one page.
+/// Relevant issues: #183, #166.
 
-// A Sliver for  Expanding empty space
+/// A Sliver for expanding empty space.
 class SliverFillEmptySpace extends SingleChildRenderObjectWidget {
   /// Creates a sliver that contains a single box widget.
   SliverFillEmptySpace({super.key}) : super(child: Container());
@@ -23,8 +21,9 @@ class SliverFillEmptySpace extends SingleChildRenderObjectWidget {
       RenderSliverFillEmptySpace();
 }
 
+/// Render object for [SliverFillEmptySpace].
 class RenderSliverFillEmptySpace extends RenderSliverSingleBoxAdapter {
-  /// Creates a [RenderSliver] that wraps a [RenderBox].
+  /// Creates a [RenderSliverFillEmptySpace].
   RenderSliverFillEmptySpace({super.child});
 
   @override
@@ -54,8 +53,12 @@ class RenderSliverFillEmptySpace extends RenderSliverSingleBoxAdapter {
   }
 }
 
-class FillEmptyCustomScrollView extends prefix0.CustomScrollView {
+/// A CustomScrollView that can fill empty space.
+class FillEmptyCustomScrollView extends CustomScrollView {
+  /// Whether to enable filling empty space.
   final bool enableFillEmpty;
+
+  /// Creates a [FillEmptyCustomScrollView].
   const FillEmptyCustomScrollView({
     super.key,
     required this.enableFillEmpty,
@@ -73,25 +76,29 @@ class FillEmptyCustomScrollView extends prefix0.CustomScrollView {
     super.dragStartBehavior,
   });
 
-  /// The slivers to place inside the viewport.
   @override
   final List<Widget> slivers;
 
   @override
   List<Widget> buildSlivers(BuildContext context) {
-    if (enableFillEmpty) slivers.add(SliverFillEmptySpace());
+    if (enableFillEmpty) {
+      final List<Widget> newSlivers = List.from(slivers);
+      newSlivers.add(SliverFillEmptySpace());
+      return newSlivers;
+    }
     return slivers;
   }
 }
 
+/// Example of forcing a full page content.
 class ForceFullExample extends StatelessWidget {
   final RefreshController _refreshController = RefreshController();
 
+  /// Creates a [ForceFullExample].
   ForceFullExample({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SmartRefresher(
       controller: _refreshController,
       enablePullUp: true,
@@ -103,16 +110,19 @@ class ForceFullExample extends StatelessWidget {
         await Future.delayed(const Duration(milliseconds: 500));
         _refreshController.loadComplete();
       },
-      footer: ClassicFooter(
+      footer: const ClassicFooter(
         loadStyle: LoadStyle.ShowWhenLoading,
       ),
       child: FillEmptyCustomScrollView(
         enableFillEmpty:
             _refreshController.footerMode?.value != LoadStatus.noMore,
-        slivers: <Widget>[
+        slivers: const <Widget>[
           SliverToBoxAdapter(
-            child: Text(
-                "有很多时候,不满一屏时,会出现很多问题,比如底部指示器加载触发只能隐藏回去,而不能在底部卡着显示,等加载完毕再隐藏回去,解决这个问题,我们可以通过把Viewport剩余空间给填充满,来达到底部能看到的效果。"),
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                  "Often, when content doesn't fill the screen, various issues arise. For example, the bottom indicator might only hide back after being triggered instead of staying visible until loading finishes. We can solve this by filling the remaining Viewport space so the bottom indicator remains visible."),
+            ),
           )
         ],
       ),

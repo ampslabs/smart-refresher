@@ -1,7 +1,7 @@
 /*
  * Author: Jpeng
  * Email: peng8350@gmail.com
- * Time: 2019/5/2 下午5:09
+ * Time: 2019/5/2 5:09 PM
  */
 
 import 'package:flutter/widgets.dart';
@@ -9,8 +9,9 @@ import 'dart:math' as math;
 import 'package:flutter/rendering.dart';
 import '../smart_refresher.dart';
 
-///  Render header sliver widget
+/// A sliver widget that renders the refresh header.
 class SliverRefresh extends SingleChildRenderObjectWidget {
+  /// Creates a [SliverRefresh] widget.
   const SliverRefresh({
     super.key,
     this.paintOffsetY,
@@ -20,19 +21,16 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
     this.refreshStyle,
   })  : assert(refreshIndicatorLayoutExtent >= 0.0);
 
-  /// The amount of space the indicator should occupy in the sliver in a
-  /// resting state when in the refreshing mode.
+  /// The amount of space the indicator occupies in the sliver while refreshing.
   final double refreshIndicatorLayoutExtent;
 
-  /// _RenderSliverRefresh will paint the child in the available
-  /// space either way but this instructs the _RenderSliverRefresh
-  /// on whether to also occupy any layoutExtent space or not.
+  /// Whether the indicator should occupy any layout extent space.
   final bool floating;
 
-  /// header indicator display style
+  /// The display style of the refresh indicator.
   final RefreshStyle? refreshStyle;
 
-  /// headerOffset	Head indicator layout deviation Y coordinates, mostly for FrontStyle
+  /// The vertical layout deviation for the head indicator, primarily for [RefreshStyle.Front].
   final double? paintOffsetY;
 
   @override
@@ -62,7 +60,9 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
   }
 }
 
+/// The render object for [SliverRefresh].
 class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
+  /// Creates a [RenderSliverRefresh] object.
   RenderSliverRefresh(
       {required double refreshIndicatorExtent,
       required bool hasLayoutExtent,
@@ -75,17 +75,19 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
     this.child = child;
   }
 
+  /// The display style of the refresh indicator.
   RefreshStyle? refreshStyle;
+
+  /// The build context for this render object.
   late BuildContext context;
 
-  // The amount of layout space the indicator should occupy in the sliver in a
-  // resting state when in the refreshing mode.
+  /// The layout space the indicator occupies while refreshing.
   double get refreshIndicatorLayoutExtent => _refreshIndicatorExtent;
   double _refreshIndicatorExtent;
+
+  /// The vertical offset for painting the indicator.
   double? paintOffsetY;
-  // need to trigger shouldAceppty user offset ,else it will not limit scroll when enter twolevel or exit
-  // also it will crash if you call applyNewDimession when the state change
-  // I don't know why flutter limit it, no choice
+
   bool _updateFlag = false;
 
   set refreshIndicatorLayoutExtent(double value) {
@@ -95,9 +97,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
     markNeedsLayout();
   }
 
-  // The child box will be laid out and painted in the available space either
-  // way but this determines whether to also occupy any
-  // [SliverGeometry.layoutExtent] space or not.
+  /// Whether the sliver currently has layout extent.
   bool get hasLayoutExtent => _hasLayoutExtent;
   bool _hasLayoutExtent;
 
@@ -110,20 +110,10 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
     markNeedsLayout();
   }
 
-  // This keeps track of the previously applied scroll offsets to the scrollable
-  // so that when [refreshIndicatorLayoutExtent] or [hasLayoutExtent] changes,
-  // the appropriate delta can be applied to keep everything in the same place
-  // visually.
+  /// Compensation for layout extent changes to prevent visual jumping.
   double layoutExtentOffsetCompensation = 0.0;
 
   @override
-  void performResize() {
-    // TODO: implement performResize
-    super.performResize();
-  }
-
-  @override
-  // TODO: implement centerOffsetAdjustment
   double get centerOffsetAdjustment {
     if (refreshStyle == RefreshStyle.Front) {
       final RenderViewportBase renderViewport =
@@ -135,7 +125,6 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
 
   @override
   void layout(Constraints constraints, {bool parentUsesSize = false}) {
-    // TODO: implement layout
     if (refreshStyle == RefreshStyle.Front) {
       final RenderViewportBase renderViewport =
           parent! as RenderViewportBase<ContainerParentDataMixin<RenderSliver>>;
@@ -148,6 +137,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
     }
   }
 
+  /// Sets the flag to trigger a dimension update.
   set updateFlag(bool u) {
     _updateFlag = u;
     markNeedsLayout();
@@ -179,17 +169,12 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   @override
   void performLayout() {
     if (_updateFlag) {
-      // ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
-      // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
+      // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
       Scrollable.of(context).position.activity!.applyNewDimensions();
       _updateFlag = false;
     }
-    // The new layout extent this sliver should now have.
     final double layoutExtent =
         (_hasLayoutExtent ? 1.0 : 0.0) * _refreshIndicatorExtent;
-    // If the new layoutExtent instructive changed, the SliverGeometry's
-    // layoutExtent will take that value (on the next performLayout run). Shift
-    // the scroll offset first so it doesn't make the scroll position suddenly jump.
     if (refreshStyle != RefreshStyle.Front) {
       if (layoutExtent != layoutExtentOffsetCompensation) {
         geometry = SliverGeometry(
@@ -300,19 +285,24 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   void applyPaintTransform(RenderObject child, Matrix4 transform) {}
 }
 
-/// Render footer sliver widget
+/// A sliver widget that renders the loading footer.
 class SliverLoading extends SingleChildRenderObjectWidget {
-  /// when not full one page,whether it should be hide and disable loading
+  /// Whether the footer should be hidden when the content doesn't fill the viewport.
   final bool? hideWhenNotFull;
+
+  /// Whether the footer is currently in a floating state.
   final bool? floating;
 
-  /// load state
+  /// The current loading state.
   final LoadStatus? mode;
+
+  /// The amount of space the footer occupies in the sliver.
   final double? layoutExtent;
 
-  /// when not full one page,whether it should follow content
+  /// Whether the footer should follow the content when the viewport is not full.
   final bool? shouldFollowContent;
 
+  /// Creates a [SliverLoading] widget.
   const SliverLoading({
     super.key,
     this.mode,
@@ -345,7 +335,9 @@ class SliverLoading extends SingleChildRenderObjectWidget {
   }
 }
 
+/// The render object for [SliverLoading].
 class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
+  /// Creates a [RenderSliverLoading] object.
   RenderSliverLoading({
     RenderBox? child,
     this.mode,
@@ -359,21 +351,28 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     this.child = child;
   }
 
+  /// Whether the footer should follow the content when the viewport is not full.
   bool? shouldFollowContent;
+
+  /// Whether the footer should be hidden when the content doesn't fill the viewport.
   bool? hideWhenNotFull;
 
+  /// The current loading state.
   LoadStatus? mode;
 
   double? _layoutExtent;
 
+  /// The layout space the footer occupies.
   set layoutExtent(double? extent) {
     if (extent == _layoutExtent) return;
     _layoutExtent = extent;
     markNeedsLayout();
   }
 
+  /// The layout space the footer occupies.
   double? get layoutExtent => _layoutExtent;
 
+  /// Whether the sliver currently has layout extent.
   bool get hasLayoutExtent => _hasLayoutExtent!;
   bool? _hasLayoutExtent;
 
@@ -394,13 +393,10 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
       }
       sliverP = viewport.childAfter(sliverP!);
     }
-    // consider about footer layoutExtent,it should be subtracted it's height
     return totalScrollExtent > cons.viewportMainAxisExtent;
   }
 
-  //  many sitiuation: 1. reverse 2. not reverse
-  // 3. follow content 4. unfollow content
-  //5. not full 6. full
+  /// Calculates the paint origin for the footer.
   double? computePaintOrigin(double? layoutExtent, bool reverse, bool follow) {
     if (follow) {
       if (reverse) {
@@ -476,13 +472,11 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     assert(paintedChildSize.isFinite);
     assert(paintedChildSize >= 0.0);
     if (active) {
-      // consider reverse loading and HideAlways==loadStyle
       geometry = SliverGeometry(
         scrollExtent: !_hasLayoutExtent! || !_computeIfFull(constraints)
             ? 0.0
             : layoutExtent ?? 0.0,
         paintExtent: paintedChildSize,
-        // this need to fix later
         paintOrigin: computePaintOrigin(
             !_hasLayoutExtent! || !_computeIfFull(constraints)
                 ? layoutExtent
@@ -503,8 +497,9 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
   }
 }
 
+/// A sliver widget that wraps the body of the scroll view.
 class SliverRefreshBody extends SingleChildRenderObjectWidget {
-  /// Creates a sliver that contains a single box widget.
+  /// Creates a [SliverRefreshBody] widget.
   const SliverRefreshBody({
     super.key,
     super.child,
@@ -515,8 +510,9 @@ class SliverRefreshBody extends SingleChildRenderObjectWidget {
       RenderSliverRefreshBody();
 }
 
+/// The render object for [SliverRefreshBody].
 class RenderSliverRefreshBody extends RenderSliverSingleBoxAdapter {
-  /// Creates a [RenderSliver] that wraps a [RenderBox].
+  /// Creates a [RenderSliverRefreshBody] object.
   RenderSliverRefreshBody({
     super.child,
   });

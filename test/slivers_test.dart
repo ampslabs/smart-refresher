@@ -12,9 +12,9 @@ import 'package:smart_refresher/src/internals/slivers.dart';
 import 'data_source.dart';
 import 'test_indicator.dart';
 
-Future<void>? buildNotFullList(tester, bool reverse, Axis direction,
-    {dynamic footer = const TestFooter(),
-    dynamic header = const TestHeader(),
+Future<void> buildNotFullList(WidgetTester tester, bool reverse, Axis direction,
+    {Widget? footer = const TestFooter(),
+    Widget? header = const TestHeader(),
     bool initload = false}) {
   final RefreshController refreshController = RefreshController(
       initialLoadStatus: initload ? LoadStatus.loading : LoadStatus.idle);

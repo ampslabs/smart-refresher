@@ -11,8 +11,6 @@ class Test4 extends StatefulWidget {
 }
 
 class Test4State extends State<Test4> with TickerProviderStateMixin {
-//  RefreshMode  refreshing = RefreshMode.idle;
-//  LoadMode loading = LoadMode.idle;
   ValueNotifier<double> topOffsetLis = ValueNotifier(0.0);
   ValueNotifier<double> bottomOffsetLis = ValueNotifier(0.0);
   late RefreshController _refreshController;
@@ -26,21 +24,21 @@ class Test4State extends State<Test4> with TickerProviderStateMixin {
             onPressed: () {
               _refreshController.requestRefresh();
             },
-            child: Text("请求刷新")),
+            child: const Text("Request Refresh")),
         TextButton(
             onPressed: () {
               _refreshController.requestLoading();
             },
-            child: Text("请求加载数据")),
+            child: const Text("Request Loading")),
       ],
     ));
     for (int i = 0; i < 22; i++) {
       data.add(GestureDetector(
         child: Container(
-          color: Color.fromARGB(255, 250, 250, 250),
+          color: const Color.fromARGB(255, 250, 250, 250),
           child: Card(
             margin:
-                EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                const EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
             child: Center(
               child: Text('Data $i'),
             ),
@@ -59,64 +57,6 @@ class Test4State extends State<Test4> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
-    // for test #68 true-> false ->true
-//    Future.delayed(Duration(milliseconds: 3000), () {
-//      _enablePullDown = false;
-//      _enablePullUp = false;
-//      if (mounted) setState(() {});
-//    });
-//    Future.delayed(Duration(milliseconds: 6000), () {
-//      _enablePullDown = true;
-//      _enablePullUp = true;
-//      if (mounted) setState(() {});
-//    });
-
-//    // for test #68 false-> true ->false
-//    Future.delayed(Duration(milliseconds: 3000),(){
-//      _enablePullDown = false;
-//      _enablePullUp = true;
-//    if(mounted)
-//      setState(() {
-//
-//      });
-//    });
-//    Future.delayed(Duration(milliseconds: 6000),(){
-//      _enablePullDown = true;
-//      _enablePullUp = false;
-//    if(mounted)
-//      setState(() {
-//
-//      });
-//    });
-//    Future.delayed(Duration(milliseconds: 3000),(){
-//      _enablePullDown = true;
-//      _enablePullUp = false;
-//    if(mounted)
-//      setState(() {
-//
-//      });
-//    });
-//    Future.delayed(Duration(milliseconds: 6000),(){
-//      _enablePullDown = false;
-//      _enablePullUp = true;
-//    if(mounted)
-//      setState(() {
-//
-//      });
-//    });
-//    final NetworkImage provider = AssetImage("images/animate.gif");
-//    provider.obtainKey(ImageConfiguration()).then((k) async{
-//        final ByteData data = await k.bundle.load(k.name);
-//         ui.Codec codec= await PaintingBinding.instance.instantiateImageCodec(data.buffer.asUint8List());
-//         ui.FrameInfo info;
-//         for(int i = 0 ;i<54;i++){
-//           info = await codec.getNextFrame();
-//         }
-//         print(codec.frameCount);
-//        return ;
-//    });
-
     _getDatas();
     _refreshController = RefreshController(initialRefresh: false);
     super.initState();
@@ -124,16 +64,11 @@ class Test4State extends State<Test4> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-//    // Check that a second resolve of the same image is synchronous.
-//    final ImageStream stream = provider.resolve(provider.);
-//    bool isSync;
-//    stream.addListener(ImageStreamListener((ImageInfo image, bool sync) { isSync = sync; }));
     return RefreshConfiguration.copyAncestor(
       context: context,
       hideFooterWhenNotFull: false,
@@ -142,8 +77,8 @@ class Test4State extends State<Test4> with TickerProviderStateMixin {
         enablePullDown: true,
         builder: (context, physics) {
           return CustomScrollView(physics: physics, slivers: [
-            MaterialClassicHeader(),
-            SliverAppBar(),
+            const MaterialClassicHeader(),
+            const SliverAppBar(),
             SliverToBoxAdapter(
               child: Column(
                 children: <Widget>[
@@ -155,13 +90,13 @@ class Test4State extends State<Test4> with TickerProviderStateMixin {
                     child: Row(
                       children: <Widget>[
                         ElevatedButton(
-                          child: Text("主动刷新(移动)"),
+                          child: const Text("Request Refresh (Move)"),
                           onPressed: () {
                             _refreshController.requestRefresh();
                           },
                         ),
                         ElevatedButton(
-                          child: Text("主动加载"),
+                          child: const Text("Request Loading"),
                           onPressed: () {
                             _refreshController.requestLoading();
                           },
@@ -176,16 +111,16 @@ class Test4State extends State<Test4> with TickerProviderStateMixin {
                 ],
               ),
             ),
-            ClassicFooter(),
+            const ClassicFooter(),
           ]);
         },
         onRefresh: () async {
           print("onRefresh");
-          await Future.delayed(Duration(milliseconds: 1300));
+          await Future.delayed(const Duration(milliseconds: 1300));
           _refreshController.refreshCompleted();
         },
         onLoading: () async {
-          await Future.delayed(Duration(milliseconds: 1300));
+          await Future.delayed(const Duration(milliseconds: 1300));
           _refreshController.loadComplete();
         },
         controller: _refreshController,
@@ -193,8 +128,6 @@ class Test4State extends State<Test4> with TickerProviderStateMixin {
     );
   }
 
-  @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => false;
 }
 
@@ -206,7 +139,6 @@ class CirclePainter extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) {
-    // TODO: implement getClip
     final path = Path();
     if (!up) path.moveTo(0.0, size.height);
     path.cubicTo(
@@ -222,7 +154,6 @@ class CirclePainter extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(CustomClipper oldClipper) {
-    // TODO: implement shouldReclip
     return oldClipper != this;
   }
 }
@@ -230,7 +161,6 @@ class CirclePainter extends CustomClipper<Path> {
 class RefreshListView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _RefreshListViewState();
   }
 
@@ -246,12 +176,11 @@ class _RefreshListViewState extends State<RefreshListView> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return show
         ? CustomScrollView(
             slivers: widget.slivers,
-            physics: AlwaysScrollableScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
           )
-        : CupertinoActivityIndicator();
+        : const CupertinoActivityIndicator();
   }
 }

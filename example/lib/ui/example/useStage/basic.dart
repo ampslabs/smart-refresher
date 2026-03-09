@@ -1,11 +1,11 @@
 /*
  * Author: Jpeng
  * Email: peng8350@gmail.com
- * Time:  2019-06-26 11:36
+ * Time:  2019-06-26 11:36 AM
  */
 
 /*
-  the basic usage
+  The basic usage examples
 */
 
 import 'package:flutter/material.dart';
@@ -13,12 +13,11 @@ import 'package:smart_refresher/smart_refresher.dart';
 import '../../Item.dart';
 
 /*
-   the most common usage,
-   child wrap ListView,GridView,CustomView,Widget,
-   RefreshConfiguration is a global setting,just  like theme,All refreshers under the RefreshConfiguration subtree will refer to its properties,
-   in this example,I gave RefreshConfiguration a property headerBuilder,The default header indicator for the four refreshers is it.
-   If you use almost the same page indicator, using Refresh Configuration can greatly reduce the complexity of your work.
-
+   The most common usage scenarios:
+   child can be ListView, GridView, CustomScrollView, or any Widget.
+   RefreshConfiguration is a global setting, similar to Theme. All refreshers in the RefreshConfiguration subtree will inherit its properties.
+   In this example, RefreshConfiguration is given a headerBuilder property, which becomes the default header indicator for the four refreshers.
+   If you use the same indicator across multiple pages, using RefreshConfiguration can significantly simplify your code.
 */
 
 class BasicExample extends StatefulWidget {
@@ -26,22 +25,18 @@ class BasicExample extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _BasicExampleState();
   }
 }
 
 class _BasicExampleState extends State<BasicExample>
     with SingleTickerProviderStateMixin {
-//  int pageIndex = 0;
   List<String> data1 = [], data2 = [], data3 = [];
   late TabController _tabController;
 
   @override
   void initState() {
-    // TODO: implement initState
     _tabController = TabController(length: 6, vsync: this);
-    _tabController.addListener(() {});
     for (int i = 0; i < 10; i++) {
       data1.add("Item $i");
     }
@@ -56,7 +51,6 @@ class _BasicExampleState extends State<BasicExample>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return RefreshConfiguration.copyAncestor(
       enableLoadingWhenFailed: true,
       context: context,
@@ -69,7 +63,7 @@ class _BasicExampleState extends State<BasicExample>
           bottom: TabBar(
             isScrollable: true,
             controller: _tabController,
-            tabs: <Widget>[
+            tabs: const <Widget>[
               Tab(
                 text: "ListView",
               ),
@@ -77,24 +71,24 @@ class _BasicExampleState extends State<BasicExample>
                 text: "GridView",
               ),
               Tab(
-                text: "非滚动组件",
+                text: "Non-Scrollable",
               ),
               Tab(
-                text: "SliverAppBar+list",
+                text: "SliverAppBar+List",
               ),
               Tab(
                 text: "GridView+ListView",
               ),
               Tab(
-                text: "水平组件+listView",
+                text: "Horizontal+ListView",
               ),
             ],
           ),
         ),
         body: TabBarView(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           controller: _tabController,
-          children: <Widget>[
+          children: const <Widget>[
             Scrollbar(
               child: OnlyListView(),
             ),
@@ -120,13 +114,12 @@ class _BasicExampleState extends State<BasicExample>
   }
 }
 
-//only ListView
+// Only ListView
 class OnlyListView extends StatefulWidget {
   const OnlyListView({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _OnlyListViewState();
   }
 }
@@ -142,7 +135,7 @@ class _OnlyListViewState extends State<OnlyListView> {
     return ListView.separated(
       key: _contentKey,
       reverse: true,
-      padding: EdgeInsets.only(left: 5, right: 5),
+      padding: const EdgeInsets.only(left: 5, right: 5),
       itemBuilder: (c, i) => Item(
         title: data[i],
       ),
@@ -158,19 +151,17 @@ class _OnlyListViewState extends State<OnlyListView> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SmartRefresher(
       key: _refresherKey,
       controller: _refreshController,
       enablePullUp: true,
-      physics: BouncingScrollPhysics(),
-      footer: ClassicFooter(
+      physics: const BouncingScrollPhysics(),
+      footer: const ClassicFooter(
         loadStyle: LoadStyle.ShowWhenLoading,
         completeDuration: Duration(milliseconds: 500),
       ),
       onRefresh: () async {
-        //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 1000));
+        await Future.delayed(const Duration(milliseconds: 1000));
 
         for (int i = 0; i < 10; i++) {
           data.add("Item $i");
@@ -178,19 +169,9 @@ class _OnlyListViewState extends State<OnlyListView> {
 
         if (mounted) setState(() {});
         _refreshController.refreshCompleted();
-
-        /*
-        if(failed){
-         _refreshController.refreshFailed();
-        }
-      */
       },
       onLoading: () async {
-        //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 180));
-//        for (int i = 0; i < 10; i++) {
-//          data.add("Item $i");
-//        }
+        await Future.delayed(const Duration(milliseconds: 180));
         if (mounted) setState(() {});
         _refreshController.loadFailed();
       },
@@ -199,13 +180,12 @@ class _OnlyListViewState extends State<OnlyListView> {
   }
 }
 
-//only GridView
+// Only GridView
 class OnlyGridView extends StatefulWidget {
   const OnlyGridView({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _OnlyGridViewState();
   }
 }
@@ -217,9 +197,9 @@ class _OnlyGridViewState extends State<OnlyGridView> {
 
   Widget buildCtn() {
     return GridView.builder(
-      physics: ClampingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
       itemBuilder: (c, i) => Item(
         title: data[i],
       ),
@@ -229,14 +209,12 @@ class _OnlyGridViewState extends State<OnlyGridView> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SmartRefresher(
       controller: _refreshController,
       enablePullUp: true,
-      header: ClassicHeader(),
+      header: const ClassicHeader(),
       onRefresh: () async {
-        //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 1000));
+        await Future.delayed(const Duration(milliseconds: 1000));
 
         if (data.isEmpty) {
           for (int i = 0; i < 10; i++) {
@@ -245,20 +223,12 @@ class _OnlyGridViewState extends State<OnlyGridView> {
         }
         if (mounted) setState(() {});
         _refreshController.refreshCompleted();
-
-        /*
-        if(failed){
-         _refreshController.refreshFailed();
-        }
-      */
       },
       onLoading: () async {
-        //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 1000));
+        await Future.delayed(const Duration(milliseconds: 1000));
         for (int i = 0; i < 10; i++) {
           data.add("Item $i");
         }
-//    pageIndex++;
         if (mounted) setState(() {});
         _refreshController.loadComplete();
       },
@@ -268,14 +238,11 @@ class _OnlyGridViewState extends State<OnlyGridView> {
 }
 
 // No vertical Scrollable (like SingleChildScrollView)
-// if child is not extends CustomScrollView,this will add it to SliverToBoxAdapter
-// mostly for emptyView
 class NoScrollable extends StatefulWidget {
   const NoScrollable({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _NoScrollableState();
   }
 }
@@ -294,36 +261,34 @@ class _NoScrollableState extends State<NoScrollable> {
               color: Colors.redAccent,
               height: 200.0,
             ),
-            Text("标题"),
+            const Text("Title"),
             Container(
               color: Colors.redAccent,
               height: 200.0,
             ),
-            Text("标题"),
+            const Text("Title"),
             Container(
               color: Colors.redAccent,
               height: 200.0,
             ),
-            Text("标题"),
+            const Text("Title"),
             Container(
               color: Colors.redAccent,
               height: 200.0,
             ),
-            Text("标题"),
+            const Text("Title"),
           ],
         ));
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SmartRefresher(
       controller: _refreshController,
       enablePullUp: true,
-      header: WaterDropHeader(),
+      header: const WaterDropHeader(),
       onRefresh: () async {
-        //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 1000));
+        await Future.delayed(const Duration(milliseconds: 1000));
 
         if (data.isEmpty) {
           for (int i = 0; i < 10; i++) {
@@ -332,20 +297,12 @@ class _NoScrollableState extends State<NoScrollable> {
         }
         if (mounted) setState(() {});
         _refreshController.refreshCompleted();
-
-        /*
-        if(failed){
-         _refreshController.refreshFailed();
-        }
-      */
       },
       onLoading: () async {
-        //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 1000));
+        await Future.delayed(const Duration(milliseconds: 1000));
         for (int i = 0; i < 10; i++) {
           data.add("Item $i");
         }
-//    pageIndex++;
         if (mounted) setState(() {});
         _refreshController.loadComplete();
       },
@@ -354,13 +311,12 @@ class _NoScrollableState extends State<NoScrollable> {
   }
 }
 
-//SliverAppBar + ListView
+// SliverAppBar + ListView
 class SliverAppBarWithList extends StatefulWidget {
   const SliverAppBarWithList({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _SliverAppBarWithListState();
   }
 }
@@ -373,8 +329,8 @@ class _SliverAppBarWithListState extends State<SliverAppBarWithList> {
   Widget buildCtn() {
     return CustomScrollView(
       slivers: <Widget>[
-        SliverToBoxAdapter(),
-        SliverAppBar(
+        const SliverToBoxAdapter(),
+        const SliverAppBar(
           title: Text("SliverAppBar"),
           expandedHeight: 100.0,
         ),
@@ -390,14 +346,12 @@ class _SliverAppBarWithListState extends State<SliverAppBarWithList> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SmartRefresher(
       controller: _refreshController,
       enablePullUp: true,
-      header: WaterDropHeader(),
+      header: const WaterDropHeader(),
       onRefresh: () async {
-        //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 1000));
+        await Future.delayed(const Duration(milliseconds: 1000));
 
         if (data.isEmpty) {
           for (int i = 0; i < 10; i++) {
@@ -406,20 +360,12 @@ class _SliverAppBarWithListState extends State<SliverAppBarWithList> {
         }
         if (mounted) setState(() {});
         _refreshController.refreshCompleted();
-
-        /*
-        if(failed){
-         _refreshController.refreshFailed();
-        }
-      */
       },
       onLoading: () async {
-        //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 1000));
+        await Future.delayed(const Duration(milliseconds: 1000));
         for (int i = 0; i < 10; i++) {
           data.add("Item $i");
         }
-//    pageIndex++;
         if (mounted) setState(() {});
         _refreshController.loadComplete();
       },
@@ -434,7 +380,6 @@ class GridAndList extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _GridAndListState();
   }
 }
@@ -449,11 +394,11 @@ class _GridAndListState extends State<GridAndList> {
       slivers: <Widget>[
         SliverGrid(
           gridDelegate:
-              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+              const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
           delegate: SliverChildBuilderDelegate(
-            (c, i) => Column(
+            (c, i) => const Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[Icon(Icons.storage), Text("菜单标题")],
+              children: <Widget>[Icon(Icons.storage), Text("Menu Title")],
             ),
             childCount: 6,
           ),
@@ -470,14 +415,12 @@ class _GridAndListState extends State<GridAndList> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SmartRefresher(
       controller: _refreshController,
       enablePullUp: true,
-      header: WaterDropHeader(),
+      header: const WaterDropHeader(),
       onRefresh: () async {
-        //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 1000));
+        await Future.delayed(const Duration(milliseconds: 1000));
 
         if (data.isEmpty) {
           for (int i = 0; i < 10; i++) {
@@ -486,20 +429,12 @@ class _GridAndListState extends State<GridAndList> {
         }
         if (mounted) setState(() {});
         _refreshController.refreshCompleted();
-
-        /*
-        if(failed){
-         _refreshController.refreshFailed();
-        }
-      */
       },
       onLoading: () async {
-        //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 1000));
+        await Future.delayed(const Duration(milliseconds: 1000));
         for (int i = 0; i < 10; i++) {
           data.add("Item $i");
         }
-//    pageIndex++;
         if (mounted) setState(() {});
         _refreshController.loadComplete();
       },
@@ -508,13 +443,12 @@ class _GridAndListState extends State<GridAndList> {
   }
 }
 
-// 水平组件(例子:轮播图)+List
+// Horizontal Swiper + List
 class SwiperAndList extends StatefulWidget {
   const SwiperAndList({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _SwiperAndListState();
   }
 }
@@ -556,14 +490,12 @@ class _SwiperAndListState extends State<SwiperAndList> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SmartRefresher(
       controller: _refreshController,
       enablePullUp: true,
-      header: WaterDropHeader(),
+      header: const WaterDropHeader(),
       onRefresh: () async {
-        //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 1000));
+        await Future.delayed(const Duration(milliseconds: 1000));
 
         if (data.isEmpty) {
           for (int i = 0; i < 10; i++) {
@@ -572,20 +504,12 @@ class _SwiperAndListState extends State<SwiperAndList> {
         }
         if (mounted) setState(() {});
         _refreshController.refreshCompleted();
-
-        /*
-        if(failed){
-         _refreshController.refreshFailed();
-        }
-      */
       },
       onLoading: () async {
-        //monitor fetch data from network
-        await Future.delayed(Duration(milliseconds: 1000));
+        await Future.delayed(const Duration(milliseconds: 1000));
         for (int i = 0; i < 10; i++) {
           data.add("Item $i");
         }
-//    pageIndex++;
         if (mounted) setState(() {});
         _refreshController.loadComplete();
       },

@@ -24,9 +24,9 @@ linter:
 
     # ─── Documentation ──────────────────────────────────────────
     # Critical for a public package — all public APIs must be documented
-    public_member_api_docs: false
-    comment_references: false
-    slash_for_doc_comments: false
+    public_member_api_docs: true
+    comment_references: true
+    slash_for_doc_comments: true
 
     # ─── Dart 3 / Null Safety ────────────────────────────────────
     cast_nullable_to_non_nullable: true
@@ -83,7 +83,7 @@ linter:
     sort_pub_dependencies: true
 
     # ─── Performance ─────────────────────────────────────────────
-    avoid_function_closures_in_foreach: true
+
     prefer_for_elements_to_map_fromIterable: true
     prefer_spread_collections: true
     prefer_if_null_operators: true

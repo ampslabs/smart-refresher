@@ -1,7 +1,7 @@
 /*
     Author: Jpeng
     Email: peng8350@gmail.com
-    createTime:2018-05-02 14:39
+    createTime:2018-05-02 2:39 PM
  */
 // ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
 // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
@@ -12,30 +12,51 @@ import 'dart:math' as math;
 import 'package:smart_refresher/smart_refresher.dart';
 import 'package:smart_refresher/src/internals/slivers.dart';
 
-/// a scrollPhysics for config refresh scroll effect,enable viewport out of edge whatever physics it is
-/// in [ClampingScrollPhysics], it doesn't allow to flip out of edge,but in RefreshPhysics,it will allow to do that,
-/// by parent physics passing,it also can attach the different of iOS and Android different scroll effect
-/// it also handles interception scrolling when refreshed, or when the second floor is open and closed.
-/// with [SpringDescription] passing,you can custom spring back animate,the more paramter can be setting in [RefreshConfiguration]
+/// A [ScrollPhysics] that enables refresh effects by allowing the viewport to overscroll.
 ///
-/// see also:
+/// Unlike [ClampingScrollPhysics], [RefreshPhysics] permits overscrolling even when it's not the default behavior.
+/// It also manages scrolling behavior during refresh states and two-level mode transitions.
+/// Custom spring animations can be configured using [SpringDescription].
 ///
-/// * [RefreshConfiguration], a configuration for Controlling how SmartRefresher widgets behave in a subtree
+/// See also:
+///
+/// * [RefreshConfiguration], which provides settings for [RefreshPhysics].
 // ignore: MUST_BE_IMMUTABLE
 class RefreshPhysics extends ScrollPhysics {
-  final double? maxOverScrollExtent, maxUnderScrollExtent;
-  final double? topHitBoundary, bottomHitBoundary;
+  /// The maximum extent to which the viewport can be overscrolled at the top.
+  final double? maxOverScrollExtent;
+
+  /// The maximum extent to which the viewport can be overscrolled at the bottom.
+  final double? maxUnderScrollExtent;
+
+  /// The boundary at the top where the scroll will hit and stop.
+  final double? topHitBoundary;
+
+  /// The boundary at the bottom where the scroll will hit and stop.
+  final double? bottomHitBoundary;
+
+  /// The description of the spring animation used for snapping back.
   final SpringDescription? springDescription;
+
+  /// The ratio applied to the drag speed.
   final double? dragSpeedRatio;
-  final bool? enableScrollWhenTwoLevel, enableScrollWhenRefreshCompleted;
+
+  /// Whether scrolling is enabled during two-level mode.
+  final bool? enableScrollWhenTwoLevel;
+
+  /// Whether scrolling is enabled once the refresh is completed.
+  final bool? enableScrollWhenRefreshCompleted;
+
+  /// The controller used to manage refresh state.
   final RefreshController? controller;
+
+  /// A flag used to force a physics update.
   final int? updateFlag;
 
-  /// find out the viewport when bouncing,for compute the layoutExtent in header and footer
-  /// This does not have any impact on performance. it only  execute once
+  /// The cached [RenderViewport] used for computing layout extents.
   RenderViewport? viewportRender;
 
-  /// Creates scroll physics that bounce back from the edge.
+  /// Creates a [RefreshPhysics].
   RefreshPhysics(
       {super.parent,
       this.updateFlag,
@@ -65,6 +86,7 @@ class RefreshPhysics extends ScrollPhysics {
         maxOverScrollExtent: maxOverScrollExtent);
   }
 
+  /// Finds the [RenderViewport] in the given [context].
   RenderViewport? findViewport(BuildContext? context) {
     if (context == null) {
       return null;
@@ -84,19 +106,13 @@ class RefreshPhysics extends ScrollPhysics {
 
   @override
   bool shouldAcceptUserOffset(ScrollMetrics position) {
-    // TODO: implement shouldAcceptUserOffset
     if (parent is NeverScrollableScrollPhysics) {
       return false;
     }
     return true;
   }
 
-  //  It seem that it was odd to do so,but I have no choose to do this for updating the state value(enablePullDown and enablePullUp),
-  // in Scrollable.dart _shouldUpdatePosition method,it use physics.runtimeType to check if the two physics is the same,this
-  // will lead to whether the newPhysics should replace oldPhysics,If flutter can provide a method such as "shouldUpdate",
-  // It can work perfectly.
   @override
-  // TODO: implement runtimeType
   Type get runtimeType {
     if (updateFlag == 0) {
       return RefreshPhysics;
@@ -107,7 +123,6 @@ class RefreshPhysics extends ScrollPhysics {
 
   @override
   double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
-    // TODO: implement applyPhysicsToUserOffset
     viewportRender ??=
         findViewport(controller!.position?.context.storageContext);
     if (controller!.headerMode!.value == RefreshStatus.twoLeveling) {
@@ -162,6 +177,7 @@ class RefreshPhysics extends ScrollPhysics {
     return total + absDelta;
   }
 
+  /// Calculates the friction factor for overscrolling.
   double frictionFactor(double overscrollFraction) =>
       0.52 * math.pow(1 - overscrollFraction, 2);
 
@@ -246,7 +262,6 @@ class RefreshPhysics extends ScrollPhysics {
       return value - bottomBoundary;
     }
 
-    // check user is dragging,it is import,some devices may not bounce with different frame and time,bouncing return the different velocity
     if (scrollPosition.activity is DragScrollActivity) {
       if (maxOverScrollExtent != double.infinity &&
           value < position.pixels &&
@@ -267,7 +282,6 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   Simulation? createBallisticSimulation(
       ScrollMetrics position, double velocity) {
-    // TODO: implement createBallisticSimulation
     viewportRender ??=
         findViewport(controller!.position?.context.storageContext);
 
@@ -293,9 +307,7 @@ class RefreshPhysics extends ScrollPhysics {
       return BouncingScrollSimulation(
         spring: springDescription ?? spring,
         position: position.pixels,
-        // -1.0 avoid stop springing back ,and release gesture
         velocity: velocity * 0.91,
-        // TODO(abarth): We should move this constant closer to the drag end.
         leadingExtent: position.minScrollExtent,
         trailingExtent:
             controller!.headerMode!.value == RefreshStatus.twoLeveling

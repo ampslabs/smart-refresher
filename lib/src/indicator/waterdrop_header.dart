@@ -1,7 +1,7 @@
 /*
  * Author: Jpeng
  * Email: peng8350@gmail.com
- * Time: 2019/5/5 下午2:37
+ * Time: 2019/5/5 2:37 PM
  */
 
 import 'dart:async';
@@ -11,23 +11,24 @@ import 'package:flutter/foundation.dart';
 import 'package:smart_refresher/smart_refresher.dart';
 import 'package:flutter/cupertino.dart';
 
-/// QQ ios refresh  header effect
+/// A refresh header that provides a waterdrop effect, similar to the one used in the iOS QQ app.
 class WaterDropHeader extends RefreshIndicator {
-  /// refreshing content
+  /// The widget to display while the header is in the refreshing state.
   final Widget? refresh;
 
-  /// complete content
+  /// The widget to display when the refresh process is successfully completed.
   final Widget? complete;
 
-  /// failed content
+  /// The widget to display when the refresh process fails.
   final Widget? failed;
 
-  /// idle Icon center in waterCircle
+  /// The icon displayed inside the waterdrop while the header is in the idle state.
   final Widget idleIcon;
 
-  /// waterDrop color,default grey
+  /// The color of the waterdrop.
   final Color waterDropColor;
 
+  /// Creates a [WaterDropHeader].
   const WaterDropHeader({
     super.key,
     this.refresh,
@@ -46,7 +47,6 @@ class WaterDropHeader extends RefreshIndicator {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _WaterDropHeaderState();
   }
 }
@@ -58,10 +58,8 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
 
   @override
   void onOffsetChange(double offset) {
-    // TODO: implement onOffsetChange
     final double realOffset =
         offset - 44.0; //55.0 mean circleHeight(24) + originH (20) in Painter
-    // when readyTorefresh
     if (!_animationController!.isAnimating) {
       _animationController!.value = realOffset;
     }
@@ -69,14 +67,12 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
 
   @override
   Future<void> readyToRefresh() {
-    // TODO: implement readyToRefresh
     _dismissCtl.animateTo(0.0);
     return _animationController!.animateTo(0.0);
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     _dismissCtl = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 400), value: 1.0);
     _animationController = AnimationController(
@@ -88,13 +84,11 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
 
   @override
   bool needReverseAll() {
-    // TODO: implement needReverseAll
     return false;
   }
 
   @override
   Widget buildContent(BuildContext context, RefreshStatus? mode) {
-    // TODO: implement buildContent
     Widget? child;
     if (mode == RefreshStatus.refreshing) {
       child = widget.refresh ??
@@ -114,7 +108,7 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                 Icons.done,
                 color: Colors.grey,
               ),
-              Container(
+              const SizedBox(
                 width: 15.0,
               ),
               Text(
@@ -134,7 +128,7 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                 Icons.close,
                 color: Colors.grey,
               ),
-              Container(
+              const SizedBox(
                 width: 15.0,
               ),
               Text(
@@ -191,14 +185,12 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
 
   @override
   void resetValue() {
-    // TODO: implement resetValue
     _animationController!.reset();
     _dismissCtl.value = 1.0;
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _dismissCtl.dispose();
     _animationController!.dispose();
     super.dispose();
@@ -265,7 +257,6 @@ class _QqPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    // TODO: implement shouldRepaint
     return oldDelegate != this;
   }
 }

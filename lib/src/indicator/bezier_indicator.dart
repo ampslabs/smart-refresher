@@ -1,7 +1,7 @@
 /*
  * Author: Jpeng
  * Email: peng8350@gmail.com
- * Time:  2019-08-02 19:20
+ * Time: 2019-08-02 7:20 PM
  */
 
 import 'package:smart_refresher/smart_refresher.dart';
@@ -10,29 +10,63 @@ import 'package:flutter/material.dart'
 import 'dart:math' as math;
 import 'package:flutter/physics.dart';
 
-enum BezierDismissType { none, rectSpread, scaleToCenter }
+/// The type of dismissal animation for the bezier header.
+enum BezierDismissType {
+  /// No dismissal animation.
+  none,
 
-enum BezierCircleType { raidal, progress }
+  /// Rectangular spread dismissal animation.
+  rectSpread,
 
-/// bezier container,if you need to implements indicator with bezier ,you can use consider about use this
-/// this will add the bezier container effect
+  /// Scale to center dismissal animation.
+  scaleToCenter
+}
+
+/// The type of circle animation in the bezier circle header.
+enum BezierCircleType {
+  /// Radial animation style.
+  raidal,
+
+  /// Progress indicator animation style.
+  progress
+}
+
+/// A refresh header that provides a bezier curve container effect.
+///
+/// Use this if you want to implement a custom indicator within a bezier container.
 ///
 /// See also:
 ///
-/// [BezierCircleHeader], bezier container +circle progress indicator
+/// [BezierCircleHeader], a pre-built header combining a bezier container and a circle indicator.
 class BezierHeader extends RefreshIndicator {
+  /// Callback when the scroll offset changes.
   final OffsetCallBack? onOffsetChange;
-  final ModeChangeCallBack? onModeChange;
+
+  /// Callback when the refresh status changes.
+  final ModeChangeCallBack<RefreshStatus>? onModeChange;
+
+  /// Callbacks for different stages of the refresh process.
   final VoidFutureCallBack? readyRefresh, endRefresh;
+
+  /// Callback when the indicator value is reset.
   final VoidCallback? onResetValue;
+
+  /// The color of the bezier curve.
   final Color? bezierColor;
-  // decide how to behave when bezier is ready to dismiss
+
+  /// How the bezier container behaves when it's ready to dismiss.
   final BezierDismissType dismissType;
+
+  /// Whether the child widget is allowed to overflow the container.
   final bool enableChildOverflow;
+
+  /// The child widget to be displayed within the header.
   final Widget child;
-  // container height(not contain bezier)
+
+  /// The height of the rectangular part of the container (excluding the bezier curve).
   final double rectHeight;
 
+  /// Creates a [BezierHeader].
   const BezierHeader(
       {super.key,
       this.child = const Text(''),
@@ -49,7 +83,6 @@ class BezierHeader extends RefreshIndicator {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _BezierHeaderState();
   }
 }
@@ -60,7 +93,6 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
 
   @override
   void initState() {
-    // TODO: implement initState
     _beizerBounceCtl = AnimationController(
         vsync: this, lowerBound: -10, upperBound: 50, value: 0);
     _bezierDismissCtl = AnimationController(vsync: this);
@@ -69,7 +101,6 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
 
   @override
   void onOffsetChange(double offset) {
-    // TODO: implement onOffsetChange
     if (widget.onOffsetChange != null) {
       widget.onOffsetChange!(offset);
     }
@@ -80,7 +111,6 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
 
   @override
   void onModeChange(RefreshStatus? mode) {
-    // TODO: implement onModeChange
     if (widget.onModeChange != null) {
       widget.onModeChange!(mode);
     }
@@ -89,7 +119,6 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _bezierDismissCtl.dispose();
     _beizerBounceCtl.dispose();
     super.dispose();
@@ -97,7 +126,6 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
 
   @override
   Future<void> readyToRefresh() {
-    // TODO: implement readyToRefresh
     final Simulation simulation = SpringSimulation(
         const SpringDescription(
           mass: 3.4,
@@ -116,7 +144,6 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
 
   @override
   Future<void> endRefresh() async {
-    // TODO: implement endRefresh
     if (widget.endRefresh != null) {
       await widget.endRefresh!();
     }
@@ -126,7 +153,6 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
 
   @override
   void resetValue() {
-    // TODO: implement resetValue
     _bezierDismissCtl.reset();
     _beizerBounceCtl.value = 0;
     if (widget.onResetValue != null) {
@@ -137,8 +163,6 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
 
   @override
   Widget buildContent(BuildContext context, RefreshStatus? mode) {
-    // TODO: implement buildContent
-
     return AnimatedBuilder(
       builder: (_, __) {
         return Stack(
@@ -205,7 +229,6 @@ class _BezierDismissPainter extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) {
-    // TODO: implement getClip
     final Path path = Path();
     if (dismissType == BezierDismissType.none || value == 0) {
       path.moveTo(0, 0);
@@ -243,7 +266,6 @@ class _BezierDismissPainter extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(_BezierDismissPainter oldClipper) {
-    // TODO: implement shouldReclip
     return dismissType != oldClipper.dismissType || value != oldClipper.value;
   }
 }
@@ -257,7 +279,6 @@ class _BezierPainter extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) {
-    // TODO: implement getClip
     final Path path = Path();
     path.lineTo(0, startOffsetY!);
     path.quadraticBezierTo(
@@ -271,37 +292,44 @@ class _BezierPainter extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(_BezierPainter oldClipper) {
-    // TODO: implement shouldReclip
     return value != oldClipper.value;
   }
 }
 
-/// bezier + circle indicator,you can use this directly
+/// A pre-built refresh header combining a bezier container and a circle indicator.
 ///
-///simple usage
-///```dart
-///header: BezierCircleHeader(
-///bezierColor: Colors.red,
-///circleColor: Colors.amber,
-///dismissType: BezierDismissType.ScaleToCenter,
-///circleType: BezierCircleType.Raidal,
-///)
-///```
+/// Simple usage:
+/// ```dart
+/// header: BezierCircleHeader(
+///   bezierColor: Colors.red,
+///   circleColor: Colors.amber,
+///   dismissType: BezierDismissType.scaleToCenter,
+///   circleType: BezierCircleType.progress,
+/// )
+/// ```
 class BezierCircleHeader extends StatefulWidget {
+  /// The color of the bezier background.
   final Color? bezierColor;
-  // two style:radial or progress
+
+  /// The style of the circle animation: radial or progress.
   final BezierCircleType circleType;
 
+  /// The height of the rectangular part of the header.
   final double rectHeight;
 
+  /// The color of the circle indicator.
   final Color circleColor;
 
+  /// The radius of the circle indicator.
   final double circleRadius;
 
+  /// Whether the circle indicator is allowed to overflow the header.
   final bool enableChildOverflow;
 
+  /// The type of dismissal animation for the bezier background.
   final BezierDismissType dismissType;
 
+  /// Creates a [BezierCircleHeader].
   const BezierCircleHeader(
       {super.key,
       this.bezierColor,
@@ -314,7 +342,6 @@ class BezierCircleHeader extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _BezierCircleHeaderState();
   }
 }
@@ -330,21 +357,19 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader>
 
   @override
   void initState() {
-    // TODO: implement initState
     _dismissCtrl = AnimationController(vsync: this);
     _childMoveCtl = AnimationController(vsync: this);
-    _radialCtrl =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
+    _radialCtrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
     _childMoveTween = AlignmentGeometryTween(
         begin: Alignment.bottomCenter, end: Alignment.center);
-    _disMissTween =
-        Tween<Offset>(begin: const Offset(0.0, 0.0), end: const Offset(0.0, 1.5));
+    _disMissTween = Tween<Offset>(
+        begin: const Offset(0.0, 0.0), end: const Offset(0.0, 1.5));
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _dismissCtrl.dispose();
     _childMoveCtl.dispose();
     _radialCtrl.dispose();
@@ -353,7 +378,6 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return BezierHeader(
       bezierColor: widget.bezierColor,
       rectHeight: widget.rectHeight,
@@ -368,7 +392,7 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader>
         _childMoveCtl.reset();
       },
       onModeChange: (m) {
-        mode = m;
+        mode = m!;
         if (m == RefreshStatus.refreshing) {
           _radialCtrl.repeat(period: const Duration(milliseconds: 500));
         }
@@ -376,7 +400,8 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader>
       },
       endRefresh: () async {
         _radialCtrl.reset();
-        await _dismissCtrl.animateTo(1, duration: const Duration(milliseconds: 550));
+        await _dismissCtrl.animateTo(1,
+            duration: const Duration(milliseconds: 550));
       },
       child: SlideTransition(
         position: _disMissTween.animate(_dismissCtrl),
@@ -403,7 +428,8 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader>
                           child: CircularProgressIndicator(
                             valueColor: mode == RefreshStatus.refreshing
                                 ? AlwaysStoppedAnimation(widget.circleColor)
-                                : const AlwaysStoppedAnimation(Colors.transparent),
+                                : const AlwaysStoppedAnimation(
+                                    Colors.transparent),
                             strokeWidth: 2,
                           ),
                         ),
@@ -446,7 +472,6 @@ class _RaidalPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // TODO: implement paint
     final Paint paint = Paint();
     paint.color = circleColor!;
     paint.strokeWidth = 2;
@@ -495,7 +520,6 @@ class _RaidalPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_RaidalPainter oldDelegate) {
-    // TODO: implement shouldRepaint
     return value != oldDelegate.value;
   }
 }

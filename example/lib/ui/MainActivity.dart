@@ -1,7 +1,7 @@
 /*
  * Author: Jpeng
  * Email: peng8350@gmail.com
- * Time: 2019/5/3 下午6:13
+ * Time: 2019/5/3 6:13 PM
  */
 
 import 'package:flutter/material.dart';
@@ -33,9 +33,9 @@ class _MainActivityState extends State<MainActivity>
     _tabController = TabController(length: 6, vsync: this);
     _pageController = PageController(initialPage: 1);
     views = [
-      IndicatorPage(title: "指示器界面"),
-      ExamplePage(),
-      TestPage(title: "测试界面"),
+      const IndicatorPage(title: "Indicators"),
+      const ExamplePage(),
+      const TestPage(title: "Tests"),
     ];
   }
 
@@ -44,25 +44,25 @@ class _MainActivityState extends State<MainActivity>
     return Scaffold(
       appBar: AppBar(
         title: Text(_tabIndex == 0
-            ? "指示器界面"
+            ? "Indicators"
             : _tabIndex == 1
-                ? "例子界面"
+                ? "Examples"
                 : _tabIndex == 2
-                    ? "测试界面"
+                    ? "Tests"
                     : _tabIndex == 3
-                        ? "样例界面"
-                        : "App界面"),
+                        ? "Samples"
+                        : "App"),
         backgroundColor: Colors.greenAccent,
         bottom: _tabIndex == 3
             ? TabBar(
                 isScrollable: true,
-                tabs: [
-                  Tab(child: Text("超大数据量性能测试")),
+                tabs: const [
+                  Tab(child: Text("Large Data Performance")),
                   Tab(child: Text("SliverAppbar+Sliverheader")),
-                  Tab(child: Text("嵌套滚动视图")),
-                  Tab(child: Text("动态变化指示器+Navigator")),
-                  Tab(child: Text("主动刷新")),
-                  Tab(child: Text("四个方向不同风格测试绘制")),
+                  Tab(child: Text("NestedScrollView")),
+                  Tab(child: Text("Dynamic Indicator+Navigator")),
+                  Tab(child: Text("Active Refresh")),
+                  Tab(child: Text("Four Directions Test")),
                 ],
                 controller: _tabController,
               )
@@ -71,7 +71,7 @@ class _MainActivityState extends State<MainActivity>
       drawer: Drawer(
         child: Column(
           children: [
-            UserAccountsDrawerHeader(
+            const UserAccountsDrawerHeader(
               accountName: Text("Jpeng"),
               accountEmail: Text("peng8350@gmail.com"),
               currentAccountPicture: CircleAvatar(
@@ -81,8 +81,8 @@ class _MainActivityState extends State<MainActivity>
               decoration: BoxDecoration(color: Colors.greenAccent),
             ),
             ListTile(
-              title: Text("各种指示器"),
-              leading: Icon(Icons.apps, color: Colors.grey),
+              title: const Text("Indicators"),
+              leading: const Icon(Icons.apps, color: Colors.grey),
               onTap: () {
                 setState(() {
                   _tabIndex = 0;
@@ -92,8 +92,8 @@ class _MainActivityState extends State<MainActivity>
               },
             ),
             ListTile(
-              title: Text("例子"),
-              leading: Icon(Icons.insert_emoticon, color: Colors.grey),
+              title: const Text("Examples"),
+              leading: const Icon(Icons.insert_emoticon, color: Colors.grey),
               onTap: () {
                 setState(() {
                   _tabIndex = 1;
@@ -103,8 +103,8 @@ class _MainActivityState extends State<MainActivity>
               },
             ),
             ListTile(
-              title: Text("测试"),
-              leading: Icon(Icons.airplanemode_active, color: Colors.grey),
+              title: const Text("Tests"),
+              leading: const Icon(Icons.airplanemode_active, color: Colors.grey),
               onTap: () {
                 setState(() {
                   _tabIndex = 2;
@@ -118,7 +118,7 @@ class _MainActivityState extends State<MainActivity>
       ),
       body: PageView(
         controller: _pageController,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         children: views,
       ),
     );

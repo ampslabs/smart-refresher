@@ -30,7 +30,6 @@ class ExamplePage extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _ExamplePageState();
   }
 }
@@ -38,7 +37,6 @@ class ExamplePage extends StatefulWidget {
 class ExampleItem extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _ExampleItemState();
   }
 
@@ -51,7 +49,6 @@ class ExampleItem extends StatefulWidget {
 class _ExampleItemState extends State<ExampleItem> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return InkWell(
       onTap: () => widget.onClick(),
       child: SizedBox(
@@ -72,87 +69,84 @@ class _ExamplePageState extends State<ExamplePage>
 
   @override
   void initState() {
-    // TODO: implement initState
     _tabController = TabController(initialIndex: 0, length: 3, vsync: this);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-
     final List<ExampleItem> items1 = [
       ExampleItem(
-          title: "基础用法",
+          title: "Basic Usage",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return BasicExample();
+              return const BasicExample();
             }));
           }),
       ExampleItem(
-          title: "手动隐藏footer",
+          title: "Hide Footer Manually",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
-                body: HideFooterManual(),
+                body: const HideFooterManual(),
                 appBar: AppBar(),
               );
             }));
           }),
       ExampleItem(
-          title: "水平刷新",
+          title: "Horizontal Refresh",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
-                body: HorizontalRefresh(),
+                body: const HorizontalRefresh(),
                 appBar: AppBar(),
               );
             }));
           }),
       ExampleItem(
-          title: "点击按钮触发刷新",
+          title: "Tap Button to Refresh",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return TapButtonRefreshExample();
+              return const TapButtonRefreshExample();
             }));
           }),
       ExampleItem(
-          title: "NestedScrollView下刷新",
+          title: "Refresh in NestedScrollView",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return NestedRefresh();
+              return const NestedRefresh();
             }));
           }),
       ExampleItem(
-          title: "模仿qq聊天",
+          title: "Mock QQ Chat",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return QQChatList();
+              return const QQChatList();
             }));
           }),
       ExampleItem(
-          title: "空白视图+刷新",
+          title: "Empty View + Refresh",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
-                body: RefreshWithEmptyView(),
+                body: const RefreshWithEmptyView(),
                 appBar: AppBar(),
               );
             }));
           }),
       ExampleItem(
-          title: "淘宝二楼例子",
+          title: "Taobao Second Floor Example",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return TwoLevelExample();
+              return const TwoLevelExample();
             }));
           }),
       ExampleItem(
-          title: "强制填满一屏",
+          title: "Force Full Page",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
-                body: ForceFullExample(),
+                body: const ForceFullExample(),
                 appBar: AppBar(),
               );
             }));
@@ -160,61 +154,61 @@ class _ExamplePageState extends State<ExamplePage>
     ];
     final List<ExampleItem> items2 = [
       ExampleItem(
-          title: "animatedlist结合refresher",
+          title: "AnimatedList + Refresher",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
-                body: AnimatedListExample(),
+                body: const AnimatedListExample(),
                 appBar: AppBar(),
               );
             }));
           }),
       ExampleItem(
-          title: "ExpansionPanelList配合使用",
+          title: "ExpansionPanelList Usage",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
                 appBar: AppBar(),
-                body: RefreshExpansionPanelList(),
+                body: const RefreshExpansionPanelList(),
               );
             }));
           }),
       ExampleItem(
-          title: "loadmore+draggablesheet",
+          title: "Load More + DraggableSheet",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
                 appBar: AppBar(),
-                body: DraggableLoadingBottomSheet(),
+                body: const DraggableLoadingBottomSheet(),
               );
             }));
           }),
       ExampleItem(
-          title: "stickyHeader+StaggeredGridView",
+          title: "StickyHeader + StaggeredGridView",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
                 appBar: AppBar(),
-                body: RefreshStaggeredAndSticky(),
+                body: const RefreshStaggeredAndSticky(),
               );
             }));
           }),
       ExampleItem(
-          title: "pageView共用SmartRefresher",
+          title: "PageView + SmartRefresher",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
-                body: PageViewExample(),
+                body: const PageViewExample(),
                 appBar: AppBar(),
               );
             }));
           }),
       ExampleItem(
-          title: "RecordableListView",
+          title: "ReorderableListView",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
-                body: ReorderableListDemo(),
+                body: const ReorderableListDemo(),
                 appBar: AppBar(),
               );
             }));
@@ -223,48 +217,48 @@ class _ExamplePageState extends State<ExamplePage>
 
     final List<ExampleItem> items3 = [
       ExampleItem(
-          title: "简单自定义头部指示器",
+          title: "Simple Custom Header",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
-                body: CustomHeaderExample(),
+                body: const CustomHeaderExample(),
                 appBar: AppBar(),
               );
             }));
           }),
       ExampleItem(
-          title: "LinkHeader例子",
+          title: "LinkHeader Example",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return LinkHeaderExample();
+              return const LinkHeaderExample();
             }));
           }),
       ExampleItem(
-          title: "Shimmer指示器例子",
+          title: "Shimmer Indicator Example",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
                 appBar: AppBar(),
-                body: ShimmerIndicatorExample(),
+                body: const ShimmerIndicatorExample(),
               );
             }));
           }),
       ExampleItem(
-          title: "Gif指示器例子1",
+          title: "Gif Indicator Example 1",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
                 backgroundColor: Colors.white,
                 appBar: AppBar(),
-                body: GifIndicatorExample1(),
+                body: const GifIndicatorExample1(),
               );
             }));
           }),
       ExampleItem(
-          title: "footer使其于header同样表现",
+          title: "Convert Footer to Header Style",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return ConvertFooter();
+              return const ConvertFooter();
             }));
           }),
     ];
@@ -276,15 +270,15 @@ class _ExamplePageState extends State<ExamplePage>
           color: Colors.greenAccent,
           child: TabBar(
             controller: _tabController,
-            tabs: <Widget>[
+            tabs: const <Widget>[
               Tab(
-                text: "使用场景",
+                text: "Usage Scenarios",
               ),
               Tab(
-                text: "配合特殊组件", //字符串
+                text: "Special Components",
               ),
               Tab(
-                text: "自定义指示器",
+                text: "Custom Indicators",
               ),
             ],
           ),

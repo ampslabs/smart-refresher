@@ -1,7 +1,7 @@
 /*
  * Author: Jpeng
  * Email: peng8350@gmail.com
- * Time:  2019-06-26 16:28
+ * Time:  2019-06-26 4:28 PM
  */
 
 import 'package:flutter/material.dart'
@@ -9,21 +9,19 @@ import 'package:flutter/material.dart'
 import 'package:smart_refresher/smart_refresher.dart';
 
 /*
-   there two example implements two level,
-   the first is common,when twoRefreshing,header will follow the list to scrollDown,when closing,still follow
-   list move up,
-   the second example use Navigator and keep offset when twoLevel trigger,
-   header can use ClassicalHeader to implments twoLevel,it provide outerBuilder(1.4.7)
-   important point:
-   1. open enableTwiceRefresh bool ,default is false
-   2. _refreshController.twiceRefreshComplete() can closing the two level
+   There are two examples implementing the two-level feature:
+   The first one is common: when two-level refreshing, the header follows the list scrolling down. When closing, it still follows the list moving up.
+   The second example uses Navigator and maintains the offset when the two-level mode is triggered.
+   The header can use ClassicHeader to implement the two-level effect via the outerBuilder (introduced in 1.4.7).
+   Important points:
+   1. Enable the enableTwoLevel property (default is false).
+   2. Use _refreshController.twoLevelComplete() to close the two-level state.
 */
 class TwoLevelExample extends StatefulWidget {
   const TwoLevelExample({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _TwoLevelExampleState();
   }
 }
@@ -35,7 +33,6 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
 
   @override
   void initState() {
-    // TODO: implement initState
     _refreshController1.headerMode?.addListener(() {
       setState(() {});
     });
@@ -48,7 +45,6 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return RefreshConfiguration.copyAncestor(
       context: context,
       enableScrollWhenTwoLevel: true,
@@ -61,11 +57,11 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                   _tabIndex = index;
                   if (mounted) setState(() {});
                 },
-                items: [
+                items: const [
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.add), label: "二级刷新例子1"),
+                      icon: Icon(Icons.add), label: "TwoLevel Example 1"),
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.border_clear), label: "二级刷新例子2")
+                      icon: Icon(Icons.border_clear), label: "TwoLevel Example 2")
                 ],
               )
             : null,
@@ -77,34 +73,34 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                 builder: (_, c) {
                   return SmartRefresher(
                     header: TwoLevelHeader(
-                      textStyle: TextStyle(color: Colors.white),
+                      textStyle: const TextStyle(color: Colors.white),
                       displayAlignment: TwoLevelDisplayAlignment.fromTop,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage("images/secondfloor.jpg"),
                             fit: BoxFit.cover,
-                            // 很重要的属性,这会影响你打开二楼和关闭二楼的动画效果
+                            // Very important attribute, this will affect the animation effect of opening and closing the second floor
                             alignment: Alignment.topCenter),
                       ),
-                      twoLevelWidget: TwoLevelWidget(),
+                      twoLevelWidget: const TwoLevelWidget(),
                     ),
                     controller: _refreshController1,
                     enableTwoLevel: true,
                     enablePullDown: true,
                     enablePullUp: true,
                     onLoading: () async {
-                      await Future.delayed(Duration(milliseconds: 2000));
+                      await Future.delayed(const Duration(milliseconds: 2000));
                       _refreshController1.loadComplete();
                     },
                     onRefresh: () async {
-                      await Future.delayed(Duration(milliseconds: 2000));
+                      await Future.delayed(const Duration(milliseconds: 2000));
                       _refreshController1.refreshCompleted();
                     },
                     onTwoLevel: (bool isOpen) {
                       print("twoLevel opening:$isOpen");
                     },
                     child: CustomScrollView(
-                      physics: ClampingScrollPhysics(),
+                      physics: const ClampingScrollPhysics(),
                       slivers: <Widget>[
                         SliverToBoxAdapter(
                           child: SizedBox(
@@ -117,13 +113,13 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
-                                    child: Text("点击这里返回上一页!"),
+                                    child: const Text("Click here to go back!"),
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
                                       _refreshController1.requestTwoLevel();
                                     },
-                                    child: Text("点击这里打开二楼!"),
+                                    child: const Text("Click here to open second floor!"),
                                   )
                                 ],
                               ),
@@ -139,41 +135,42 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
             Offstage(
               offstage: _tabIndex != 1,
               child: SmartRefresher(
-                header: ClassicHeader(),
+                header: const ClassicHeader(),
                 controller: _refreshController2,
                 enableTwoLevel: true,
                 onRefresh: () async {
-                  await Future.delayed(Duration(milliseconds: 2000));
+                  await Future.delayed(const Duration(milliseconds: 2000));
                   _refreshController2.refreshCompleted();
                 },
                 onTwoLevel: (bool isOpen) {
                   if (isOpen) {
-                    print("Asd");
                     _refreshController2.position?.hold(() {});
                     Navigator.of(context)
                         .push(MaterialPageRoute(
                             builder: (c) => Scaffold(
                                   appBar: AppBar(),
-                                  body: Text("二楼刷新"),
+                                  body: const Center(child: Text("Second Floor Refresh")),
                                 )))
                         .whenComplete(() {
                       _refreshController2.twoLevelComplete(
-                          duration: Duration(microseconds: 1));
+                          duration: const Duration(microseconds: 1));
                     });
                   }
                 },
                 child: CustomScrollView(
-                  physics: ClampingScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   slivers: <Widget>[
                     SliverToBoxAdapter(
                       child: Container(
                         color: Colors.red,
                         height: 680.0,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text("点击这里返回上一页!"),
+                        child: Center(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("Click here to go back!"),
+                          ),
                         ),
                       ),
                     )
@@ -193,12 +190,11 @@ class TwoLevelWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         image: DecorationImage(
             image: AssetImage("images/secondfloor.jpg"),
-            // 很重要的属性,这会影响你打开二楼和关闭二楼的动画效果,关联到TwoLevelHeader,如果背景一致的情况,请设置相同
+            // Very important attribute, this will affect the animation effect of opening and closing the second floor, related to TwoLevelHeader. If the background is consistent, please set it to be the same.
             alignment: Alignment.topCenter,
             fit: BoxFit.cover),
       ),
@@ -210,7 +206,7 @@ class TwoLevelWidget extends StatelessWidget {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.greenAccent),
                   onPressed: () {},
-                  child: Text("登陆"),
+                  child: const Text("Login"),
                 ),
               ],
             ),
@@ -219,7 +215,7 @@ class TwoLevelWidget extends StatelessWidget {
             height: 60.0,
             alignment: Alignment.bottomLeft,
             child: GestureDetector(
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_back_ios,
                 color: Colors.white,
               ),

@@ -8,60 +8,72 @@ import 'package:flutter/material.dart';
 import 'classic_indicator.dart';
 import '../smart_refresher.dart';
 
-enum TwoLevelDisplayAlignment { fromTop, fromCenter, fromBottom }
+/// Alignment for displaying content within the two-level header.
+enum TwoLevelDisplayAlignment {
+  /// Align content from the top.
+  fromTop,
 
-/// this header help you implements twoLevel function easyily,
-/// the behaviour just like TaoBao,XieCheng(携程) App TwoLevel
+  /// Align content from the center.
+  fromCenter,
+
+  /// Align content from the bottom.
+  fromBottom
+}
+
+/// A refresh header that facilitates the implementation of a "two-level" refresh effect.
 ///
-/// just a example
+/// This behavior is similar to the "second floor" effect seen in apps like TaoBao or Ctrip.
 ///
+/// Example:
 /// ```dart
-///
-///TwoLevelHeader(
-///  textStyle: TextStyle(color: Colors.white),
-///  displayAlignment: TwoLevelDisplayAlignment.fromTop,
-///  decoration: BoxDecoration(
-///  image: DecorationImage(
-///  image: AssetImage("images/secondfloor.jpg"),
-///  fit: BoxFit.cover,
-///  // 很重要的属性,这会影响你打开二楼和关闭二楼的动画效果
-///  alignment: Alignment.topCenter),
-///),
-///twoLevelWidget: Container(
+/// TwoLevelHeader(
+///   textStyle: TextStyle(color: Colors.white),
+///   displayAlignment: TwoLevelDisplayAlignment.fromTop,
 ///   decoration: BoxDecoration(
-///   image: DecorationImage(
-///   image: AssetImage("images/secondfloor.jpg"),
-//    很重要的属性,这会影响你打开二楼和关闭二楼的动画效果,关联到TwoLevelHeader,如果背景一致的情况,请设置相同
-///   alignment: Alignment.topCenter,
-///   fit: BoxFit.cover),
+///     image: DecorationImage(
+///       image: AssetImage("images/secondfloor.jpg"),
+///       fit: BoxFit.cover,
+///       // Very important attribute, this will affect the animation effect of opening and closing the second floor
+///       alignment: Alignment.topCenter),
 ///   ),
-///   Container(
-///     height: 60.0,
-///     child: GestureDetector(
-///     child: Icon(
-///       Icons.arrow_back_ios,
-///     color: Colors.white,
-///    ),
-///   onTap: () {
-///     SmartRefresher.of(context).controller.twoLevelComplete();
-///   },
+///   twoLevelWidget: Container(
+///     decoration: BoxDecoration(
+///       image: DecorationImage(
+///         image: AssetImage("images/secondfloor.jpg"),
+///         // Very important attribute, this will affect the animation effect of opening and closing the second floor, related to TwoLevelHeader. If the background is consistent, please set it to be the same.
+///         alignment: Alignment.topCenter,
+///         fit: BoxFit.cover),
+///     ),
+///     child: Container(
+///       height: 60.0,
+///       child: GestureDetector(
+///         child: Icon(
+///           Icons.arrow_back_ios,
+///           color: Colors.white,
+///         ),
+///         onTap: () {
+///           SmartRefresher.of(context).controller.twoLevelComplete();
+///         },
+///       ),
+///       alignment: Alignment.bottomLeft,
+///     ),
 ///   ),
-///   alignment: Alignment.bottomLeft,
-///),
-///),
-///);
-///
+/// );
 /// ```
 class TwoLevelHeader extends StatelessWidget {
-  /// this  attr mostly put image or color
+  /// The decoration for the header, typically used for background color or image.
   final BoxDecoration? decoration;
 
-  /// the content in TwoLevel,display in (twoLevelOpening,closing,TwoLeveling state)
+  /// The widget to display when the header is in a two-level state (opening, closing, or active).
   final Widget? twoLevelWidget;
 
-  /// fromTop use with RefreshStyle.Behind,from bottom use with Follow Style
+  /// The alignment of the header content.
+  ///
+  /// Use [TwoLevelDisplayAlignment.fromTop] with [RefreshStyle.Behind] and
+  /// [TwoLevelDisplayAlignment.fromBottom] with [RefreshStyle.Follow].
   final TwoLevelDisplayAlignment displayAlignment;
-  // the following is the same with ClassicHeader
+
+  /// Custom text for different refresh states.
   final String? releaseText,
       idleText,
       refreshingText,
@@ -69,6 +81,7 @@ class TwoLevelHeader extends StatelessWidget {
       failedText,
       canTwoLevelText;
 
+  /// Custom icons for different refresh states.
   final Widget? releaseIcon,
       idleIcon,
       refreshingIcon,
@@ -76,15 +89,22 @@ class TwoLevelHeader extends StatelessWidget {
       failedIcon,
       canTwoLevelIcon;
 
-  /// icon and text middle margin
+  /// The margin between the icon and the text.
   final double spacing;
+
+  /// The position of the icon relative to the text.
   final IconPosition iconPos;
 
+  /// The style of the text in the indicator.
   final TextStyle textStyle;
 
+  /// The height of the header.
   final double height;
+
+  /// The duration the "complete" state is displayed.
   final Duration completeDuration;
 
+  /// Creates a [TwoLevelHeader].
   const TwoLevelHeader(
       {super.key,
       this.height = 80.0,
@@ -110,7 +130,6 @@ class TwoLevelHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return ClassicHeader(
       refreshStyle: displayAlignment == TwoLevelDisplayAlignment.fromBottom
           ? RefreshStyle.Follow
@@ -158,7 +177,8 @@ class TwoLevelHeader extends StatelessWidget {
                 ? twoLevelWidget
                 : Container(
                     decoration: !isTwoLevel
-                        ? (decoration ?? const BoxDecoration(color: Colors.redAccent))
+                        ? (decoration ??
+                            const BoxDecoration(color: Colors.redAccent))
                         : null,
                     alignment: Alignment.bottomCenter,
                     padding: const EdgeInsets.only(bottom: 15),

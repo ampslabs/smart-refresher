@@ -5,76 +5,79 @@
 */
 // ignore_for_file: constant_identifier_names
 
-/// header state
+/// The current status of the refresh header.
 enum RefreshStatus {
   /// Initial state, when not being overscrolled into, or after the overscroll
   /// is canceled or after done and the sliver retracted away.
   idle,
 
-  /// Dragged far enough that the onRefresh callback will callback
+  /// Dragged far enough that the onRefresh callback will be triggered.
   canRefresh,
 
-  /// the indicator is refreshing,waiting for the finish callback
+  /// The indicator is refreshing, waiting for the completion callback.
   refreshing,
 
-  /// the indicator refresh completed
+  /// The indicator refresh has successfully completed.
   completed,
 
-  /// the indicator refresh failed
+  /// The indicator refresh has failed.
   failed,
 
-  ///  Dragged far enough that the onTwoLevel callback will callback
+  /// Dragged far enough that the onTwoLevel callback will be triggered.
   canTwoLevel,
 
-  ///  indicator is opening twoLevel
+  /// The indicator is in the process of opening the two-level mode.
   twoLevelOpening,
 
-  /// indicator is in twoLevel
+  /// The indicator is currently in two-level mode.
   twoLeveling,
 
-  ///  indicator is closing twoLevel
+  /// The indicator is in the process of closing the two-level mode.
   twoLevelClosing
 }
 
-///  footer state
+/// The current status of the loading footer.
 enum LoadStatus {
-  /// Initial state, which can be triggered loading more by gesture pull up
+  /// Initial state, which can trigger loading more by a pull-up gesture.
   idle,
 
+  /// Dragged far enough that the onLoading callback will be triggered.
   canLoading,
 
-  /// indicator is loading more data
+  /// The indicator is currently loading more data.
   loading,
 
-  /// indicator is no more data to loading,this state doesn't allow to load more whatever
+  /// The indicator has no more data to load; this state prevents further loading.
   noMore,
 
-  /// indicator load failed,Initial state, which can be click retry,If you need to pull up trigger load more,you should set enableLoadingWhenFailed = true in RefreshConfiguration
+  /// The indicator load has failed. It can be clicked to retry.
+  /// If you want pull-up to trigger retry, set enableLoadingWhenFailed to true.
   failed
 }
 
-/// header indicator display style
+/// The display style of the refresh header indicator.
 enum RefreshStyle {
-  // indicator box always follow content
+  /// The indicator box always follows the content.
   Follow,
-  // indicator box follow content,When the box reaches the top and is fully visible, it does not follow content.
+
+  /// The indicator box follows content until it reaches the top and is fully visible, then it remains stationary.
   UnFollow,
 
-  /// Let the indicator size zoom in with the boundary distance,look like showing behind the content
+  /// The indicator size zooms with the boundary distance, appearing to be behind the content.
   Behind,
 
-  /// this style just like flutter RefreshIndicator,showing above the content
+  /// The indicator is shown above the content, similar to Flutter's native RefreshIndicator.
   Front
 }
 
-/// footer indicator display style
+/// The display style of the loading footer indicator.
 enum LoadStyle {
-  /// indicator always own layoutExtent whatever the state
+  /// The indicator always occupies its layout extent, regardless of its state.
   ShowAlways,
 
-  /// indicator always own 0.0 layoutExtent whatever the state
+  /// The indicator always has a layout extent of 0.0, regardless of its state.
   HideAlways,
 
-  /// indicator follow the content, owning layoutExtent when loading
+  /// The indicator follows the content and only occupies its layout extent while loading.
   ShowWhenLoading,
 }

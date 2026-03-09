@@ -6,10 +6,11 @@
 
 import 'package:flutter/material.dart';
 
-// 在不自定义的默认情况下,当你拖到顶端不能再拖的时候会出现光晕,假如你只想在撞击顶部时看到光晕的情况
-// 以下例子就是可以解决这种问题
+// By default, without customization, a glow appears when you drag to the top and cannot drag any further.
+// If you only want to see the glow when hitting the top:
+// The following example can solve this problem.
 
-// Android平台 自定义刷新光晕效果
+// Android platform custom refresh glow effect
 class RefreshScrollBehavior extends ScrollBehavior {
   @override
   Widget buildOverscrollIndicator(

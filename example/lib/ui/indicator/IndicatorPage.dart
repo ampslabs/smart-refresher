@@ -1,7 +1,7 @@
 /*
  * Author: Jpeng
  * Email: peng8350@gmail.com
- * Time: 2019/5/5 下午6:07
+ * Time: 2019/5/5 6:07 PM
  */
 
 import 'package:flutter/material.dart';
@@ -10,15 +10,6 @@ import 'base/IndicatorActivity.dart';
 
 class IndicatorPage extends StatefulWidget {
   const IndicatorPage({super.key, this.title = ""});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -32,7 +23,7 @@ class _IndicatorPageState extends State<IndicatorPage> {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, childAspectRatio: 0.5),
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) => items[index],
@@ -40,85 +31,78 @@ class _IndicatorPageState extends State<IndicatorPage> {
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     items = [
       IndicatorItem(
-          title: "经典指示器(跟随)",
+          title: "Classic (Follow)",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => IndicatorActivity(
-                      title: "经典指示器(跟随)",
+                builder: (BuildContext context) => const IndicatorActivity(
+                      title: "Classic (Follow)",
                       header: ClassicHeader(refreshStyle: RefreshStyle.Follow),
                     )));
           },
           imgRes: "images/classical_follow.gif"),
       IndicatorItem(
-          title: "经典指示器(不跟随)",
+          title: "Classic (Unfollow)",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => IndicatorActivity(
-                      title: "经典指示器(不跟随)",
+                builder: (BuildContext context) => const IndicatorActivity(
+                      title: "Classic (Unfollow)",
                       header:
                           ClassicHeader(refreshStyle: RefreshStyle.UnFollow),
                     )));
           },
           imgRes: "images/classical_unfollow.gif"),
       IndicatorItem(
-          title: "QQ头部指示器",
+          title: "WaterDrop Header",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => IndicatorActivity(
+                builder: (BuildContext context) => const IndicatorActivity(
                     reverse: false,
-                    title: "QQ头部指示器",
+                    title: "WaterDrop Header",
                     header: WaterDropHeader())));
           },
           imgRes: "images/warterdrop.gif"),
       IndicatorItem(
-          title: "经典Material指示器",
+          title: "Material Classic",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => IndicatorActivity(
-                    title: "官方Material指示器",
+                builder: (BuildContext context) => const IndicatorActivity(
+                    title: "Material Classic",
                     header: MaterialClassicHeader(
                       distance: 40,
                     ))));
           },
           imgRes: "images/material_classic.gif"),
       IndicatorItem(
-          title: "bezier+circle",
+          title: "Bezier + Circle",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => IndicatorActivity(
+                builder: (BuildContext context) => const IndicatorActivity(
                     reverse: false,
-                    title: "bezier+circle",
+                    title: "Bezier + Circle",
                     header: BezierCircleHeader(
                       dismissType: BezierDismissType.scaleToCenter,
                     ))));
           },
           imgRes: "images/bezier.gif"),
       IndicatorItem(
-          title: "水滴坠落Material指示器",
+          title: "Material WaterDrop",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => IndicatorActivity(
+                builder: (BuildContext context) => const IndicatorActivity(
                     reverse: false,
-                    title: "水滴坠落Material指示器",
+                    title: "Material WaterDrop",
                     header: WaterDropMaterialHeader(color: Colors.red))));
           },
           imgRes: "images/material_waterdrop.gif"),
       IndicatorItem(
-          title: "底部指示器(经常显示)",
+          title: "Footer (Always Show)",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => IndicatorActivity(
-                      title: "底部指示器(经常显示)",
+                builder: (BuildContext context) => const IndicatorActivity(
+                      title: "Footer (Always Show)",
                       footer: ClassicFooter(
                         height: 80.0,
                         loadStyle: LoadStyle.ShowAlways,
@@ -127,7 +111,7 @@ class _IndicatorPageState extends State<IndicatorPage> {
           },
           imgRes: "images/loadstyle1.gif"),
       IndicatorItem(
-          title: "底部指示器(经常隐藏)",
+          title: "Footer (Always Hide)",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (BuildContext context) =>
@@ -136,9 +120,9 @@ class _IndicatorPageState extends State<IndicatorPage> {
                       footerTriggerDistance: -30.0,
                       enableLoadingWhenFailed: true,
                       maxUnderScrollExtent: 100.0,
-                      child: IndicatorActivity(
+                      child: const IndicatorActivity(
                           reverse: false,
-                          title: "底部指示器(经常隐藏)",
+                          title: "Footer (Always Hide)",
                           footer: ClassicFooter(
                             loadStyle: LoadStyle.HideAlways,
                           )),
@@ -146,7 +130,7 @@ class _IndicatorPageState extends State<IndicatorPage> {
           },
           imgRes: "images/loadstyle2.gif"),
       IndicatorItem(
-          title: "底部指示器(只有加载中才显示)",
+          title: "Footer (Show When Loading)",
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (BuildContext context) =>
@@ -159,9 +143,9 @@ class _IndicatorPageState extends State<IndicatorPage> {
                         enableLoadingWhenFailed: true,
                         maxUnderScrollExtent: 100.0,
                         footerTriggerDistance: -45.0,
-                        child: IndicatorActivity(
+                        child: const IndicatorActivity(
                             reverse: false,
-                            title: "底部指示器(只有加载中才显示)",
+                            title: "Footer (Show When Loading)",
                             footer: ClassicFooter(
                               loadStyle: LoadStyle.ShowWhenLoading,
                             )),
@@ -177,7 +161,6 @@ class _IndicatorPageState extends State<IndicatorPage> {
 class IndicatorItem extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _IndicatorItemState();
   }
 
@@ -192,7 +175,6 @@ class IndicatorItem extends StatefulWidget {
 class _IndicatorItemState extends State<IndicatorItem> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return InkWell(
       onTap: widget.onClick,
       child: Card(

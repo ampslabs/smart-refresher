@@ -1,74 +1,44 @@
 /*
  * Author: Jpeng
  * Email: peng8350@gmail.com
- * Time:  2019-09-06 23:18
+ * Time:  2019-09-06 11:18 PM
  */
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_refresher/smart_refresher.dart' show ClassicHeader, ClassicFooter, TwoLevelHeader, RefreshLocalizations;
-import 'package:smart_refresher/src/indicator/classic_indicator.dart' show ClassicHeader, ClassicFooter;
-import 'package:smart_refresher/src/indicator/twolevel_indicator.dart' show TwoLevelHeader;
-import 'package:smart_refresher/src/internals/refresh_localizations.dart' show RefreshLocalizations;
 
-/// Implementation of localized strings for the [ClassicHeader],[ClassicFooter],[TwoLevelHeader]
+/// Implementation of localized strings for ClassicHeader, ClassicFooter, and TwoLevelHeader.
 ///
-///
-/// Supported languages:now only add Chinese and English
-/// If you need to add other languages,please give me a pr
+/// Supported languages include Chinese, English, French, Russian, Ukrainian, Italian, Japanese, German, Spanish, Dutch, Swedish, Portuguese, and Korean.
 ///
 /// ## Sample code
 ///
 /// To include the localizations provided by this class in a [MaterialApp],
-/// add [RefreshLocalizations.delegates] to
-/// [MaterialApp.localizationsDelegates], and specify the locales your
-/// app supports with [MaterialApp.supportedLocales]:
+/// add [RefreshLocalizations.delegate] to [MaterialApp.localizationsDelegates],
+/// and specify the locales your app supports with [MaterialApp.supportedLocales]:
 ///
 /// ```dart
-/// new MaterialApp(
-///   localizationsDelegates: RefreshLocalizations.delegates,
+/// MaterialApp(
+///   localizationsDelegates: [
+///     RefreshLocalizations.delegate,
+///     // ... other delegates
+///   ],
 ///   supportedLocales: [
-///     const Locale('en'), // American English
-///     const Locale('zh'), // Israeli Hebrew
+///     const Locale('en'),
+///     const Locale('zh'),
 ///     // ...
 ///   ],
 ///   // ...
 /// )
-///
-/// If you don't have the language you need here and you want to add it, you can give me a pr.
-///
-/// Steps:
-/// 1. custom a class XXRefreshString implements  RefreshString ,and then translate them
-/// 2. add it into values
-/// ```dart
-///   `Map<String, RefreshString>` values = {
-///    'en': EnRefreshString(),
-///    'zh': ChRefreshString(),
-///    'fr': FrRefreshString(),
-///    'ru': RuRefreshString(),
-///    'uk': UkRefreshString(),
-///    'xx':XXRefreshString(), // xx indicate your country code
-///  };
-/// 3. update delegate a method "isSupported"
-/// ```dart
-///   @override
-//  bool isSupported(Locale locale) {
-//    return ['en', 'zh', 'fr', 'ru', 'uk','xx'].contains(locale.languageCode);
-//  }
-/// ```
-///
-/// see #175 to find more details
-///
-///
-/// ```
-///
-///
 /// ```
 class RefreshLocalizations {
+  /// The locale for which the strings are provided.
   final Locale locale;
 
+  /// Creates a [RefreshLocalizations] for the given [locale].
   RefreshLocalizations(this.locale);
 
+  /// A map of language codes to their corresponding [RefreshString] implementations.
   Map<String, RefreshString> values = {
     'en': EnRefreshString(),
     'zh': ChRefreshString(),
@@ -85,6 +55,9 @@ class RefreshLocalizations {
     'ko': KrRefreshString(),
   };
 
+  /// Returns the localized strings for the current [locale].
+  ///
+  /// Defaults to English if the locale is not supported.
   RefreshString? get currentLocalization {
     if (values.containsKey(locale.languageCode)) {
       return values[locale.languageCode];
@@ -92,16 +65,20 @@ class RefreshLocalizations {
     return values['en'];
   }
 
+  /// The delegate for [RefreshLocalizations].
   static const RefreshLocalizationsDelegate delegate =
       RefreshLocalizationsDelegate();
 
+  /// Returns the [RefreshLocalizations] instance from the given [context].
   static RefreshLocalizations? of(BuildContext context) {
     return Localizations.of(context, RefreshLocalizations);
   }
 }
 
+/// A delegate for [RefreshLocalizations] that can be used in [MaterialApp.localizationsDelegates].
 class RefreshLocalizationsDelegate
     extends LocalizationsDelegate<RefreshLocalizations> {
+  /// Creates a [RefreshLocalizationsDelegate].
   const RefreshLocalizationsDelegate();
 
   @override
@@ -135,43 +112,43 @@ class RefreshLocalizationsDelegate
   }
 }
 
-/// interface implements different language
+/// An interface for providing localized strings for refresh indicators.
 abstract class RefreshString {
-  /// pull down refresh idle text
+  /// Text shown when the header is in the idle refresh state.
   String? idleRefreshText;
 
-  ///  tips user to release gesture to refresh at time
+  /// Text shown when the user has dragged far enough to trigger a refresh.
   String? canRefreshText;
 
-  /// refreshing state text
+  /// Text shown while the header is refreshing.
   String? refreshingText;
 
-  /// refresh completed text
+  /// Text shown when the refresh is successfully completed.
   String? refreshCompleteText;
 
-  /// refresh failed text
+  /// Text shown when the refresh process fails.
   String? refreshFailedText;
 
-  /// enable open twoLevel and tips user to release gesture to enter two level
+  /// Text shown when the user has dragged far enough to trigger the two-level mode.
   String? canTwoLevelText;
 
-  /// pull down load idle text
+  /// Text shown when the footer is in the idle loading state.
   String? idleLoadingText;
 
-  /// tips user to release gesture to load more at time
+  /// Text shown when the user has dragged far enough to trigger loading more data.
   String? canLoadingText;
 
-  /// loading state text
+  /// Text shown while the footer is loading.
   String? loadingText;
 
-  /// load failed text
+  /// Text shown when the loading process fails.
   String? loadFailedText;
 
-  /// no more data text
+  /// Text shown when there is no more data to load.
   String? noMoreText;
 }
 
-/// Chinese
+/// Chinese implementation of [RefreshString].
 class ChRefreshString implements RefreshString {
   @override
   String? canLoadingText = '松手开始加载数据';
@@ -207,7 +184,7 @@ class ChRefreshString implements RefreshString {
   String? refreshingText = '刷新中…';
 }
 
-/// English
+/// English implementation of [RefreshString].
 class EnRefreshString implements RefreshString {
   @override
   String? canLoadingText = 'Release to load more';
@@ -243,7 +220,7 @@ class EnRefreshString implements RefreshString {
   String? refreshingText = 'Refreshing…';
 }
 
-/// French
+/// French implementation of [RefreshString].
 class FrRefreshString implements RefreshString {
   @override
   String? canLoadingText = 'Relâchez pour charger davantage';
@@ -279,7 +256,7 @@ class FrRefreshString implements RefreshString {
   String? refreshingText = 'Rafraîchissement…';
 }
 
-/// Russian
+/// Russian implementation of [RefreshString].
 class RuRefreshString implements RefreshString {
   @override
   String? canLoadingText = 'Отпустите, чтобы загрузить больше';
@@ -315,7 +292,7 @@ class RuRefreshString implements RefreshString {
   String? refreshingText = 'Обновление…';
 }
 
-// Ukrainian
+/// Ukrainian implementation of [RefreshString].
 class UkRefreshString implements RefreshString {
   @override
   String? canLoadingText = 'Відпустіть, щоб завантажити більше';
@@ -351,7 +328,7 @@ class UkRefreshString implements RefreshString {
   String? refreshingText = 'Оновлення…';
 }
 
-/// Italian
+/// Italian implementation of [RefreshString].
 class ItRefreshString implements RefreshString {
   @override
   String? canLoadingText = 'Rilascia per caricare altro';
@@ -387,7 +364,7 @@ class ItRefreshString implements RefreshString {
   String? refreshingText = 'Aggiornamento…';
 }
 
-/// Japanese
+/// Japanese implementation of [RefreshString].
 class JpRefreshString implements RefreshString {
   @override
   String? canLoadingText = '指を離して更に読み込む';
@@ -423,7 +400,7 @@ class JpRefreshString implements RefreshString {
   String? refreshingText = '更新中…';
 }
 
-/// German
+/// German implementation of [RefreshString].
 class DeRefreshString implements RefreshString {
   @override
   String? canLoadingText = 'Loslassen, um mehr zu laden';
@@ -459,7 +436,7 @@ class DeRefreshString implements RefreshString {
   String? refreshingText = 'Aktualisiere…';
 }
 
-/// Spanish
+/// Spanish implementation of [RefreshString].
 class EsRefreshString implements RefreshString {
   @override
   String? canLoadingText = 'Suelte para cargar más';
@@ -468,7 +445,7 @@ class EsRefreshString implements RefreshString {
   String? canRefreshText = 'Suelte para actualizar';
 
   @override
-  String? canTwoLevelText = 'Suelte para entrar al segundo nivel';
+  String? canTwoLevelText = 'Suelte para entrar al secondfloor';
 
   @override
   String? idleLoadingText = 'Tire hacia arriba para cargar más';
@@ -495,7 +472,7 @@ class EsRefreshString implements RefreshString {
   String? refreshingText = 'Actualizando…';
 }
 
-/// Dutch
+/// Dutch implementation of [RefreshString].
 class NlRefreshString implements RefreshString {
   @override
   String? canLoadingText = 'Laat los om meer te laden';
@@ -504,7 +481,7 @@ class NlRefreshString implements RefreshString {
   String? canRefreshText = 'Laat los om te vernieuwen';
 
   @override
-  String? canTwoLevelText = 'Laat los om naar tweede verdieping te gaan';
+  String? canTwoLevelText = 'Laat los om naar secondfloor te gaan';
 
   @override
   String? idleLoadingText = 'Trek omhoog om meer te laden';
@@ -531,7 +508,7 @@ class NlRefreshString implements RefreshString {
   String? refreshingText = 'Vernieuwen…';
 }
 
-/// Swedish
+/// Swedish implementation of [RefreshString].
 class SvRefreshString implements RefreshString {
   @override
   String? canLoadingText = 'Släpp för att ladda mer';
@@ -540,7 +517,7 @@ class SvRefreshString implements RefreshString {
   String? canRefreshText = 'Släpp för att uppdatera';
 
   @override
-  String? canTwoLevelText = 'Släpp för att gå till andra våningen';
+  String? canTwoLevelText = 'Släpp för att gå till secondfloor';
 
   @override
   String? idleLoadingText = 'Dra upp för att ladda mer';
@@ -567,7 +544,7 @@ class SvRefreshString implements RefreshString {
   String? refreshingText = 'Uppdaterar…';
 }
 
-// Portuguese - Brazil
+/// Portuguese implementation of [RefreshString].
 class PtRefreshString implements RefreshString {
   @override
   String? canLoadingText = 'Solte para carregar mais';
@@ -576,7 +553,7 @@ class PtRefreshString implements RefreshString {
   String? canRefreshText = 'Solte para atualizar';
 
   @override
-  String? canTwoLevelText = 'Solte para entrar no segundo andar';
+  String? canTwoLevelText = 'Solte para entrar no secondfloor';
 
   @override
   String? idleLoadingText = 'Puxe para cima para carregar mais';
@@ -603,7 +580,7 @@ class PtRefreshString implements RefreshString {
   String? refreshingText = 'Atualizando…';
 }
 
-/// Korean
+/// Korean implementation of [RefreshString].
 class KrRefreshString implements RefreshString {
   @override
   String? canLoadingText = '당겨서 불러오기';

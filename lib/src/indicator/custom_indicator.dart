@@ -1,67 +1,71 @@
 /*
  * Author: Jpeng
  * Email: peng8350@gmail.com
- * Time: 2019/5/4 下午9:49
+ * Time: 2019/5/4 9:49 PM
  */
 
 import 'package:flutter/widgets.dart';
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
 
-/// custom header builder,you can use second paramter to know what header state is
+/// Custom header builder. The second parameter provides the current header state.
 typedef HeaderBuilder = Widget Function(BuildContext context, RefreshStatus? mode);
 
-/// custom footer builder,you can use second paramter to know what footerr state is
+/// Custom footer builder. The second parameter provides the current footer state.
 typedef FooterBuilder = Widget Function(BuildContext context, LoadStatus? mode);
 
-/// a custom Indicator for header
+/// A custom refresh header indicator.
 ///
-/// here is the very simple usage
-///
+/// Simple usage:
 /// ```dart
 /// CustomHeader(
-///      builder: (context,mode){
-///        Widget body;
-///        if(mode==RefreshStatus.idle){
-///          body = Text("pull down refresh");
-///        }
-///       else if(mode==RefreshStatus.refreshing){
-///          body = CupertinoActivityIndicator();
-///        }
-///        else if(mode==RefreshStatus.canRefresh){
-///          body = Text("release to refresh");
-///        }
-///        else if(mode==RefreshStatus.completed){
-///          body = Text("refreshCompleted!");
-///       }
-///        return Container(
-///          height: 60.0,
-///          child: Center(
-///            child: body,
-///          ),
-///       );
-///      },
-///    )
+///   builder: (context, mode) {
+///     Widget body;
+///     if (mode == RefreshStatus.idle) {
+///       body = Text("pull down refresh");
+///     } else if (mode == RefreshStatus.refreshing) {
+///       body = CupertinoActivityIndicator();
+///     } else if (mode == RefreshStatus.canRefresh) {
+///       body = Text("release to refresh");
+///     } else if (mode == RefreshStatus.completed) {
+///       body = Text("refreshCompleted!");
+///     }
+///     return Container(
+///       height: 60.0,
+///       child: Center(
+///         child: body,
+///       ),
+///     );
+///   },
+/// )
 /// ```
-/// If you need to listen overScroll event do some animate,you should use [OnOffsetChange] callback in [SmartRefresher]
-/// finally,If your indicator contain more complex animation and need to update frequently ,I suggest you extends [RefreshIndicator] to implements
 ///
-/// See also
+/// Use SmartRefresher.onOffsetChange to listen to overscroll events for animations.
+/// For complex or frequently updating animations, consider extending [RefreshIndicator] directly.
 ///
-/// [CustomFooter], a custom Indicator for footer
+/// See also:
+///
+/// [CustomFooter], a custom loading footer indicator.
 class CustomHeader extends RefreshIndicator {
+  /// The builder function for the header content.
   final HeaderBuilder builder;
 
+  /// Callback when the header is ready to start refreshing.
   final VoidFutureCallBack? readyToRefresh;
 
+  /// Callback when the refresh process ends.
   final VoidFutureCallBack? endRefresh;
 
+  /// Callback when the scroll offset changes.
   final OffsetCallBack? onOffsetChange;
 
+  /// Callback when the refresh status changes.
   final ModeChangeCallBack<RefreshStatus>? onModeChange;
 
+  /// Callback when the header values are reset.
   final VoidCallback? onResetValue;
 
+  /// Creates a [CustomHeader].
   const CustomHeader({
     super.key,
     required this.builder,
@@ -77,7 +81,6 @@ class CustomHeader extends RefreshIndicator {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _CustomHeaderState();
   }
 }
@@ -85,7 +88,6 @@ class CustomHeader extends RefreshIndicator {
 class _CustomHeaderState extends RefreshIndicatorState<CustomHeader> {
   @override
   void onOffsetChange(double offset) {
-    // TODO: implement onOffsetChange
     if (widget.onOffsetChange != null) {
       widget.onOffsetChange!(offset);
     }
@@ -94,7 +96,6 @@ class _CustomHeaderState extends RefreshIndicatorState<CustomHeader> {
 
   @override
   void onModeChange(RefreshStatus? mode) {
-    // TODO: implement onModeChange
     if (widget.onModeChange != null) {
       widget.onModeChange!(mode);
     }
@@ -103,7 +104,6 @@ class _CustomHeaderState extends RefreshIndicatorState<CustomHeader> {
 
   @override
   Future<void> readyToRefresh() {
-    // TODO: implement endRefresh
     if (widget.readyToRefresh != null) {
       return widget.readyToRefresh!();
     }
@@ -112,7 +112,6 @@ class _CustomHeaderState extends RefreshIndicatorState<CustomHeader> {
 
   @override
   Future<void> endRefresh() {
-    // TODO: implement endRefresh
     if (widget.endRefresh != null) {
       return widget.endRefresh!();
     }
@@ -121,26 +120,32 @@ class _CustomHeaderState extends RefreshIndicatorState<CustomHeader> {
 
   @override
   Widget buildContent(BuildContext context, RefreshStatus? mode) {
-    // TODO: implement buildContent
     return widget.builder(context, mode);
   }
 }
 
-/// a custom Indicator for footer,the usage I have put in [CustomHeader],same with that
-/// See also
+/// A custom loading footer indicator. Usage is similar to [CustomHeader].
 ///
-/// [CustomHeader], a custom Indicator for header
+/// See also:
+///
+/// [CustomHeader], a custom refresh header indicator.
 class CustomFooter extends LoadIndicator {
+  /// The builder function for the footer content.
   final FooterBuilder builder;
 
+  /// Callback when the scroll offset changes.
   final OffsetCallBack? onOffsetChange;
 
-  final ModeChangeCallBack? onModeChange;
+  /// Callback when the loading status changes.
+  final ModeChangeCallBack<LoadStatus>? onModeChange;
 
+  /// Callback when the footer is ready to start loading.
   final VoidFutureCallBack? readyLoading;
 
+  /// Callback when the loading process ends.
   final VoidFutureCallBack? endLoading;
 
+  /// Creates a [CustomFooter].
   const CustomFooter({
     super.key,
     super.height,
@@ -150,13 +155,11 @@ class CustomFooter extends LoadIndicator {
     this.endLoading,
     super.loadStyle,
     required this.builder,
-    Function? onClick,
-  }) : super(
-            onClick: onClick as void Function()?);
+    super.onClick,
+  });
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _CustomFooterState();
   }
 }
@@ -164,7 +167,6 @@ class CustomFooter extends LoadIndicator {
 class _CustomFooterState extends LoadIndicatorState<CustomFooter> {
   @override
   void onOffsetChange(double offset) {
-    // TODO: implement onOffsetChange
     if (widget.onOffsetChange != null) {
       widget.onOffsetChange!(offset);
     }
@@ -173,7 +175,6 @@ class _CustomFooterState extends LoadIndicatorState<CustomFooter> {
 
   @override
   void onModeChange(LoadStatus? mode) {
-    // TODO: implement onModeChange
     if (widget.onModeChange != null) {
       widget.onModeChange!(mode);
     }
@@ -181,8 +182,7 @@ class _CustomFooterState extends LoadIndicatorState<CustomFooter> {
   }
 
   @override
-  Future readyToLoad() {
-    // TODO: implement readyToLoad
+  Future<void> readyToLoad() {
     if (widget.readyLoading != null) {
       return widget.readyLoading!();
     }
@@ -190,8 +190,7 @@ class _CustomFooterState extends LoadIndicatorState<CustomFooter> {
   }
 
   @override
-  Future endLoading() {
-    // TODO: implement endLoading
+  Future<void> endLoading() {
     if (widget.endLoading != null) {
       return widget.endLoading!();
     }
@@ -200,7 +199,6 @@ class _CustomFooterState extends LoadIndicatorState<CustomFooter> {
 
   @override
   Widget buildContent(BuildContext context, LoadStatus? mode) {
-    // TODO: implement buildContent
     return widget.builder(context, mode);
   }
 }

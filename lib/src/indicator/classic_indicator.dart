@@ -1,7 +1,7 @@
 /*
  *   Author: Jpeng
  *   Email: peng8350@gmail.com
- *   createTime:2018-05-14 17:39
+ *   createTime:2018-05-14 5:39 PM
  */
 
 import 'package:flutter/material.dart'
@@ -13,36 +13,52 @@ import '../internals/refresh_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
-/// direction that icon should place to the text
-enum IconPosition { left, right, top, bottom }
+/// The direction that the icon should be placed relative to the text.
+enum IconPosition {
+  /// Place the icon to the left of the text.
+  left,
 
-/// wrap child in outside,mostly use in add background color and padding
+  /// Place the icon to the right of the text.
+  right,
+
+  /// Place the icon above the text.
+  top,
+
+  /// Place the icon below the text.
+  bottom
+}
+
+/// A builder that wraps the indicator's child, typically used for adding background colors or padding.
 typedef OuterBuilder = Widget Function(Widget child);
 
-///the most common indicator,combine with a text and a icon
+/// The most common refresh header, combining text and an icon.
 ///
 /// See also:
 ///
-/// [ClassicFooter]
+/// [ClassicFooter], the footer version of this indicator.
 class ClassicHeader extends RefreshIndicator {
-  /// a builder for re wrap child,If you need to change the boxExtent or background,padding etc.you need outerBuilder to reWrap child
-  /// example:
+  /// A builder for re-wrapping the child. Use this to change background, padding, etc.
+  ///
+  /// Example:
   /// ```dart
-  /// outerBuilder:(child){
+  /// outerBuilder: (child) {
   ///    return Container(
-  ///       color:Colors.red,
-  ///       child:child
+  ///       color: Colors.red,
+  ///       child: child,
   ///    );
   /// }
-  /// ````
-  /// In this example,it will help to add backgroundColor in indicator
+  /// ```
   final OuterBuilder? outerBuilder;
+
+  /// Custom text for different refresh states.
   final String? releaseText,
       idleText,
       refreshingText,
       completeText,
       failedText,
       canTwoLevelText;
+
+  /// Custom icons for different refresh states.
   final Widget? releaseIcon,
       idleIcon,
       refreshingIcon,
@@ -51,12 +67,16 @@ class ClassicHeader extends RefreshIndicator {
       canTwoLevelIcon,
       twoLevelView;
 
-  /// icon and text middle margin
+  /// The margin between the icon and the text.
   final double spacing;
+
+  /// The position of the icon relative to the text.
   final IconPosition iconPos;
 
+  /// The style of the text in the indicator.
   final TextStyle textStyle;
 
+  /// Creates a [ClassicHeader].
   const ClassicHeader({
     super.key,
     RefreshStyle super.refreshStyle,
@@ -83,7 +103,6 @@ class ClassicHeader extends RefreshIndicator {
 
   @override
   State createState() {
-    // TODO: implement createState
     return _ClassicHeaderState();
   }
 }
@@ -141,13 +160,11 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
 
   @override
   bool needReverseAll() {
-    // TODO: implement needReverseAll
     return false;
   }
 
   @override
   Widget buildContent(BuildContext context, RefreshStatus? mode) {
-    // TODO: implement buildContent
     final Widget textWidget = _buildText(mode);
     final Widget iconWidget = _buildIcon(mode);
     final List<Widget> children = <Widget>[iconWidget, textWidget];
@@ -176,39 +193,44 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
   }
 }
 
-///the most common indicator,combine with a text and a icon
+/// The most common loading footer, combining text and an icon.
 ///
-// See also:
-//
-// [ClassicHeader]
+/// See also:
+///
+/// [ClassicHeader], the header version of this indicator.
 class ClassicFooter extends LoadIndicator {
+  /// Custom text for different loading states.
   final String? idleText, loadingText, noDataText, failedText, canLoadingText;
 
-  /// a builder for re wrap child,If you need to change the boxExtent or background,padding etc.you need outerBuilder to reWrap child
-  /// example:
+  /// A builder for re-wrapping the child. Use this to change background, padding, etc.
+  ///
+  /// Example:
   /// ```dart
-  /// outerBuilder:(child){
+  /// outerBuilder: (child) {
   ///    return Container(
-  ///       color:Colors.red,
-  ///       child:child
+  ///       color: Colors.red,
+  ///       child: child,
   ///    );
   /// }
-  /// ````
-  /// In this example,it will help to add backgroundColor in indicator
+  /// ```
   final OuterBuilder? outerBuilder;
 
+  /// Custom icons for different loading states.
   final Widget? idleIcon, loadingIcon, noMoreIcon, failedIcon, canLoadingIcon;
 
-  /// icon and text middle margin
+  /// The margin between the icon and the text.
   final double spacing;
 
+  /// The position of the icon relative to the text.
   final IconPosition iconPos;
 
+  /// The style of the text in the indicator.
   final TextStyle textStyle;
 
-  /// notice that ,this attrs only works for LoadStyle.ShowWhenLoading
+  /// The duration the "complete" state is displayed. Only works for [LoadStyle.ShowWhenLoading].
   final Duration completeDuration;
 
+  /// Creates a [ClassicFooter].
   const ClassicFooter({
     super.key,
     super.onClick,
@@ -233,8 +255,6 @@ class ClassicFooter extends LoadIndicator {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-
     return _ClassicFooterState();
   }
 }
@@ -278,14 +298,12 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
   }
 
   @override
-  Future endLoading() {
-    // TODO: implement endLoading
+  Future<void> endLoading() {
     return Future.delayed(widget.completeDuration);
   }
 
   @override
   Widget buildContent(BuildContext context, LoadStatus? mode) {
-    // TODO: implement buildChild
     final Widget textWidget = _buildText(mode);
     final Widget iconWidget = _buildIcon(mode);
     final List<Widget> children = <Widget>[iconWidget, textWidget];

@@ -1,7 +1,7 @@
 /*
  * Author: Jpeng
  * Email: peng8350@gmail.com
- * Time:  2019-07-11 17:55
+ * Time:  2019-07-11 5:55 PM
  */
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,18 +9,17 @@ import 'package:smart_refresher/smart_refresher.dart';
 import '../../../other/expanded_viewport.dart';
 
 /*
-   实现聊天列表+加载更多功能,类似于qq那种加载效果
-   聊天列表最大的难点就是在列表不满一屏时,要把它往上压。目前来说,flutter没有提供这类sliver能把剩余空间(上和下)给占有,类似于Expanded,
-   SliverFillRemaing并没有起作用。
-   ExpandedViewport是我自定义Viewport,用来解决当不满一屏时reverseListView要居于顶部的问题(只适用于少数情况),原理就是第一次
-   布局先探测一下他们的布局情况,第二次布局假如不满一屏,就在SliverExpanded后面的所有slivers调整主轴偏距。
+   Implements a chat list with load-more functionality, similar to the loading effect in QQ.
+   The biggest challenge with a chat list is pushing it to the top when it doesn't fill the screen.
+   Currently, Flutter doesn't provide a sliver that can occupy remaining space like Expanded; SliverFillRemaining doesn't work here.
+   ExpandedViewport is a custom Viewport used to solve the issue of a reverse ListView staying at the top when the screen isn't full.
+   The principle is to detect the layout situation in the first pass, and if it's not full, adjust the main axis offset for all slivers after SliverExpanded in the second pass.
  */
 class QQChatList extends StatefulWidget {
   const QQChatList({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _QQChatListState();
   }
 }
@@ -33,24 +32,24 @@ class _QQChatListState extends State<QQChatList> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
   List<_MessageItem> data = [
-    _MessageItem(
-      content: "你好...................asdasdasdasdasdasdasdasdasda",
+    const _MessageItem(
+      content: "Hello...................asdasdasdasdasdasdasdasdasda",
       isMe: true,
-      author: "我",
+      author: "Me",
       url: myUrl,
     ),
-    _MessageItem(
+    const _MessageItem(
       content:
           "eem.....................................................................",
       isMe: false,
-      author: "对方",
+      author: "Friend",
       url:
           "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1718395925,3485808025&fm=27&gp=0.jpg",
     ),
-    _MessageItem(
-      content: "吃饭了没有?????????????",
+    const _MessageItem(
+      content: "Have you eaten yet?????????????",
       isMe: false,
-      author: "对方",
+      author: "Friend",
       url:
           "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1718395925,3485808025&fm=27&gp=0.jpg",
     )
@@ -58,13 +57,11 @@ class _QQChatListState extends State<QQChatList> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return CupertinoApp(
       home: RefreshConfiguration.copyAncestor(
         context: context,
@@ -73,9 +70,9 @@ class _QQChatListState extends State<QQChatList> {
         },
         child: CupertinoPageScaffold(
           navigationBar: CupertinoNavigationBar(
-            middle: Text("XXXXX"),
+            middle: const Text("Chat Demo"),
             leading: GestureDetector(
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_back_ios,
                 color: Colors.grey,
                 size: 20,
@@ -84,7 +81,7 @@ class _QQChatListState extends State<QQChatList> {
                 Navigator.of(context).pop();
               },
             ),
-            trailing: Icon(
+            trailing: const Icon(
               Icons.group,
               color: Colors.grey,
               size: 24,
@@ -97,24 +94,24 @@ class _QQChatListState extends State<QQChatList> {
                   child: SmartRefresher(
                     enablePullDown: false,
                     onLoading: () async {
-                      await Future.delayed(Duration(milliseconds: 1000));
-                      data.add(_MessageItem(
-                        content: "Xxxxxxxxxxxxxx",
+                      await Future.delayed(const Duration(milliseconds: 1000));
+                      data.add(const _MessageItem(
+                        content: "Load history data...",
                         isMe: true,
-                        author: "我",
+                        author: "Me",
                         url: myUrl,
                       ));
-                      data.add(_MessageItem(
+                      data.add(const _MessageItem(
                         content: "...........",
                         isMe: false,
-                        author: "对方",
+                        author: "Friend",
                         url:
                             "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1718395925,3485808025&fm=27&gp=0.jpg",
                       ));
-                      data.add(_MessageItem(
-                          content: "吃饭了没有?????????????",
+                      data.add(const _MessageItem(
+                          content: "Old message content",
                           isMe: false,
-                          author: "对方",
+                          author: "Friend",
                           url:
                               "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1718395925,3485808025&fm=27&gp=0.jpg"));
                       setState(() {});
@@ -124,12 +121,14 @@ class _QQChatListState extends State<QQChatList> {
                       loadStyle: LoadStyle.ShowAlways,
                       builder: (context, mode) {
                         if (mode == LoadStatus.loading) {
-                          return SizedBox(
+                          return const SizedBox(
                             height: 60.0,
-                            child: SizedBox(
-                              height: 20.0,
-                              width: 20.0,
-                              child: CupertinoActivityIndicator(),
+                            child: Center(
+                              child: SizedBox(
+                                height: 20.0,
+                                width: 20.0,
+                                child: CupertinoActivityIndicator(),
+                              ),
                             ),
                           );
                         } else {
@@ -148,7 +147,7 @@ class _QQChatListState extends State<QQChatList> {
                           center: null,
                           axisDirection: AxisDirection.up,
                           slivers: <Widget>[
-                            SliverExpanded(),
+                            const SliverExpanded(),
                             SliverList(
                               delegate: SliverChildBuilderDelegate(
                                   (c, i) => data[i],
@@ -167,16 +166,16 @@ class _QQChatListState extends State<QQChatList> {
                     children: <Widget>[
                       Expanded(
                         child: Container(
-                          margin: EdgeInsets.all(10.0),
+                          margin: const EdgeInsets.all(10.0),
                           child: CupertinoTextField(
                             controller: _textController,
-                            placeholder: "输入你想发送的信息",
+                            placeholder: "Enter your message",
                             onSubmitted: (s) {
                               data.insert(
                                   0,
                                   _MessageItem(
                                     content: s,
-                                    author: "我",
+                                    author: "Me",
                                     url: myUrl,
                                     isMe: true,
                                   ));
@@ -195,14 +194,14 @@ class _QQChatListState extends State<QQChatList> {
                               0,
                               _MessageItem(
                                 content: _textController.text,
-                                author: "我",
+                                author: "Me",
                                 url: myUrl,
                                 isMe: true,
                               ));
                           setState(() {});
                           _textController.clear();
                         },
-                        child: Text("发送"),
+                        child: const Text("Send"),
                       )
                     ],
                   ),
@@ -226,9 +225,8 @@ class _MessageItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
-      margin: EdgeInsets.only(top: 10.0),
+      margin: const EdgeInsets.only(top: 10.0),
       child: Wrap(
         textDirection: isMe ? TextDirection.rtl : TextDirection.ltr,
         children: <Widget>[
@@ -246,11 +244,11 @@ class _MessageItem extends StatelessWidget {
                 alignment: isMe ? Alignment.topRight : Alignment.topLeft,
                 child: Text(
                   author,
-                  style: TextStyle(color: Colors.grey, fontSize: 16),
+                  style: const TextStyle(color: Colors.grey, fontSize: 16),
                 ),
               ),
               Container(
-                constraints: BoxConstraints(
+                constraints: const BoxConstraints(
                   minWidth: 100.0,
                   minHeight: 100.0,
                   maxWidth: 222.0,
@@ -260,10 +258,10 @@ class _MessageItem extends StatelessWidget {
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(10),
                 ),
-                padding: EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Text(
                   content,
-                  style: TextStyle(color: Colors.black),
+                  style: const TextStyle(color: Colors.black),
                 ),
               )
             ],

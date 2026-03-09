@@ -1,7 +1,7 @@
 /*
  * Author: Jpeng
  * Email: peng8350@gmail.com
- * Time:  2019-06-24 17:14
+ * Time:  2019-06-24 5:14 PM
  */
 
 import 'dart:async';
@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_refresher/smart_refresher.dart';
 
 /*
-  this example will show you how to use vertical PageView as child in SmartRefresher(vertical refresh)
+  This example demonstrates how to use a vertical PageView as a child in SmartRefresher.
  */
 class PageViewExample extends StatefulWidget {
   const PageViewExample({super.key});
@@ -33,14 +33,12 @@ class PageViewExampleState extends State<PageViewExample>
 
   @override
   void initState() {
-    // TODO: implement initState
     _refreshController = RefreshController(initialRefresh: true);
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _refreshController.dispose();
     super.dispose();
   }
@@ -55,7 +53,6 @@ class PageViewExampleState extends State<PageViewExample>
           final int currentPage = metrics.page?.round() ?? 0;
           if (currentPage != _lastReportedPage) {
             _lastReportedPage = currentPage;
-            // this will callback onPageChange()
             print("onPageChange + $currentPage");
           }
         }
@@ -64,11 +61,11 @@ class PageViewExampleState extends State<PageViewExample>
       child: SmartRefresher(
         enablePullUp: true,
         enablePullDown: true,
-        footer: ClassicFooter(
+        footer: const ClassicFooter(
           loadStyle: LoadStyle.ShowWhenLoading,
         ),
         controller: _refreshController,
-        header: MaterialClassicHeader(),
+        header: const MaterialClassicHeader(),
         onRefresh: () async {
           print("onRefresh");
           await Future.delayed(const Duration(milliseconds: 4000));
@@ -77,20 +74,20 @@ class PageViewExampleState extends State<PageViewExample>
           _refreshController.refreshFailed();
         },
         child: CustomScrollView(
-          physics: PageScrollPhysics(),
+          physics: const PageScrollPhysics(),
           controller: _pageController,
           slivers: <Widget>[
             SliverFillViewport(
-                delegate: SliverChildListDelegate([
-              Center(child: Text("第一页")),
-              Center(child: Text("第二页")),
-              Center(child: Text("第三页")),
-              Center(child: Text("第四页"))
+                delegate: SliverChildListDelegate(const [
+              Center(child: Text("Page One")),
+              Center(child: Text("Page Two")),
+              Center(child: Text("Page Three")),
+              Center(child: Text("Page Four"))
             ]))
           ],
         ),
         onLoading: () {
-          print("onload");
+          print("onLoading");
           Future.delayed(const Duration(milliseconds: 2000)).then((val) {
             _refreshController.loadComplete();
           });

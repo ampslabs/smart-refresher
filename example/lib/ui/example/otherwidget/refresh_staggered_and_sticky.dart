@@ -1,7 +1,7 @@
 /*
  * Author: Jpeng
  * Email: peng8350@gmail.com
- * Time:  2019-07-23 21:09
+ * Time:  2019-07-23 9:09 PM
  */
 import 'package:flutter/material.dart';
 import 'package:smart_refresher/smart_refresher.dart';
@@ -9,9 +9,8 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
 /*
-   use refresh with StaggeredGridView or StickyHeader
-   the two plugins from letsar
-   author page : https://github.com/letsar
+   Use refresh with StaggeredGridView or StickyHeader.
+   These two plugins are from letsar (https://github.com/letsar).
  */
 class RefreshStaggeredAndSticky extends StatefulWidget {
   const RefreshStaggeredAndSticky({super.key});
@@ -36,21 +35,21 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
             onPressed: () {
               _refreshController.requestRefresh();
             },
-            child: Text("请求刷新")),
+            child: const Text("Request Refresh")),
         TextButton(
             onPressed: () {
               _refreshController.requestLoading();
             },
-            child: Text("请求加载数据"))
+            child: const Text("Request Loading"))
       ],
     ));
     for (int i = 0; i < 13; i++) {
       data.add(GestureDetector(
         child: Container(
-          color: Color.fromARGB(255, 250, 250, 250),
+          color: const Color.fromARGB(255, 250, 250, 250),
           child: Card(
             margin:
-                EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                const EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
             child: Center(
               child: Text('Data $i'),
             ),
@@ -69,7 +68,6 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
 
   @override
   void initState() {
-    // TODO: implement initState
     _refreshController = RefreshController(initialRefresh: true);
     _getDatas();
     super.initState();
@@ -77,7 +75,6 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _refreshController.dispose();
     super.dispose();
   }
@@ -93,7 +90,7 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
           child: Container(
             height: 60.0,
             color: Colors.lightBlue,
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: Text(
               'Header #$i',
@@ -109,7 +106,7 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
             ? SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, i) => ListTile(
-                    leading: CircleAvatar(
+                    leading: const CircleAvatar(
                       child: Text('0'),
                     ),
                     title: Text('List tile #$i'),
@@ -141,7 +138,7 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
           enablePullUp: true,
           enablePullDown: true,
           controller: _refreshController,
-          header: MaterialClassicHeader(),
+          header: const MaterialClassicHeader(),
           onRefresh: () async {
             print("onRefresh");
             await Future.delayed(const Duration(milliseconds: 4000));
@@ -152,7 +149,7 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
             slivers: slivers,
           ),
           onLoading: () {
-            print("onload");
+            print("onLoading");
             Future.delayed(const Duration(milliseconds: 2000)).then((val) {
               length += 10;
               if (mounted) setState(() {});

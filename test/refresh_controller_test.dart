@@ -14,6 +14,7 @@ import 'test_indicator.dart';
 Widget buildRefresher(RefreshController controller, {int count = 20}) {
   return RefreshConfiguration(
     maxOverScrollExtent: 180,
+    closeTwoLevelDistance: 400.0,
     child: Directionality(
       textDirection: TextDirection.ltr,
       child: SizedBox(

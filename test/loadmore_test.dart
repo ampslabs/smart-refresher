@@ -421,7 +421,7 @@ void main() {
             footer: const TestFooter(),
             enablePullUp: true,
             onLoading: () async {
-              await Future.delayed(const Duration(milliseconds: 180));
+              await Future<void>.delayed(const Duration(milliseconds: 180));
               refreshController.loadComplete();
               time++;
             },
