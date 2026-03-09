@@ -1,0 +1,46 @@
+name: Bug Report
+description: Report a reproducible problem in smart_refresher
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve smart_refresher.
+  - type: input
+    id: flutter-version
+    attributes:
+      label: Flutter version
+      placeholder: "e.g. Flutter 3.19.0"
+    validations:
+      required: true
+  - type: input
+    id: package-version
+    attributes:
+      label: smart_refresher version
+      placeholder: "e.g. 2.0.0"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the bug and expected behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs / stack traces
+      render: shell
