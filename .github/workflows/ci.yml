@@ -31,5 +31,10 @@ jobs:
       - name: Run tests
         run: flutter test
 
+      - name: Clean environment for publish
+        run: |
+          git checkout example/ios/Flutter/flutter_export_environment.sh || true
+          git status
+
       - name: Package publish dry-run
         run: dart pub publish --dry-run
