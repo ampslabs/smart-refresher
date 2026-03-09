@@ -4,7 +4,7 @@
  * Time:  2019-07-08 10:51
  */
 import 'package:flutter/material.dart' as prefix0;
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
 import 'package:shimmer/shimmer.dart';
@@ -21,17 +21,17 @@ class ShimmerHeader extends RefreshIndicator {
   final Widget text;
   final Duration period;
   final ShimmerDirection direction;
-  final Function outerBuilder;
+  final Function? outerBuilder;
 
-  ShimmerHeader(
-      {@required this.text,
+  const ShimmerHeader(
+      {super.key, required this.text,
       this.baseColor = Colors.grey,
       this.highlightColor = Colors.white,
       this.outerBuilder,
-      double height: 80.0,
+      super.height = 80.0,
       this.period = const Duration(milliseconds: 1000),
       this.direction = ShimmerDirection.ltr})
-      : super(height: height, refreshStyle: RefreshStyle.Behind);
+      : super(refreshStyle: RefreshStyle.Behind);
 
   @override
   State<StatefulWidget> createState() {
@@ -42,8 +42,8 @@ class ShimmerHeader extends RefreshIndicator {
 
 class _ShimmerHeaderState extends RefreshIndicatorState<ShimmerHeader>
     with TickerProviderStateMixin {
-  AnimationController _scaleController;
-  AnimationController _fadeController;
+  late AnimationController _scaleController;
+  late AnimationController _fadeController;
 
   @override
   void initState() {
@@ -57,8 +57,8 @@ class _ShimmerHeaderState extends RefreshIndicatorState<ShimmerHeader>
   void onOffsetChange(double offset) {
     // TODO: implement onOffsetChange
     if (!floating) {
-      _scaleController.value = offset / configuration.headerTriggerDistance;
-      _fadeController.value = offset / configuration.footerTriggerDistance;
+      _scaleController.value = offset / (configuration?.headerTriggerDistance ?? 80.0);
+      _fadeController.value = offset / (configuration?.footerTriggerDistance ?? 80.0);
     }
   }
 
@@ -86,34 +86,33 @@ class _ShimmerHeaderState extends RefreshIndicatorState<ShimmerHeader>
       ),
     );
     return widget.outerBuilder != null
-        ? widget.outerBuilder(body)
+        ? widget.outerBuilder!(body)
         : Container(
             alignment: prefix0.Alignment.center,
-            child: body,
             decoration: prefix0.BoxDecoration(color: Colors.black12),
+            child: body,
           );
   }
 }
 
 class ShimmerFooter extends LoadIndicator {
   final Color baseColor, highlightColor;
-  final Widget text, failed, noMore;
+  final Widget? text, failed, noMore;
   final Duration period;
   final ShimmerDirection direction;
-  final Function outerBuilder;
+  final Function? outerBuilder;
 
-  ShimmerFooter(
-      {@required this.text,
+  const ShimmerFooter(
+      {super.key, required this.text,
       this.baseColor = Colors.grey,
       this.highlightColor = Colors.white,
       this.outerBuilder,
-      double height: 80.0,
+      super.height = 80.0,
       this.failed,
       this.noMore,
       this.period = const Duration(milliseconds: 1000),
       this.direction = ShimmerDirection.ltr,
-      LoadStyle loadStyle: LoadStyle.ShowAlways})
-      : super(height: height, loadStyle: loadStyle);
+      super.loadStyle});
 
   @override
   State<StatefulWidget> createState() {
@@ -128,9 +127,9 @@ class _ShimmerFooterState extends LoadIndicatorState<ShimmerFooter> {
     // TODO: implement buildContent
 
     final Widget body = mode == LoadStatus.failed
-        ? widget.failed
+        ? (widget.failed ?? const SizedBox.shrink())
         : mode == LoadStatus.noMore
-            ? widget.noMore
+            ? (widget.noMore ?? const SizedBox.shrink())
             : mode == LoadStatus.idle
                 ? Center(child: widget.text)
                 : Shimmer.fromColors(
@@ -143,11 +142,11 @@ class _ShimmerFooterState extends LoadIndicatorState<ShimmerFooter> {
                     ),
                   );
     return widget.outerBuilder != null
-        ? widget.outerBuilder(body)
+        ? widget.outerBuilder!(body)
         : Container(
             height: widget.height,
-            child: body,
             decoration: prefix0.BoxDecoration(color: Colors.black12),
+            child: body,
           );
   }
 }

@@ -10,13 +10,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../Item.dart';
 import 'package:http/http.dart' as HTTP;
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 
 /*
    this example will show you how to implements horizontal refresh or reverse,
    the main point is in child scrollDirection attr
  */
 class HorizontalRefresh extends StatefulWidget {
+  const HorizontalRefresh({super.key});
+
   @override
   _HorizontalRefreshState createState() => _HorizontalRefreshState();
 }
@@ -24,14 +26,14 @@ class HorizontalRefresh extends StatefulWidget {
 class _HorizontalRefreshState extends State<HorizontalRefresh>
     with TickerProviderStateMixin {
   RefreshController _controller1 = RefreshController();
-  RefreshController _controller2 = RefreshController();
+  final RefreshController _controller2 = RefreshController();
   int indexPage = 0;
   List<String> data = [];
 
   void _fetch() {
     HTTP
-        .get(
-            'https://gank.io/api/v2/data/category/Girl/type/Girl/page/$indexPage/count/10')
+        .get(Uri.parse(
+            'https://gank.io/api/v2/data/category/Girl/type/Girl/page/$indexPage/count/10'))
         .then((HTTP.Response response) {
       Map map = json.decode(response.body);
       return map["data"];
@@ -84,7 +86,8 @@ class _HorizontalRefreshState extends State<HorizontalRefresh>
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Container(
+        SizedBox(
+          height: 200.0,
           child: SmartRefresher(
             enablePullDown: true,
             enablePullUp: true,
@@ -93,7 +96,7 @@ class _HorizontalRefreshState extends State<HorizontalRefresh>
             footer: ClassicFooter(
               iconPos: IconPosition.top,
               outerBuilder: (child) {
-                return Container(
+                return SizedBox(
                   width: 80.0,
                   child: Center(
                     child: child,
@@ -104,7 +107,7 @@ class _HorizontalRefreshState extends State<HorizontalRefresh>
             header: ClassicHeader(
               iconPos: IconPosition.top,
               outerBuilder: (child) {
-                return Container(
+                return SizedBox(
                   width: 80.0,
                   child: Center(
                     child: child,
@@ -120,10 +123,10 @@ class _HorizontalRefreshState extends State<HorizontalRefresh>
               itemBuilder: buildImage,
             ),
           ),
-          height: 200.0,
         ),
         Expanded(
-          child: Container(
+          child: SizedBox(
+            height: 200.0,
             child: SmartRefresher(
               enablePullDown: true,
               enablePullUp: true,
@@ -134,7 +137,7 @@ class _HorizontalRefreshState extends State<HorizontalRefresh>
               footer: ClassicFooter(
                 iconPos: IconPosition.top,
                 outerBuilder: (child) {
-                  return Container(
+                  return SizedBox(
                     width: 80.0,
                     child: Center(
                       child: child,
@@ -157,7 +160,6 @@ class _HorizontalRefreshState extends State<HorizontalRefresh>
                 ),
               ),
             ),
-            height: 200.0,
           ),
         )
       ],
@@ -172,7 +174,7 @@ class _HorizontalRefreshState extends State<HorizontalRefresh>
 class Item1 extends StatefulWidget {
   final String url;
 
-  Item1({this.url});
+  const Item1({super.key, required this.url});
 
   @override
   _ItemState createState() => _ItemState();
@@ -181,7 +183,6 @@ class Item1 extends StatefulWidget {
 class _ItemState extends State<Item1> {
   @override
   Widget build(BuildContext context) {
-    if (widget.url == null) return Container();
     return FadeInImage(
       placeholder: AssetImage("images/empty.png"),
       image: NetworkImage(

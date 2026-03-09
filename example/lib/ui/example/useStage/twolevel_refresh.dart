@@ -4,11 +4,9 @@
  * Time:  2019-06-26 16:28
  */
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
-import 'package:flutter/widgets.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 
 /*
    there two example implements two level,
@@ -21,6 +19,8 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
    2. _refreshController.twiceRefreshComplete() can closing the two level
 */
 class TwoLevelExample extends StatefulWidget {
+  const TwoLevelExample({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -29,18 +29,18 @@ class TwoLevelExample extends StatefulWidget {
 }
 
 class _TwoLevelExampleState extends State<TwoLevelExample> {
-  RefreshController _refreshController1 = RefreshController();
-  RefreshController _refreshController2 = RefreshController();
+  final RefreshController _refreshController1 = RefreshController();
+  final RefreshController _refreshController2 = RefreshController();
   int _tabIndex = 0;
 
   @override
   void initState() {
     // TODO: implement initState
-    _refreshController1.headerMode.addListener(() {
+    _refreshController1.headerMode?.addListener(() {
       setState(() {});
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _refreshController1.position.jumpTo(0);
+      _refreshController1.position?.jumpTo(0);
       setState(() {});
     });
     super.initState();
@@ -63,9 +63,9 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                 },
                 items: [
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.add), title: Text("二级刷新例子1")),
+                      icon: Icon(Icons.add), label: "二级刷新例子1"),
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.border_clear), title: Text("二级刷新例子2"))
+                      icon: Icon(Icons.border_clear), label: "二级刷新例子2")
                 ],
               )
             : null,
@@ -88,35 +88,6 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                       ),
                       twoLevelWidget: TwoLevelWidget(),
                     ),
-                    child: CustomScrollView(
-                      physics: ClampingScrollPhysics(),
-                      slivers: <Widget>[
-                        SliverToBoxAdapter(
-                          child: Container(
-                            child: Scaffold(
-                              appBar: AppBar(),
-                              body: Column(
-                                children: <Widget>[
-                                  RaisedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text("点击这里返回上一页!"),
-                                  ),
-                                  RaisedButton(
-                                    onPressed: () {
-                                      _refreshController1.requestTwoLevel();
-                                    },
-                                    child: Text("点击这里打开二楼!"),
-                                  )
-                                ],
-                              ),
-                            ),
-                            height: 500.0,
-                          ),
-                        )
-                      ],
-                    ),
                     controller: _refreshController1,
                     enableTwoLevel: true,
                     enablePullDown: true,
@@ -130,8 +101,37 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                       _refreshController1.refreshCompleted();
                     },
                     onTwoLevel: (bool isOpen) {
-                      print("twoLevel opening:" + isOpen.toString());
+                      print("twoLevel opening:$isOpen");
                     },
+                    child: CustomScrollView(
+                      physics: ClampingScrollPhysics(),
+                      slivers: <Widget>[
+                        SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: 500.0,
+                            child: Scaffold(
+                              appBar: AppBar(),
+                              body: Column(
+                                children: <Widget>[
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text("点击这里返回上一页!"),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      _refreshController1.requestTwoLevel();
+                                    },
+                                    child: Text("点击这里打开二楼!"),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   );
                 },
               ),
@@ -140,23 +140,6 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
               offstage: _tabIndex != 1,
               child: SmartRefresher(
                 header: ClassicHeader(),
-                child: CustomScrollView(
-                  physics: ClampingScrollPhysics(),
-                  slivers: <Widget>[
-                    SliverToBoxAdapter(
-                      child: Container(
-                        child: RaisedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text("点击这里返回上一页!"),
-                        ),
-                        color: Colors.red,
-                        height: 680.0,
-                      ),
-                    )
-                  ],
-                ),
                 controller: _refreshController2,
                 enableTwoLevel: true,
                 onRefresh: () async {
@@ -166,7 +149,7 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                 onTwoLevel: (bool isOpen) {
                   if (isOpen) {
                     print("Asd");
-                    _refreshController2.position.hold(() {});
+                    _refreshController2.position?.hold(() {});
                     Navigator.of(context)
                         .push(MaterialPageRoute(
                             builder: (c) => Scaffold(
@@ -179,6 +162,23 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                     });
                   }
                 },
+                child: CustomScrollView(
+                  physics: ClampingScrollPhysics(),
+                  slivers: <Widget>[
+                    SliverToBoxAdapter(
+                      child: Container(
+                        color: Colors.red,
+                        height: 680.0,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("点击这里返回上一页!"),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             )
           ],
@@ -189,6 +189,8 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
 }
 
 class TwoLevelWidget extends StatelessWidget {
+  const TwoLevelWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -205,8 +207,8 @@ class TwoLevelWidget extends StatelessWidget {
           Center(
             child: Wrap(
               children: <Widget>[
-                RaisedButton(
-                  color: Colors.greenAccent,
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.greenAccent),
                   onPressed: () {},
                   child: Text("登陆"),
                 ),
@@ -215,16 +217,16 @@ class TwoLevelWidget extends StatelessWidget {
           ),
           Container(
             height: 60.0,
+            alignment: Alignment.bottomLeft,
             child: GestureDetector(
               child: Icon(
                 Icons.arrow_back_ios,
                 color: Colors.white,
               ),
               onTap: () {
-                SmartRefresher.of(context).controller.twoLevelComplete();
+                SmartRefresher.of(context)?.controller.twoLevelComplete();
               },
             ),
-            alignment: Alignment.bottomLeft,
           ),
         ],
       ),

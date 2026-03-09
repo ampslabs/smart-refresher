@@ -6,14 +6,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 
 /*
    when listView have no data,sometime we should return a view that indicate empty state
    there are two ways to do ,see follow
  */
 class RefreshWithEmptyView extends StatefulWidget {
-  RefreshWithEmptyView();
+  const RefreshWithEmptyView({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -24,7 +24,7 @@ class RefreshWithEmptyView extends StatefulWidget {
 
 class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
   List<String> data = [];
-  RefreshController _refreshController =
+  final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
   Widget buildEmpty() {
@@ -64,17 +64,18 @@ class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
     // TODO: implement build
     return SmartRefresher(
       controller: _refreshController,
-      enablePullUp: data.length != 0,
+      enablePullUp: data.isNotEmpty,
       enablePullDown: true,
       onRefresh: () async {
         await Future.delayed(const Duration(milliseconds: 2000));
-        if (mounted)
+        if (mounted) {
           setState(() {
             data.add("new");
           });
+        }
         _refreshController.refreshCompleted();
       },
-      child: data.length == 0
+      child: data.isEmpty
           ? buildEmpty()
           : ListView.builder(
               itemBuilder: (c, i) => Text(data[i]),

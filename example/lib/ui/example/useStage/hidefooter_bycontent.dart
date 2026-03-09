@@ -15,9 +15,11 @@
  */
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 
 class HideFooterManual extends StatefulWidget {
+  const HideFooterManual({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -26,7 +28,7 @@ class HideFooterManual extends StatefulWidget {
 }
 
 class HideFooterManualState extends State<HideFooterManual> {
-  RefreshController _controller = RefreshController();
+  final RefreshController _controller = RefreshController();
 
   List<String> strs = ["1", "2"];
 
@@ -35,6 +37,7 @@ class HideFooterManualState extends State<HideFooterManual> {
     // TODO: implement build
     return RefreshConfiguration.copyAncestor(
       context: context,
+      hideFooterWhenNotFull: false,
       child: LayoutBuilder(
         builder: (b, c) {
           double refresherHeight = c.biggest.height -
@@ -75,7 +78,6 @@ class HideFooterManualState extends State<HideFooterManual> {
           );
         },
       ),
-      hideFooterWhenNotFull: false,
     );
   }
 }

@@ -4,12 +4,12 @@
     createTime: 2019-07-20 20:58
  */
 
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 import 'package:flutter/material.dart'
     hide RefreshIndicatorState, RefreshIndicator;
 
 class TestHeader extends RefreshIndicator {
-  const TestHeader();
+  const TestHeader({super.key});
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -22,27 +22,27 @@ class _TestHeaderState extends RefreshIndicatorState<TestHeader> {
   Widget buildContent(BuildContext context, RefreshStatus? mode) {
     // TODO: implement buildContent
     return Text(mode == RefreshStatus.idle
-        ? "idle"
+        ? 'idle'
         : mode == RefreshStatus.refreshing
-            ? "refreshing"
+            ? 'refreshing'
             : mode == RefreshStatus.canRefresh
-                ? "canRefresh"
+                ? 'canRefresh'
                 : mode == RefreshStatus.canTwoLevel
-                    ? "canTwoLevel"
+                    ? 'canTwoLevel'
                     : mode == RefreshStatus.completed
-                        ? "completed"
+                        ? 'completed'
                         : mode == RefreshStatus.failed
-                            ? "failed"
+                            ? 'failed'
                             : mode == RefreshStatus.twoLevelClosing
-                                ? "twoLevelClosing"
+                                ? 'twoLevelClosing'
                                 : mode == RefreshStatus.twoLevelOpening
-                                    ? "twoLevelOpening"
-                                    : "twoLeveling");
+                                    ? 'twoLevelOpening'
+                                    : 'twoLeveling');
   }
 }
 
 class TestFooter extends LoadIndicator {
-  const TestFooter();
+  const TestFooter({super.key});
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -55,11 +55,11 @@ class _TestFooterState extends LoadIndicatorState<TestFooter> {
   Widget buildContent(BuildContext context, LoadStatus? mode) {
     // TODO: implement buildContent
     return Text(mode == LoadStatus.failed
-        ? "failed"
+        ? 'failed'
         : mode == LoadStatus.loading
-            ? "loading"
+            ? 'loading'
             : mode == LoadStatus.idle
-                ? "idle"
-                : "noData");
+                ? 'idle'
+                : 'noData');
   }
 }

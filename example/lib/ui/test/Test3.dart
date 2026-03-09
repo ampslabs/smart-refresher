@@ -1,11 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 
 class Test3 extends StatefulWidget {
-  Test3({Key key}) : super(key: key);
+  const Test3({super.key});
 
   @override
   Test3State createState() => Test3State();
@@ -16,35 +15,35 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
 //  LoadMode loading = LoadMode.idle;
   ValueNotifier<double> topOffsetLis = ValueNotifier(0.0);
   ValueNotifier<double> bottomOffsetLis = ValueNotifier(0.0);
-  RefreshController _refreshController;
+  late RefreshController _refreshController;
 
   List<Widget> data = [];
 
   void _getDatas() {
     data.add(Row(
       children: <Widget>[
-        FlatButton(
+        TextButton(
             onPressed: () {
               _refreshController
                   .requestRefresh(needCallback: false)
-                  .then((value) async {
+                  ?.then((value) async {
                 print("requestRefresh");
                 await Future.delayed(const Duration(milliseconds: 5000));
                 _refreshController.refreshCompleted();
               });
             },
             child: Text("请求刷新")),
-        FlatButton(
+        TextButton(
             onPressed: () {
               _refreshController
                   .requestLoading(needCallback: false)
-                  .then((value) async {
+                  ?.then((value) async {
                 print("requestLoading");
                 await Future.delayed(const Duration(milliseconds: 5000));
                 _refreshController.loadComplete();
               });
             },
-            child: Text("请求加载数据"))
+            child: Text("请求加载数据")),
       ],
     ));
     for (int i = 0; i < 1; i++) {
@@ -143,6 +142,7 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
       footerTriggerDistance: -80,
       maxUnderScrollExtent: 60,
       enableLoadingWhenNoData: true,
+      dragSpeedRatio: 0.9,
       child: SmartRefresher(
         enablePullUp: true,
         enablePullDown: true,
@@ -156,17 +156,17 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
             child: Container(
               color: Colors.green,
               width: double.infinity,
-              child: Text("twoLevel"),
               height: 60,
+              child: Text("twoLevel"),
             ),
           ),
         ),
         onRefresh: () async {
           print("onRefresh");
           await Future.delayed(const Duration(milliseconds: 3000));
-          data.add(Container(
-            child: Card(),
+          data.add(SizedBox(
             height: 100.0,
+            child: Card(),
           ));
           if (mounted) setState(() {});
           _refreshController.refreshCompleted();
@@ -189,7 +189,6 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
           _refreshController.loadNoData();
         },
       ),
-      dragSpeedRatio: 0.9,
     );
   }
 }
@@ -198,7 +197,7 @@ class CirclePainter extends CustomClipper<Path> {
   final double offset;
   final bool up;
 
-  CirclePainter({this.offset, this.up});
+  CirclePainter({required this.offset, required this.up});
 
   @override
   Path getClip(Size size) {

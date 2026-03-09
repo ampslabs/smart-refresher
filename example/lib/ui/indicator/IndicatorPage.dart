@@ -5,11 +5,11 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 import 'base/IndicatorActivity.dart';
 
 class IndicatorPage extends StatefulWidget {
-  IndicatorPage({Key key, this.title}) : super(key: key);
+  const IndicatorPage({super.key, this.title = ""});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -23,11 +23,11 @@ class IndicatorPage extends StatefulWidget {
   final String title;
 
   @override
-  _IndicatorPageState createState() => new _IndicatorPageState();
+  _IndicatorPageState createState() => _IndicatorPageState();
 }
 
 class _IndicatorPageState extends State<IndicatorPage> {
-  List<Widget> items;
+  late List<Widget> items;
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +99,7 @@ class _IndicatorPageState extends State<IndicatorPage> {
                     reverse: false,
                     title: "bezier+circle",
                     header: BezierCircleHeader(
-                      dismissType: BezierDismissType.ScaleToCenter,
+                      dismissType: BezierDismissType.scaleToCenter,
                     ))));
           },
           imgRes: "images/bezier.gif"),
@@ -133,15 +133,15 @@ class _IndicatorPageState extends State<IndicatorPage> {
                 builder: (BuildContext context) =>
                     RefreshConfiguration.copyAncestor(
                       context: context,
+                      footerTriggerDistance: -30.0,
+                      enableLoadingWhenFailed: true,
+                      maxUnderScrollExtent: 100.0,
                       child: IndicatorActivity(
                           reverse: false,
                           title: "底部指示器(经常隐藏)",
                           footer: ClassicFooter(
                             loadStyle: LoadStyle.HideAlways,
                           )),
-                      footerTriggerDistance: -30.0,
-                      enableLoadingWhenFailed: true,
-                      maxUnderScrollExtent: 100.0,
                     )));
           },
           imgRes: "images/loadstyle2.gif"),
@@ -152,20 +152,20 @@ class _IndicatorPageState extends State<IndicatorPage> {
                 builder: (BuildContext context) =>
                     RefreshConfiguration.copyAncestor(
                       context: context,
+                      enableLoadingWhenFailed: true,
+                      footerTriggerDistance: -60.0,
                       child: RefreshConfiguration.copyAncestor(
                         context: context,
+                        enableLoadingWhenFailed: true,
+                        maxUnderScrollExtent: 100.0,
+                        footerTriggerDistance: -45.0,
                         child: IndicatorActivity(
                             reverse: false,
                             title: "底部指示器(只有加载中才显示)",
                             footer: ClassicFooter(
                               loadStyle: LoadStyle.ShowWhenLoading,
                             )),
-                        enableLoadingWhenFailed: true,
-                        maxUnderScrollExtent: 100.0,
-                        footerTriggerDistance: -45.0,
                       ),
-                      enableLoadingWhenFailed: true,
-                      footerTriggerDistance: -60.0,
                     )));
           },
           imgRes: "images/loadstyle3.gif"),
@@ -181,13 +181,12 @@ class IndicatorItem extends StatefulWidget {
     return _IndicatorItemState();
   }
 
-  final Function onClick;
-
+  final VoidCallback onClick;
   final String imgRes;
-
   final String title;
 
-  IndicatorItem({this.title, this.imgRes, this.onClick});
+  const IndicatorItem(
+      {super.key, required this.title, required this.imgRes, required this.onClick});
 }
 
 class _IndicatorItemState extends State<IndicatorItem> {

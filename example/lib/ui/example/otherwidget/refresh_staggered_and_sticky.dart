@@ -4,7 +4,7 @@
  * Time:  2019-07-23 21:09
  */
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
@@ -14,7 +14,7 @@ import 'package:flutter_sticky_header/flutter_sticky_header.dart';
    author page : https://github.com/letsar
  */
 class RefreshStaggeredAndSticky extends StatefulWidget {
-  RefreshStaggeredAndSticky({Key key}) : super(key: key);
+  const RefreshStaggeredAndSticky({super.key});
 
   @override
   RefreshStaggeredAndStickyState createState() =>
@@ -23,7 +23,7 @@ class RefreshStaggeredAndSticky extends StatefulWidget {
 
 class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
     with TickerProviderStateMixin {
-  RefreshController _refreshController;
+  late RefreshController _refreshController;
 
   List<Widget> data = [];
 
@@ -32,12 +32,12 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
   void _getDatas() {
     data.add(Row(
       children: <Widget>[
-        FlatButton(
+        TextButton(
             onPressed: () {
               _refreshController.requestRefresh();
             },
             child: Text("请求刷新")),
-        FlatButton(
+        TextButton(
             onPressed: () {
               _refreshController.requestLoading();
             },
@@ -70,8 +70,8 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
   @override
   void initState() {
     // TODO: implement initState
-    _getDatas();
     _refreshController = RefreshController(initialRefresh: true);
+    _getDatas();
     super.initState();
   }
 
@@ -90,12 +90,12 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
     for (int i = 0; i < expand.length; i++) {
       slivers.add(SliverStickyHeader(
         header: GestureDetector(
-          child: new Container(
+          child: Container(
             height: 60.0,
             color: Colors.lightBlue,
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
-            child: new Text(
+            child: Text(
               'Header #$i',
               style: const TextStyle(color: Colors.white),
             ),
@@ -106,13 +106,13 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
           },
         ),
         sliver: expand[i]
-            ? new SliverList(
-                delegate: new SliverChildBuilderDelegate(
-                  (context, i) => new ListTile(
-                    leading: new CircleAvatar(
-                      child: new Text('0'),
+            ? SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, i) => ListTile(
+                    leading: CircleAvatar(
+                      child: Text('0'),
                     ),
-                    title: new Text('List tile #$i'),
+                    title: Text('List tile #$i'),
                   ),
                   childCount: 4,
                 ),
@@ -120,21 +120,20 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
             : null,
       ));
     }
-    slivers.add(SliverStaggeredGrid.countBuilder(
-      crossAxisCount: 4,
-      itemCount: length,
-      itemBuilder: (BuildContext context, int index) => new Container(
-          color: Colors.green,
-          child: new Center(
-            child: new CircleAvatar(
-              backgroundColor: Colors.white,
-              child: new Text('$index'),
-            ),
-          )),
-      staggeredTileBuilder: (int index) =>
-          new StaggeredTile.count(2, index.isEven ? 2 : 1),
+    slivers.add(SliverMasonryGrid.count(
+      crossAxisCount: 2,
       mainAxisSpacing: 4.0,
       crossAxisSpacing: 4.0,
+      childCount: length,
+      itemBuilder: (BuildContext context, int index) => Container(
+          color: Colors.green,
+          height: index.isEven ? 100 : 60,
+          child: Center(
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Text('$index'),
+            ),
+          )),
     ));
     return LayoutBuilder(
       builder: (i, c) {

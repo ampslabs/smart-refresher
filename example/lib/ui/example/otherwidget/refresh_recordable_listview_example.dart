@@ -9,10 +9,8 @@
 // found in the LICENSE file.
 
 import 'package:example/other/refresh_recordable_listview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 
 enum _ReorderableListType {
   /// A list tile that contains a [CircleAvatar].
@@ -26,7 +24,7 @@ enum _ReorderableListType {
 }
 
 class ReorderableListDemo extends StatefulWidget {
-  const ReorderableListDemo({Key key}) : super(key: key);
+  const ReorderableListDemo({super.key});
 
   static const String routeName = '/material/reorderable-list';
 
@@ -45,8 +43,8 @@ class _ListItem {
 class _ListDemoState extends State<ReorderableListDemo> {
   static final GlobalKey<ScaffoldState> scaffoldKey =
       GlobalKey<ScaffoldState>();
-  PersistentBottomSheetController<void> _bottomSheet;
-  RefreshController _refreshController = RefreshController();
+  PersistentBottomSheetController? _bottomSheet;
+  final RefreshController _refreshController = RefreshController();
   _ReorderableListType _itemType = _ReorderableListType.threeLine;
   bool _reverse = false;
   bool _reverseSort = false;
@@ -68,38 +66,30 @@ class _ListDemoState extends State<ReorderableListDemo> {
   ].map<_ListItem>((String item) => _ListItem(item, false)).toList();
 
   void changeItemType(_ReorderableListType type) {
-    if (mounted)
+    if (mounted) {
       setState(() {
         _itemType = type;
       });
-    // Rebuild the bottom sheet to reflect the selected list view.
-    if (mounted)
-      _bottomSheet?.setState(() {
-        // Trigger a rebuild.
-      });
+    }
     // Close the bottom sheet to give the user a clear view of the list.
     _bottomSheet?.close();
   }
 
   void changeReverse(bool newValue) {
-    if (mounted)
+    if (mounted) {
       setState(() {
         _reverse = newValue;
       });
-    // Rebuild the bottom sheet to reflect the selected list view.
-    if (mounted)
-      _bottomSheet?.setState(() {
-        // Trigger a rebuild.
-      });
+    }
     // Close the bottom sheet to give the user a clear view of the list.
     _bottomSheet?.close();
   }
 
   void _showConfigurationSheet() {
-    if (mounted)
+    if (mounted) {
       setState(() {
         _bottomSheet = scaffoldKey.currentState
-            .showBottomSheet<void>((BuildContext bottomSheetContext) {
+            ?.showBottomSheet((BuildContext bottomSheetContext) {
           return DecoratedBox(
             decoration: const BoxDecoration(
               border: Border(top: BorderSide(color: Colors.black26)),
@@ -112,28 +102,28 @@ class _ListDemoState extends State<ReorderableListDemo> {
                   dense: true,
                   title: const Text('Reverse'),
                   value: _reverse,
-                  onChanged: changeReverse,
+                  onChanged: (val) => changeReverse(val ?? false),
                 ),
                 RadioListTile<_ReorderableListType>(
                   dense: true,
                   title: const Text('Horizontal Avatars'),
                   value: _ReorderableListType.horizontalAvatar,
                   groupValue: _itemType,
-                  onChanged: changeItemType,
+                  onChanged: (val) => val != null ? changeItemType(val) : null,
                 ),
                 RadioListTile<_ReorderableListType>(
                   dense: true,
                   title: const Text('Vertical Avatars'),
                   value: _ReorderableListType.verticalAvatar,
                   groupValue: _itemType,
-                  onChanged: changeItemType,
+                  onChanged: (val) => val != null ? changeItemType(val) : null,
                 ),
                 RadioListTile<_ReorderableListType>(
                   dense: true,
                   title: const Text('Three-line'),
                   value: _ReorderableListType.threeLine,
                   groupValue: _itemType,
-                  onChanged: changeItemType,
+                  onChanged: (val) => val != null ? changeItemType(val) : null,
                 ),
               ],
             ),
@@ -141,7 +131,7 @@ class _ListDemoState extends State<ReorderableListDemo> {
         });
 
         // Garbage collect the bottom sheet when it closes.
-        _bottomSheet.closed.whenComplete(() {
+        _bottomSheet?.closed.whenComplete(() {
           if (mounted) {
             setState(() {
               _bottomSheet = null;
@@ -149,6 +139,7 @@ class _ListDemoState extends State<ReorderableListDemo> {
           }
         });
       });
+    }
   }
 
   Widget buildListTile(_ListItem item) {
@@ -161,12 +152,13 @@ class _ListDemoState extends State<ReorderableListDemo> {
         listTile = CheckboxListTile(
           key: Key(item.value),
           isThreeLine: true,
-          value: item.checkState ?? false,
-          onChanged: (bool newValue) {
-            if (mounted)
+          value: item.checkState,
+          onChanged: (bool? newValue) {
+            if (mounted) {
               setState(() {
-                item.checkState = newValue;
+                item.checkState = newValue ?? false;
               });
+            }
           },
           title: Text('This item represents ${item.value}.'),
           subtitle: secondary,
@@ -175,13 +167,13 @@ class _ListDemoState extends State<ReorderableListDemo> {
         break;
       case _ReorderableListType.horizontalAvatar:
       case _ReorderableListType.verticalAvatar:
-        listTile = Container(
+        listTile = SizedBox(
           key: Key(item.value),
           height: 100.0,
           width: 100.0,
           child: CircleAvatar(
-            child: Text(item.value),
             backgroundColor: Colors.green,
+            child: Text(item.value),
           ),
         );
         break;
@@ -191,7 +183,7 @@ class _ListDemoState extends State<ReorderableListDemo> {
   }
 
   void _onReorder(int oldIndex, int newIndex) {
-    if (mounted)
+    if (mounted) {
       setState(() {
         if (newIndex > oldIndex) {
           newIndex -= 1;
@@ -199,6 +191,7 @@ class _ListDemoState extends State<ReorderableListDemo> {
         final _ListItem item = _items.removeAt(oldIndex);
         _items.insert(newIndex, item);
       });
+    }
   }
 
   @override
@@ -212,13 +205,14 @@ class _ListDemoState extends State<ReorderableListDemo> {
             icon: const Icon(Icons.sort_by_alpha),
             tooltip: 'Sort',
             onPressed: () {
-              if (mounted)
+              if (mounted) {
                 setState(() {
                   _reverseSort = !_reverseSort;
                   _items.sort((_ListItem a, _ListItem b) => _reverseSort
                       ? b.value.compareTo(a.value)
                       : a.value.compareTo(b.value));
                 });
+              }
             },
           ),
           IconButton(
@@ -228,7 +222,7 @@ class _ListDemoState extends State<ReorderableListDemo> {
                   : Icons.more_vert,
             ),
             tooltip: 'Show menu',
-            onPressed: _bottomSheet == null ? _showConfigurationSheet : null,
+            onPressed: null,
           ),
         ],
       ),
@@ -238,16 +232,16 @@ class _ListDemoState extends State<ReorderableListDemo> {
               ? Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text('Header of the list',
-                      style: Theme.of(context).textTheme.headline1))
-              : null,
+                      style: Theme.of(context).textTheme.displayLarge))
+              : const SizedBox.shrink(),
           onReorder: _onReorder,
           reverse: _reverse,
           scrollDirection: _itemType == _ReorderableListType.horizontalAvatar
               ? Axis.horizontal
               : Axis.vertical,
           padding: const EdgeInsets.symmetric(vertical: 8.0),
-          children: _items.map<Widget>(buildListTile).toList(),
           refreshController: _refreshController,
+          children: _items.map<Widget>(buildListTile).toList(),
         ),
       ),
     );

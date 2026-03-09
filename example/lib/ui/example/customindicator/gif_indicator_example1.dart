@@ -4,9 +4,8 @@
  * Time:  2019-07-26 18:22
  */
 
-import 'package:flutter/widgets.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:flutter_gifimage/flutter_gifimage.dart';
+import 'package:smart_refresher/smart_refresher.dart';
+// import 'package:flutter_gifimage/flutter_gifimage.dart';
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
 
@@ -14,8 +13,32 @@ import 'package:flutter/material.dart'
   I use my plugin to implements gif effect,this plugin can help you to controll gif easily,
   see page to find about usage: (https://github.com/peng8350/flutter_gifimage)
 */
+
+class GifController extends AnimationController {
+  GifController({required super.vsync, double value = 0.0}) : super(value: value);
+}
+
+class GifImage extends StatelessWidget {
+  final ImageProvider image;
+  final AnimationController controller;
+  final double? height;
+  final double? width;
+
+  const GifImage({
+    super.key,
+    required this.image,
+    required this.controller,
+    this.height,
+    this.width,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Image(image: image, width: width, height: height, gaplessPlayback: true);
+  }
+}
 class GifHeader1 extends RefreshIndicator {
-  GifHeader1() : super(height: 80.0, refreshStyle: RefreshStyle.Follow);
+  const GifHeader1({super.key}) : super(height: 80.0, refreshStyle: RefreshStyle.Follow);
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -25,7 +48,7 @@ class GifHeader1 extends RefreshIndicator {
 
 class GifHeader1State extends RefreshIndicatorState<GifHeader1>
     with SingleTickerProviderStateMixin {
-  GifController _gifController;
+  late GifController _gifController;
 
   @override
   void initState() {
@@ -39,11 +62,11 @@ class GifHeader1State extends RefreshIndicatorState<GifHeader1>
   }
 
   @override
-  void onModeChange(RefreshStatus mode) {
+  void onModeChange(RefreshStatus? mode) {
     // TODO: implement onModeChange
     if (mode == RefreshStatus.refreshing) {
       _gifController.repeat(
-          min: 0, max: 29, period: Duration(milliseconds: 500));
+          min: 0, max: 29, period: const Duration(milliseconds: 500));
     }
     super.onModeChange(mode);
   }
@@ -83,7 +106,7 @@ class GifHeader1State extends RefreshIndicatorState<GifHeader1>
 }
 
 class GifFooter1 extends StatefulWidget {
-  GifFooter1() : super();
+  const GifFooter1({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -94,7 +117,7 @@ class GifFooter1 extends StatefulWidget {
 
 class _GifFooter1State extends State<GifFooter1>
     with SingleTickerProviderStateMixin {
-  GifController _gifController;
+  late GifController _gifController;
 
   @override
   void initState() {
@@ -144,6 +167,8 @@ class _GifFooter1State extends State<GifFooter1>
 }
 
 class GifIndicatorExample1 extends StatefulWidget {
+  const GifIndicatorExample1({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -152,7 +177,7 @@ class GifIndicatorExample1 extends StatefulWidget {
 }
 
 class GifIndicatorExample1State extends State<GifIndicatorExample1> {
-  RefreshController _controller = RefreshController();
+  final RefreshController _controller = RefreshController();
   @override
   Widget build(BuildContext context) {
     // TODO: implement build

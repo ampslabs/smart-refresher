@@ -5,15 +5,14 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 
 /*
     achieve requirement
     tap button to trigger refresh insteal of pull down refresh
  */
 class TapButtonRefreshExample extends StatefulWidget {
-  TapButtonRefreshExample();
+  const TapButtonRefreshExample({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -24,7 +23,7 @@ class TapButtonRefreshExample extends StatefulWidget {
 
 class _TapButtonRefreshExampleState extends State<TapButtonRefreshExample> {
   List<String> data = [];
-  RefreshController _refreshController =
+  final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   bool _enablePullDown = false;
 
@@ -63,8 +62,8 @@ class _TapButtonRefreshExampleState extends State<TapButtonRefreshExample> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _refreshController.headerMode.addListener(() {
-      if (_refreshController.headerMode.value == RefreshStatus.idle) {
+    _refreshController.headerMode?.addListener(() {
+      if (_refreshController.headerMode?.value == RefreshStatus.idle) {
         Future.delayed(const Duration(milliseconds: 20)).then((value) {
           _enablePullDown = false;
           setState(() {});
@@ -79,12 +78,12 @@ class _TapButtonRefreshExampleState extends State<TapButtonRefreshExample> {
     return Scaffold(
       body: SmartRefresher(
         controller: _refreshController,
-        enablePullUp: data.length != 0,
+        enablePullUp: data.isNotEmpty,
         enablePullDown: _enablePullDown,
         header: ClassicHeader(),
         onRefresh: () async {
           await Future.delayed(const Duration(milliseconds: 2000));
-          if (mounted)
+          if (mounted) {
             setState(() {
               data.add("new");
               data.add("new");
@@ -93,9 +92,10 @@ class _TapButtonRefreshExampleState extends State<TapButtonRefreshExample> {
               data.add("new");
               data.add("new");
             });
+          }
           _refreshController.refreshCompleted();
         },
-        child: data.length == 0
+        child: data.isEmpty
             ? buildEmpty()
             : ListView.builder(
                 itemBuilder: (c, i) => Text(data[i]),

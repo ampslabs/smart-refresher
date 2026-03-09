@@ -1,7 +1,7 @@
 name: smart_refresher
-description: A maintained community fork of flutter_pulltorefresh for pull-to-refresh and infinite loading in Flutter scrollables.
+description: pull-to-refresh and infinite loading in Flutter scrollables.
 version: 0.1.0
-homepage: https://github.com/your-github-username/smart-refresher
+homepage: https://github.com/ampslabs/smart-refresher
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -12,9 +12,9 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
 
 flutter:
   uses-material-design: true

@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart' hide RefreshIndicator;
+import 'package:smart_refresher/smart_refresher.dart' hide RefreshIndicator;
 
 class Test1 extends StatefulWidget {
-  Test1({Key key}) : super(key: key);
+  const Test1({super.key});
 
   @override
   Test1State createState() => Test1State();
@@ -14,8 +14,8 @@ class Test1 extends StatefulWidget {
 class Test1State extends State<Test1> {
 //  RefreshMode  refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;
-  RefreshController _refreshController;
-  ScrollController _scrollController;
+  late RefreshController _refreshController;
+  late ScrollController _scrollController;
   List<Widget> data = [];
 
   void _getDatas() {
@@ -90,15 +90,16 @@ class Test1State extends State<Test1> {
                       child: Text('Data '),
                     ),
                   ));
-                  if (mounted)
+                  if (mounted) {
                     setState(() {
                       _refreshController.refreshCompleted();
                     });
+                  }
                 });
               },
               onLoading: () {
                 Future.delayed(const Duration(milliseconds: 2009)).then((val) {
-                  if (mounted)
+                  if (mounted) {
                     setState(() {
                       data.add(Card(
                         margin: EdgeInsets.only(
@@ -109,6 +110,7 @@ class Test1State extends State<Test1> {
                       ));
                       _refreshController.loadComplete();
                     });
+                  }
                 });
               },
               child: ListView.builder(
@@ -121,6 +123,8 @@ class Test1State extends State<Test1> {
 }
 
 class Item extends StatefulWidget {
+  const Item({super.key});
+
   @override
   _ItemState createState() => _ItemState();
 }

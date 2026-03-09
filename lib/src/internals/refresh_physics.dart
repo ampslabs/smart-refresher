@@ -5,13 +5,12 @@
  */
 // ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
 // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:pull_to_refresh/src/internals/slivers.dart';
+import 'package:smart_refresher/smart_refresher.dart';
+import 'package:smart_refresher/src/internals/slivers.dart';
 
 /// a scrollPhysics for config refresh scroll effect,enable viewport out of edge whatever physics it is
 /// in [ClampingScrollPhysics], it doesn't allow to flip out of edge,but in RefreshPhysics,it will allow to do that,
@@ -38,7 +37,7 @@ class RefreshPhysics extends ScrollPhysics {
 
   /// Creates scroll physics that bounce back from the edge.
   RefreshPhysics(
-      {ScrollPhysics? parent,
+      {super.parent,
       this.updateFlag,
       this.maxUnderScrollExtent,
       this.springDescription,
@@ -48,8 +47,7 @@ class RefreshPhysics extends ScrollPhysics {
       this.bottomHitBoundary,
       this.enableScrollWhenRefreshCompleted,
       this.enableScrollWhenTwoLevel,
-      this.maxOverScrollExtent})
-      : super(parent: parent);
+      this.maxOverScrollExtent});
 
   @override
   RefreshPhysics applyTo(ScrollPhysics? ancestor) {
@@ -172,7 +170,7 @@ class RefreshPhysics extends ScrollPhysics {
     final ScrollPosition scrollPosition = position as ScrollPosition;
     viewportRender ??=
         findViewport(controller!.position?.context.storageContext);
-    bool notFull = position.minScrollExtent == position.maxScrollExtent;
+    final bool notFull = position.minScrollExtent == position.maxScrollExtent;
     final bool enablePullDown = viewportRender == null
         ? false
         : viewportRender!.firstChild is RenderSliverRefresh;
@@ -190,10 +188,10 @@ class RefreshPhysics extends ScrollPhysics {
       }
     }
     double topExtra = 0.0;
-    double? bottomExtra = 0.0;
+    double bottomExtra = 0.0;
     if (enablePullDown) {
       final RenderSliverRefresh sliverHeader =
-          viewportRender!.firstChild as RenderSliverRefresh;
+          viewportRender!.firstChild! as RenderSliverRefresh;
       topExtra = sliverHeader.hasLayoutExtent
           ? 0.0
           : sliverHeader.refreshIndicatorLayoutExtent;
@@ -213,12 +211,12 @@ class RefreshPhysics extends ScrollPhysics {
                           ?.hideFooterWhenNotFull ??
                       false))
           ? 0.0
-          : sliverFooter!.layoutExtent;
+          : sliverFooter!.layoutExtent!;
     }
     final double topBoundary =
         position.minScrollExtent - maxOverScrollExtent! - topExtra;
     final double bottomBoundary =
-        position.maxScrollExtent + maxUnderScrollExtent! + bottomExtra!;
+        position.maxScrollExtent + maxUnderScrollExtent! + bottomExtra;
 
     if (scrollPosition.activity is BallisticScrollActivity) {
       if (topHitBoundary != double.infinity) {
@@ -237,8 +235,10 @@ class RefreshPhysics extends ScrollPhysics {
     }
     if (maxOverScrollExtent != double.infinity &&
         value < topBoundary &&
-        topBoundary < position.pixels) // hit top edge
+        topBoundary < position.pixels) {
+      // hit top edge
       return value - topBoundary;
+    }
     if (maxUnderScrollExtent != double.infinity &&
         position.pixels < bottomBoundary &&
         bottomBoundary < value) {
@@ -250,12 +250,16 @@ class RefreshPhysics extends ScrollPhysics {
     if (scrollPosition.activity is DragScrollActivity) {
       if (maxOverScrollExtent != double.infinity &&
           value < position.pixels &&
-          position.pixels <= topBoundary) // underscroll
+          position.pixels <= topBoundary) {
+        // underscroll
         return value - position.pixels;
+      }
       if (maxUnderScrollExtent != double.infinity &&
           bottomBoundary <= position.pixels &&
-          position.pixels < value) // overscroll
+          position.pixels < value) {
+        // overscroll
         return value - position.pixels;
+      }
     }
     return 0.0;
   }
@@ -297,7 +301,7 @@ class RefreshPhysics extends ScrollPhysics {
             controller!.headerMode!.value == RefreshStatus.twoLeveling
                 ? 0.0
                 : position.maxScrollExtent,
-        tolerance: tolerance,
+        tolerance: toleranceFor(position),
       );
     }
     return super.createBallisticSimulation(position, velocity);

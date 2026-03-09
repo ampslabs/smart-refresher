@@ -4,12 +4,13 @@
  * Time:  2019-07-08 11:05
  */
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../other/shimmer_indicator.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 
 class ShimmerIndicatorExample extends StatefulWidget {
+  const ShimmerIndicatorExample({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -26,7 +27,7 @@ class ShimmerIndicatorExample extends StatefulWidget {
 
  */
 class _ShimmerIndicatorExampleState extends State<ShimmerIndicatorExample> {
-  RefreshController _refreshController = RefreshController();
+  final RefreshController _refreshController = RefreshController();
   List<String> data = [
     "1",
     "2",

@@ -10,7 +10,7 @@
 
 import 'package:flutter/material.dart';
 import '../../../other/custom_spinkit.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 
 /*
    this example show you how to custom your indicator with CustomHeader and CustomFooter,
@@ -20,6 +20,8 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
  */
 class CustomHeaderExample extends StatefulWidget {
+  const CustomHeaderExample({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -29,9 +31,9 @@ class CustomHeaderExample extends StatefulWidget {
 
 class _CustomHeaderExampleState extends State<CustomHeaderExample>
     with TickerProviderStateMixin {
-  AnimationController _anicontroller, _scaleController;
-  AnimationController _footerController;
-  RefreshController _refreshController = RefreshController();
+  late AnimationController _anicontroller, _scaleController;
+  late AnimationController _footerController;
+  final RefreshController _refreshController = RefreshController();
   int count = 20;
   @override
   void initState() {
@@ -42,7 +44,7 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample>
         AnimationController(value: 0.0, vsync: this, upperBound: 1.0);
     _footerController = AnimationController(
         vsync: this, duration: Duration(milliseconds: 2000));
-    _refreshController.headerMode.addListener(() {
+    _refreshController.headerMode?.addListener(() {
       if (_refreshController.headerStatus == RefreshStatus.idle) {
         _scaleController.value = 0.0;
         _anicontroller.reset();
@@ -80,11 +82,6 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample>
           setState(() {});
           _refreshController.loadComplete();
         },
-        child: ListView.builder(
-          itemBuilder: (c, i) => Card(),
-          itemExtent: 100,
-          itemCount: count,
-        ),
         footer: CustomFooter(
           onModeChange: (mode) {
             if (mode == LoadStatus.loading) {
@@ -117,7 +114,7 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample>
                 );
                 break;
             }
-            return Container(
+            return SizedBox(
               height: 60,
               child: Center(
                 child: child,
@@ -128,14 +125,17 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample>
         header: CustomHeader(
           refreshStyle: RefreshStyle.Behind,
           onOffsetChange: (offset) {
-            if (_refreshController.headerMode.value != RefreshStatus.refreshing)
+            if (_refreshController.headerMode?.value != RefreshStatus.refreshing) {
               _scaleController.value = offset / 80.0;
+            }
           },
           builder: (c, m) {
             return Container(
+              alignment: Alignment.center,
               child: FadeTransition(
                 opacity: _scaleController,
                 child: ScaleTransition(
+                  scale: _scaleController,
                   child: SpinKitFadingCircle(
                     size: 30.0,
                     animationController: _anicontroller,
@@ -147,12 +147,15 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample>
                       );
                     },
                   ),
-                  scale: _scaleController,
                 ),
               ),
-              alignment: Alignment.center,
             );
           },
+        ),
+        child: ListView.builder(
+          itemBuilder: (c, i) => Card(),
+          itemExtent: 100,
+          itemCount: count,
         ),
       ),
     );

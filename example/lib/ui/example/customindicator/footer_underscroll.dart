@@ -7,13 +7,14 @@
 // convert footer to header to use ,behaviour almost same with header
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_gifimage/flutter_gifimage.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+// import 'package:flutter_gifimage/flutter_gifimage.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 
 import '../../Item.dart';
 
 class ConvertFooter extends StatefulWidget {
+  const ConvertFooter({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -22,7 +23,7 @@ class ConvertFooter extends StatefulWidget {
 }
 
 class _ConvertFooterState extends State<ConvertFooter> {
-  RefreshController _refreshController = RefreshController();
+  final RefreshController _refreshController = RefreshController();
 
   List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
@@ -57,15 +58,17 @@ class _ConvertFooterState extends State<ConvertFooter> {
           footer: ClassicFooter(
             loadStyle: LoadStyle.ShowWhenLoading,
           ),
-          child: buildCtn(),
           onLoading: () async {
             await Future.delayed(Duration(milliseconds: 1000));
-            for (int i = 0; i < 5; i++) data.add("1");
+            for (int i = 0; i < 5; i++) {
+              data.add("1");
+            }
 
             setState(() {});
             _refreshController.loadFailed();
           },
           controller: _refreshController,
+          child: buildCtn(),
         ),
       ),
       appBar: AppBar(),

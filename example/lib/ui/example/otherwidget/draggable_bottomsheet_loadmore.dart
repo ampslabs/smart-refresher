@@ -4,9 +4,8 @@
  * Time:  2019-07-03 17:24
  */
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 
 /*
   notice that,If your combine with DraggableScrollSheet with SmartRefresher,
@@ -14,6 +13,8 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
   the second, the example has StatefulBuilder,just not setState(),it will never rebuild scrollSheet
  */
 class DraggableLoadingBottomSheet extends StatefulWidget {
+  const DraggableLoadingBottomSheet({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -23,7 +24,7 @@ class DraggableLoadingBottomSheet extends StatefulWidget {
 
 class _DraggableLoadingBottomSheetState
     extends State<DraggableLoadingBottomSheet> {
-  RefreshController _controller = RefreshController();
+  final RefreshController _controller = RefreshController();
 
   List<String> items = [];
 
@@ -31,7 +32,9 @@ class _DraggableLoadingBottomSheetState
   void initState() {
     // TODO: implement initState
     super.initState();
-    for (int i = 0; i < 15; i++) items.add("数据");
+    for (int i = 0; i < 15; i++) {
+      items.add("数据");
+    }
   }
 
   @override
@@ -42,7 +45,7 @@ class _DraggableLoadingBottomSheetState
         title: const Text('DraggableScrollableSheet'),
       ),
       body: Container(
-        child: RaisedButton(
+        child: ElevatedButton(
           onPressed: () {
             showModalBottomSheet(
                 backgroundColor: Colors.transparent,
@@ -59,17 +62,6 @@ class _DraggableLoadingBottomSheetState
                         child: StatefulBuilder(
                           builder: (BuildContext context2, setter) {
                             return SmartRefresher(
-                              child: ListView.separated(
-                                controller: scrollController,
-                                separatorBuilder: (c, i) => Divider(),
-                                itemBuilder: (_, e) => Container(
-                                  child:
-                                      Center(child: Text("菜单" + e.toString())),
-                                  height: 40.0,
-                                ),
-                                physics: ClampingScrollPhysics(),
-                                itemCount: items.length,
-                              ),
                               controller: _controller,
                               onLoading: () async {
                                 await Future.delayed(
@@ -83,6 +75,17 @@ class _DraggableLoadingBottomSheetState
                               },
                               enablePullUp: true,
                               enablePullDown: false,
+                              child: ListView.separated(
+                                controller: scrollController,
+                                separatorBuilder: (c, i) => Divider(),
+                                itemBuilder: (_, e) => SizedBox(
+                                  height: 40.0,
+                                  child:
+                                      Center(child: Text("菜单$e")),
+                                ),
+                                physics: ClampingScrollPhysics(),
+                                itemCount: items.length,
+                              ),
                             );
                           },
                         ),

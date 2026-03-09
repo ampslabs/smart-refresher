@@ -5,7 +5,7 @@
 import 'dart:math';
 
 import 'package:flutter/rendering.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 import 'package:flutter/material.dart' hide RefreshIndicator;
 
 // Examples can assume:
@@ -48,37 +48,37 @@ typedef ReorderCallback = void Function(int oldIndex, int newIndex);
 ///
 /// All [children] must have a key.
 class RefreshReorderableListView extends StatefulWidget {
-  final RefreshIndicator refreshHeader;
+  final RefreshIndicator? refreshHeader;
 
-  final LoadIndicator refreshFooter;
+  final LoadIndicator? refreshFooter;
 
   final bool enablePullUp;
 
   final bool enablePullDown;
 
-  final Function onRefresh, onLoading;
+  final Function? onRefresh, onLoading;
+
+  final Function? onOffsetChange;
 
   final RefreshController refreshController;
 
   /// Creates a reorderable list.
-  RefreshReorderableListView({
+  RefreshReorderableListView({super.key, 
     this.header,
-    @required this.children,
-    @required this.onReorder,
+    required this.children,
+    required this.onReorder,
     this.scrollDirection = Axis.vertical,
     this.padding,
     this.reverse = false,
-    @required this.refreshController,
+    required this.refreshController,
     this.refreshHeader,
     this.refreshFooter,
-    this.enablePullDown: true,
-    this.enablePullUp: false,
+    this.enablePullDown = true,
+    this.enablePullUp = false,
     this.onRefresh,
     this.onLoading,
-  })  : assert(scrollDirection != null),
-        assert(onReorder != null),
-        assert(children != null),
-        assert(
+    this.onOffsetChange,
+  })  : assert(
           children.every((Widget w) => w.key != null),
           'All children of this widget must have a key.',
         );
@@ -86,7 +86,7 @@ class RefreshReorderableListView extends StatefulWidget {
   /// A non-reorderable header widget to show before the list.
   ///
   /// If null, no header will appear before the list.
-  final Widget header;
+  final Widget? header;
 
   /// The widgets to display.
   final List<Widget> children;
@@ -97,7 +97,7 @@ class RefreshReorderableListView extends StatefulWidget {
   final Axis scrollDirection;
 
   /// The amount of space by which to inset the [children].
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
 
   /// Whether the scroll view scrolls in the reading direction.
   ///
@@ -139,7 +139,7 @@ class _ReorderableListViewState extends State<RefreshReorderableListView> {
       GlobalKey(debugLabel: '$ReorderableListView overlay key');
 
   // This entry contains the scrolling list itself.
-  OverlayEntry _listOverlayEntry;
+  late OverlayEntry _listOverlayEntry;
 
   @override
   void initState() {
@@ -149,7 +149,6 @@ class _ReorderableListViewState extends State<RefreshReorderableListView> {
       builder: (BuildContext context) {
         return _ReorderableListContent(
           header: widget.header,
-          children: widget.children,
           scrollDirection: widget.scrollDirection,
           onReorder: widget.onReorder,
           padding: widget.padding,
@@ -161,6 +160,8 @@ class _ReorderableListViewState extends State<RefreshReorderableListView> {
           refreshHeader: widget.refreshHeader,
           onLoading: widget.onLoading,
           onRefresh: widget.onRefresh,
+          onOffsetChange: widget.onOffsetChange,
+          children: widget.children,
         );
       },
     );
@@ -178,40 +179,40 @@ class _ReorderableListViewState extends State<RefreshReorderableListView> {
 // ReorderableListView.
 class _ReorderableListContent extends StatefulWidget {
   const _ReorderableListContent({
-    @required this.header,
-    @required this.children,
-    @required this.scrollDirection,
-    @required this.padding,
-    @required this.onReorder,
-    @required this.reverse,
-    @required this.refreshController,
+    this.header,
+    required this.children,
+    required this.scrollDirection,
+    this.padding,
+    required this.onReorder,
+    required this.reverse,
+    required this.refreshController,
     this.refreshHeader,
     this.refreshFooter,
-    this.enablePullDown: true,
-    this.enablePullUp: false,
+    this.enablePullDown = true,
+    this.enablePullUp = false,
     this.onRefresh,
     this.onLoading,
     this.onOffsetChange,
   });
 
-  final RefreshIndicator refreshHeader;
+  final RefreshIndicator? refreshHeader;
 
-  final LoadIndicator refreshFooter;
+  final LoadIndicator? refreshFooter;
 
   final bool enablePullUp;
 
   final bool enablePullDown;
 
-  final Function onRefresh, onLoading;
+  final Function? onRefresh, onLoading;
 
-  final Function onOffsetChange;
+  final Function? onOffsetChange;
 
   final RefreshController refreshController;
 
-  final Widget header;
+  final Widget? header;
   final List<Widget> children;
   final Axis scrollDirection;
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
   final ReorderCallback onReorder;
   final bool reverse;
 
@@ -239,22 +240,22 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
   static const Duration _scrollAnimationDuration = Duration(milliseconds: 200);
 
   // Controls scrolls and measures scroll progress.
-  ScrollController _scrollController;
+  late ScrollController _scrollController;
 
   // This controls the entrance of the dragging widget into a new place.
-  AnimationController _entranceController;
+  late AnimationController _entranceController;
 
   // This controls the 'ghost' of the dragging widget, which is left behind
   // where the widget used to be.
-  AnimationController _ghostController;
+  late AnimationController _ghostController;
 
   // The member of widget.children currently being dragged.
   //
   // Null if no drag is underway.
-  Key _dragging;
+  Key? _dragging;
 
   // The last computed size of the feedback widget being dragged.
-  Size _draggingFeedbackSize;
+  late Size _draggingFeedbackSize;
 
   // The location that the dragging widget occupied before it started to drag.
   int _dragStartIndex = 0;
@@ -273,9 +274,6 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
   bool _scrolling = false;
 
   double get _dropAreaExtent {
-    if (_draggingFeedbackSize == null) {
-      return _defaultDropAreaExtent;
-    }
     double dropAreaWithoutMargin;
     switch (widget.scrollDirection) {
       case Axis.horizontal:
@@ -338,10 +336,9 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
   // Scrolls to a target context if that context is not on the screen.
   void _scrollTo(BuildContext context) {
     if (_scrolling) return;
-    final RenderObject contextObject = context.findRenderObject();
+    final RenderObject? contextObject = context.findRenderObject();
     final RenderAbstractViewport viewport =
         RenderAbstractViewport.of(contextObject);
-    assert(viewport != null);
     // If and only if the current scroll offset falls in-between the offsets
     // necessary to reveal the selected context at the top or bottom of the
     // screen, then it is already on-screen.
@@ -349,7 +346,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
     final double scrollOffset = _scrollController.offset;
     final double topOffset = max(
       _scrollController.position.minScrollExtent,
-      viewport.getOffsetToReveal(contextObject, 0.0).offset - margin,
+      viewport.getOffsetToReveal(contextObject!, 0.0).offset - margin,
     );
     final double bottomOffset = min(
       _scrollController.position.maxScrollExtent,
@@ -377,7 +374,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
 
   // Wraps children in Row or Column, so that the children flow in
   // the widget's scrollDirection.
-  Widget _buildContainerForScrollDirection({List<Widget> children}) {
+  Widget _buildContainerForScrollDirection({required List<Widget> children}) {
     switch (widget.scrollDirection) {
       case Axis.horizontal:
         return Row(children: children);
@@ -391,7 +388,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
   // Handles up the logic for dragging and reordering items in the list.
   Widget _wrap(Widget toWrap, int index, BoxConstraints constraints) {
     assert(toWrap.key != null);
-    final GlobalObjectKey keyIndexGlobalKey = GlobalObjectKey(toWrap.key);
+    final GlobalObjectKey keyIndexGlobalKey = GlobalObjectKey(toWrap.key!);
     // We pass the toWrapWithGlobalKey into the Draggable so that when a list
     // item gets dragged, the accessibility framework can preserve the selected
     // state of the dragging item.
@@ -404,7 +401,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
         _ghostIndex = index;
         _currentIndex = index;
         _entranceController.value = 1.0;
-        _draggingFeedbackSize = keyIndexGlobalKey.currentContext.size;
+        _draggingFeedbackSize = keyIndexGlobalKey.currentContext?.size ?? Size.zero;
       });
     }
 
@@ -488,7 +485,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
       );
     }
 
-    Widget buildDragTarget(BuildContext context, List<Key> acceptedCandidates,
+    Widget buildDragTarget(BuildContext context, List<Key?> acceptedCandidates,
         List<dynamic> rejectedCandidates) {
       final Widget toWrapWithSemantics = wrapWithSemantics();
 
@@ -508,10 +505,8 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
             child: toWrapWithSemantics,
           ),
         ),
-        child: _dragging == toWrap.key ? const SizedBox() : toWrapWithSemantics,
         childWhenDragging: const SizedBox(),
-        dragAnchor: DragAnchor.child,
-        onDragStarted: onDragStarted,
+        onDragStarted: onDragStarted, dragAnchorStrategy: childDragAnchorStrategy,
         // When the drag ends inside a DragTarget widget, the drag
         // succeeds, and we reorder the widget into position appropriately.
         onDragCompleted: onDragEnded,
@@ -521,6 +516,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
         onDraggableCanceled: (Velocity velocity, Offset offset) {
           onDragEnded();
         },
+        child: _dragging == toWrap.key ? const SizedBox() : toWrapWithSemantics,
       );
 
       // The target for dropping at the end of the list doesn't need to be
@@ -572,16 +568,16 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
     return Builder(builder: (BuildContext context) {
       return DragTarget<Key>(
         builder: buildDragTarget,
-        onWillAccept: (Key toAccept) {
+        onWillAcceptWithDetails: (DragTargetDetails<Key> toAccept) {
           setState(() {
             _nextIndex = index;
             _requestAnimationToNextIndex();
           });
           _scrollTo(context);
           // If the target is not the original starting point, then we will accept the drop.
-          return _dragging == toAccept && toAccept != toWrap.key;
+          return _dragging == toAccept.data && toAccept.data != toWrap.key;
         },
-        onAccept: (Key accepted) {},
+        onAcceptWithDetails: (DragTargetDetails<Key> accepted) {},
         onLeave: (_) {},
       );
     });
@@ -593,10 +589,8 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       final List<Widget> wrappedChildren = <Widget>[];
-      if (widget.header != null) {
-        wrappedChildren.add(widget.header);
-      }
-      for (int i = 0; i < widget.children.length; i += 1) {
+      if (widget.header != null) wrappedChildren.add(widget.header!);
+          for (int i = 0; i < widget.children.length; i += 1) {
         wrappedChildren.add(_wrap(widget.children[i], i, constraints));
       }
       const Key endWidgetKey = Key('DraggableList - End Widget');
@@ -629,22 +623,22 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
         );
       }
       return SmartRefresher(
-        child: ListView(
-          scrollDirection: widget.scrollDirection,
-          children: [
-            _buildContainerForScrollDirection(children: wrappedChildren)
-          ],
-          padding: widget.padding,
-          controller: _scrollController,
-          reverse: widget.reverse,
-        ),
         controller: widget.refreshController,
         enablePullDown: widget.enablePullDown,
         enablePullUp: widget.enablePullUp,
         footer: widget.refreshFooter,
         header: widget.refreshHeader,
-        onLoading: widget.onLoading,
-        onRefresh: widget.onRefresh,
+        onLoading: widget.onLoading as VoidCallback?,
+        onRefresh: widget.onRefresh as VoidCallback?,
+        child: ListView(
+          scrollDirection: widget.scrollDirection,
+          padding: widget.padding,
+          controller: _scrollController,
+          reverse: widget.reverse,
+          children: [
+            _buildContainerForScrollDirection(children: wrappedChildren)
+          ],
+        ),
       );
     });
   }

@@ -1,15 +1,16 @@
 import 'package:example/other/refresh_glowindicator.dart';
 import 'package:example/ui/MainActivity.dart';
 import 'package:example/ui/SecondActivity.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 import 'ui/indicator/base/IndicatorActivity.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -30,8 +31,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         builder: (context, child) {
           return ScrollConfiguration(
-            child: child,
             behavior: RefreshScrollBehavior(),
+            child: child!,
           );
         },
         theme: ThemeData(
@@ -67,7 +68,7 @@ class MyApp extends StatelessWidget {
         ],
         locale: const Locale('zh'),
         localeResolutionCallback:
-            (Locale locale, Iterable<Locale> supportedLocales) {
+            (Locale? locale, Iterable<Locale> supportedLocales) {
           //print("change language");
           return locale;
         },
@@ -79,7 +80,7 @@ class MyApp extends StatelessWidget {
             );
           },
           "indicator": (BuildContext context) {
-            return IndicatorActivity();
+            return IndicatorActivity(title: 'Indicators');
           }
         },
       ),

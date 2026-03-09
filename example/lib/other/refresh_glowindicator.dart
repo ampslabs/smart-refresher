@@ -12,24 +12,19 @@ import 'package:flutter/material.dart';
 // Android平台 自定义刷新光晕效果
 class RefreshScrollBehavior extends ScrollBehavior {
   @override
-  Widget buildViewportChrome(
-      BuildContext context, Widget child, AxisDirection axisDirection) {
-    // When modifying this function, consider modifying the implementation in
-    // _MaterialScrollBehavior as well.
+  Widget buildOverscrollIndicator(
+      BuildContext context, Widget child, ScrollableDetails details) {
     switch (getPlatform(context)) {
       case TargetPlatform.iOS:
         return child;
       case TargetPlatform.macOS:
       case TargetPlatform.android:
         return GlowingOverscrollIndicator(
-          child: child,
-          // this will disable top Bouncing OverScroll Indicator showing in Android
-          showLeading: true, //顶部水波纹是否展示
-          showTrailing: true, //底部水波纹是否展示
-          axisDirection: axisDirection,
+          showLeading: true,
+          showTrailing: true,
+          axisDirection: details.direction,
           notificationPredicate: (notification) {
             if (notification.depth == 0) {
-              // 越界了拖动触发overScroll的话就没必要展示水波纹
               if (notification.metrics.outOfRange) {
                 return false;
               }
@@ -38,11 +33,12 @@ class RefreshScrollBehavior extends ScrollBehavior {
             return false;
           },
           color: Theme.of(context).primaryColor,
+          child: child,
         );
       case TargetPlatform.fuchsia:
       case TargetPlatform.linux:
       case TargetPlatform.windows:
     }
-    return null;
+    return child;
   }
 }

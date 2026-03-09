@@ -3,22 +3,24 @@ import 'dart:convert' show json;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as HTTP;
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 
 class Test2 extends StatefulWidget {
+  const Test2({super.key});
+
   @override
   _Test2State createState() => _Test2State();
 }
 
 class _Test2State extends State<Test2> with TickerProviderStateMixin {
-  RefreshController _controller;
+  late RefreshController _controller;
   int indexPage = 0;
   List<String> data = [];
 
   void _fetch() {
     HTTP
-        .get(
-            'https://gank.io/api/v2/data/category/Girl/type/Girl/page/$indexPage/count/10')
+        .get(Uri.parse(
+            'https://gank.io/api/v2/data/category/Girl/type/Girl/page/$indexPage/count/10'))
         .then((HTTP.Response response) {
       Map map = json.decode(response.body);
       return map["data"];
@@ -108,7 +110,7 @@ class _Test2State extends State<Test2> with TickerProviderStateMixin {
 class Item extends StatefulWidget {
   final String url;
 
-  Item({this.url});
+  const Item({super.key, required this.url});
 
   @override
   _ItemState createState() => _ItemState();
@@ -117,7 +119,6 @@ class Item extends StatefulWidget {
 class _ItemState extends State<Item> {
   @override
   Widget build(BuildContext context) {
-    if (widget.url == null) return Container();
     return Container(
       child: FadeInImage(
         placeholder: AssetImage("images/empty.png"),

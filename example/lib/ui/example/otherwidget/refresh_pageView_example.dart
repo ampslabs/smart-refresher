@@ -7,13 +7,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 
 /*
   this example will show you how to use vertical PageView as child in SmartRefresher(vertical refresh)
  */
 class PageViewExample extends StatefulWidget {
-  PageViewExample({Key key}) : super(key: key);
+  const PageViewExample({super.key});
 
   @override
   PageViewExampleState createState() => PageViewExampleState();
@@ -21,7 +21,7 @@ class PageViewExample extends StatefulWidget {
 
 class PageViewExampleState extends State<PageViewExample>
     with TickerProviderStateMixin {
-  RefreshController _refreshController;
+  late RefreshController _refreshController;
   int _lastReportedPage = 0;
   List<Widget> data = [];
 
@@ -52,7 +52,7 @@ class PageViewExampleState extends State<PageViewExample>
         if (notification.depth == 0 &&
             notification is ScrollUpdateNotification) {
           final PageMetrics metrics = notification.metrics as PageMetrics;
-          final int currentPage = metrics.page.round();
+          final int currentPage = metrics.page?.round() ?? 0;
           if (currentPage != _lastReportedPage) {
             _lastReportedPage = currentPage;
             // this will callback onPageChange()

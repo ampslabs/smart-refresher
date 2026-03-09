@@ -26,6 +26,8 @@ import 'otherwidget/draggable_bottomsheet_loadmore.dart';
 import 'useStage/tapbutton_refresh.dart';
 
 class ExamplePage extends StatefulWidget {
+  const ExamplePage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -40,11 +42,10 @@ class ExampleItem extends StatefulWidget {
     return _ExampleItemState();
   }
 
-  final Function onClick;
-
+  final VoidCallback onClick;
   final String title;
 
-  ExampleItem({this.title, this.onClick});
+  const ExampleItem({super.key, required this.title, required this.onClick});
 }
 
 class _ExampleItemState extends State<ExampleItem> {
@@ -52,8 +53,8 @@ class _ExampleItemState extends State<ExampleItem> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return InkWell(
-      onTap: widget.onClick,
-      child: Container(
+      onTap: () => widget.onClick(),
+      child: SizedBox(
         height: 100.0,
         child: Card(
           child: Center(
@@ -67,7 +68,7 @@ class _ExampleItemState extends State<ExampleItem> {
 
 class _ExamplePageState extends State<ExamplePage>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
+  late TabController _tabController;
 
   @override
   void initState() {
@@ -271,6 +272,8 @@ class _ExamplePageState extends State<ExamplePage>
     return Column(
       children: <Widget>[
         Container(
+          height: 50.0,
+          color: Colors.greenAccent,
           child: TabBar(
             controller: _tabController,
             tabs: <Widget>[
@@ -285,17 +288,15 @@ class _ExamplePageState extends State<ExamplePage>
               ),
             ],
           ),
-          height: 50.0,
-          color: Colors.greenAccent,
         ),
         Expanded(
           child: TabBarView(
+            controller: _tabController,
             children: <Widget>[
               ListView(children: items1),
               ListView(children: items2),
               ListView(children: items3)
             ],
-            controller: _tabController,
           ),
         )
       ],

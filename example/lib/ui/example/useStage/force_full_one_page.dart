@@ -4,12 +4,11 @@
  * Time:  2019-10-17 20:30
  */
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/widgets.dart' as prefix0;
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 
 /// This example aim to fix the viewport not enough one page,there must be exist some problems that you don't hope that.
 /// relevant issue:#183,#166*
@@ -17,9 +16,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 // A Sliver for  Expanding empty space
 class SliverFillEmptySpace extends SingleChildRenderObjectWidget {
   /// Creates a sliver that contains a single box widget.
-  SliverFillEmptySpace({
-    Key key,
-  }) : super(key: key, child: Container());
+  SliverFillEmptySpace({super.key}) : super(child: Container());
 
   @override
   RenderSliverFillEmptySpace createRenderObject(BuildContext context) =>
@@ -28,9 +25,7 @@ class SliverFillEmptySpace extends SingleChildRenderObjectWidget {
 
 class RenderSliverFillEmptySpace extends RenderSliverSingleBoxAdapter {
   /// Creates a [RenderSliver] that wraps a [RenderBox].
-  RenderSliverFillEmptySpace({
-    RenderBox child,
-  }) : super(child: child);
+  RenderSliverFillEmptySpace({super.child});
 
   @override
   void performLayout() {
@@ -38,7 +33,8 @@ class RenderSliverFillEmptySpace extends RenderSliverSingleBoxAdapter {
         constraints.viewportMainAxisExtent - constraints.precedingScrollExtent;
 
     if (emptySpaceExtent > 0) {
-      child.layout(constraints.asBoxConstraints(maxExtent: emptySpaceExtent),
+      child!.layout(
+          constraints.asBoxConstraints(maxExtent: emptySpaceExtent),
           parentUsesSize: true);
       double childExtent = emptySpaceExtent;
       final double paintedChildSize =
@@ -51,7 +47,7 @@ class RenderSliverFillEmptySpace extends RenderSliverSingleBoxAdapter {
         cacheExtent: cacheExtent,
         maxPaintExtent: childExtent,
       );
-      setChildParentData(child, constraints, geometry);
+      setChildParentData(child!, constraints, geometry!);
     } else {
       geometry = SliverGeometry.zero;
     }
@@ -61,36 +57,24 @@ class RenderSliverFillEmptySpace extends RenderSliverSingleBoxAdapter {
 class FillEmptyCustomScrollView extends prefix0.CustomScrollView {
   final bool enableFillEmpty;
   const FillEmptyCustomScrollView({
-    Key key,
-    this.enableFillEmpty,
-    Axis scrollDirection = Axis.vertical,
-    bool reverse = false,
-    ScrollController controller,
-    bool primary,
-    ScrollPhysics physics,
-    bool shrinkWrap = false,
-    Key center,
-    double anchor = 0.0,
-    double cacheExtent,
+    super.key,
+    required this.enableFillEmpty,
+    super.scrollDirection,
+    super.reverse,
+    super.controller,
+    super.primary,
+    super.physics,
+    super.shrinkWrap,
+    super.center,
+    super.anchor,
+    super.cacheExtent,
     this.slivers = const <Widget>[],
-    int semanticChildCount,
-    DragStartBehavior dragStartBehavior = DragStartBehavior.start,
-  }) : super(
-          key: key,
-          scrollDirection: scrollDirection,
-          reverse: reverse,
-          controller: controller,
-          primary: primary,
-          physics: physics,
-          shrinkWrap: shrinkWrap,
-          center: center,
-          anchor: anchor,
-          cacheExtent: cacheExtent,
-          semanticChildCount: semanticChildCount,
-          dragStartBehavior: dragStartBehavior,
-        );
+    super.semanticChildCount,
+    super.dragStartBehavior,
+  });
 
   /// The slivers to place inside the viewport.
+  @override
   final List<Widget> slivers;
 
   @override
@@ -101,7 +85,9 @@ class FillEmptyCustomScrollView extends prefix0.CustomScrollView {
 }
 
 class ForceFullExample extends StatelessWidget {
-  RefreshController _refreshController = RefreshController();
+  final RefreshController _refreshController = RefreshController();
+
+  ForceFullExample({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +108,7 @@ class ForceFullExample extends StatelessWidget {
       ),
       child: FillEmptyCustomScrollView(
         enableFillEmpty:
-            _refreshController.footerMode.value != LoadStatus.noMore,
+            _refreshController.footerMode?.value != LoadStatus.noMore,
         slivers: <Widget>[
           SliverToBoxAdapter(
             child: Text(

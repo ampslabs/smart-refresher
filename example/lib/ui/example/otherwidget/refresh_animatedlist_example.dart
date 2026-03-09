@@ -2,26 +2,27 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 
 class AnimatedListExample extends StatefulWidget {
+  const AnimatedListExample({super.key});
+
   @override
-  _AnimatedListExampleState createState() => new _AnimatedListExampleState();
+  _AnimatedListExampleState createState() => _AnimatedListExampleState();
 }
 
 class _AnimatedListExampleState extends State<AnimatedListExample> {
   final GlobalKey<SliverAnimatedListState> _listKey =
-      new GlobalKey<SliverAnimatedListState>();
-  ListModel<int> _list;
-  int _selectedItem;
-  int _nextItem; // The next item inserted when the user presses the '+' button.
+      GlobalKey<SliverAnimatedListState>();
+  late ListModel<int> _list;
+  int? _selectedItem;
+  int _nextItem = 0;
 
   @override
   void initState() {
     super.initState();
-    _list = new ListModel<int>(
+    _list = ListModel<int>(
       listKey: _listKey,
       initialItems: <int>[0, 1, 2],
       removedItemBuilder: _buildRemovedItem,
@@ -32,15 +33,16 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
   // Used to build list items that haven't been removed.
   Widget _buildItem(
       BuildContext context, int index, Animation<double> animation) {
-    return new CardItem(
+    return CardItem(
       animation: animation,
       item: _list[index],
       selected: _selectedItem == _list[index],
       onTap: () {
-        if (mounted)
+        if (mounted) {
           setState(() {
             _selectedItem = _selectedItem == _list[index] ? null : _list[index];
           });
+        }
       },
     );
   }
@@ -52,7 +54,7 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
   // [SliverAnimatedListRemovedItemBuilder] parameter.
   Widget _buildRemovedItem(
       int item, BuildContext context, Animation<double> animation) {
-    return new CardItem(
+    return CardItem(
       animation: animation,
       item: item,
       selected: false,
@@ -63,8 +65,7 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
   // Insert the "next item" into the list model.
   void _insert() {
     for (int i = 0; i < 5; i++) {
-      final int index =
-          _selectedItem == null ? _list.length : _list.indexOf(_selectedItem);
+      final int index = _selectedItem == null ? _list.length : _list.indexOf(_selectedItem!);
       _list.insert(index, _nextItem++);
     }
   }
@@ -72,28 +73,29 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
   // Remove the selected item from the list model.
   void _remove() {
     if (_selectedItem != null) {
-      _list.removeAt(_list.indexOf(_selectedItem));
-      if (mounted)
+      _list.removeAt(_list.indexOf(_selectedItem!));
+      if (mounted) {
         setState(() {
           _selectedItem = null;
         });
+      }
     }
   }
 
-  RefreshController _refreshController = RefreshController();
+  final RefreshController _refreshController = RefreshController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new AppBar(
+      appBar: AppBar(
         title: const Text('SliverAnimatedList'),
         actions: <Widget>[
-          new IconButton(
+          IconButton(
             icon: const Icon(Icons.add_circle),
             onPressed: _insert,
             tooltip: 'insert a new item',
           ),
-          new IconButton(
+          IconButton(
             icon: const Icon(Icons.remove_circle),
             onPressed: _remove,
             tooltip: 'remove the selected item',
@@ -101,15 +103,6 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
         ],
       ),
       body: SmartRefresher(
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverAnimatedList(
-              key: _listKey,
-              initialItemCount: _list.length,
-              itemBuilder: _buildItem,
-            )
-          ],
-        ),
         onRefresh: () async {
           await Future.delayed(Duration(milliseconds: 500));
           _list.insert(0, 0);
@@ -122,6 +115,15 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
         },
         enablePullUp: true,
         controller: _refreshController,
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverAnimatedList(
+              key: _listKey,
+              initialItemCount: _list.length,
+              itemBuilder: _buildItem,
+            )
+          ],
+        ),
       ),
     );
   }
@@ -138,28 +140,26 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
 /// [SliverAnimatedListState.insertItem] and [SliverAnimatedList.removeItem].
 class ListModel<E> {
   ListModel({
-    @required this.listKey,
-    @required this.removedItemBuilder,
-    Iterable<E> initialItems,
-  })  : assert(listKey != null),
-        assert(removedItemBuilder != null),
-        _items = new List<E>.from(initialItems ?? <E>[]);
+    required this.listKey,
+    required this.removedItemBuilder,
+    Iterable<E>? initialItems,
+  }) : _items = List<E>.from(initialItems ?? <E>[]);
 
   final GlobalKey<SliverAnimatedListState> listKey;
   final dynamic removedItemBuilder;
   final List<E> _items;
 
-  SliverAnimatedListState get _sliverAnimatedList => listKey.currentState;
+  SliverAnimatedListState? get _sliverAnimatedList => listKey.currentState;
 
   void insert(int index, E item) {
     _items.insert(index, item);
-    _sliverAnimatedList.insertItem(index);
+    _sliverAnimatedList!.insertItem(index);
   }
 
   E removeAt(int index) {
     final E removedItem = _items.removeAt(index);
     if (removedItem != null) {
-      _sliverAnimatedList.removeItem(index,
+      _sliverAnimatedList!.removeItem(index,
           (BuildContext context, Animation<double> animation) {
         return removedItemBuilder(removedItem, context, animation);
       });
@@ -180,40 +180,38 @@ class ListModel<E> {
 /// from 0 to 128 as the animation varies from 0.0 to 1.0.
 class CardItem extends StatelessWidget {
   const CardItem(
-      {Key key,
-      @required this.animation,
+      {super.key,
+      required this.animation,
       this.onTap,
-      @required this.item,
-      this.selected: false})
-      : assert(animation != null),
-        assert(item != null && item >= 0),
-        assert(selected != null),
-        super(key: key);
+      required this.item,
+      this.selected = false})
+      : assert(item >= 0);
 
   final Animation<double> animation;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final int item;
   final bool selected;
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = Theme.of(context).textTheme.bodyText1;
-    if (selected)
+    TextStyle textStyle = Theme.of(context).textTheme.bodyLarge!;
+    if (selected) {
       textStyle = textStyle.copyWith(color: Colors.lightGreenAccent[400]);
-    return new Padding(
+    }
+    return Padding(
       padding: const EdgeInsets.all(2.0),
-      child: new SizeTransition(
+      child: SizeTransition(
         axis: Axis.vertical,
         sizeFactor: animation,
-        child: new GestureDetector(
+        child: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: onTap,
-          child: new SizedBox(
+          child: SizedBox(
             height: 128.0,
-            child: new Card(
+            child: Card(
               color: Colors.primaries[item % Colors.primaries.length],
-              child: new Center(
-                child: new Text('Item $item', style: textStyle),
+              child: Center(
+                child: Text('Item $item', style: textStyle),
               ),
             ),
           ),

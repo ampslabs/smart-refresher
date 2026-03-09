@@ -7,12 +7,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart'
     hide RefreshIndicatorState, RefreshIndicator;
-import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../internals/indicator_wrap.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 import 'package:flutter/cupertino.dart';
-import '../smart_refresher.dart';
 
 /// QQ ios refresh  header effect
 class WaterDropHeader extends RefreshIndicator {
@@ -32,21 +29,19 @@ class WaterDropHeader extends RefreshIndicator {
   final Color waterDropColor;
 
   const WaterDropHeader({
-    Key? key,
+    super.key,
     this.refresh,
     this.complete,
-    Duration completeDuration: const Duration(milliseconds: 600),
+    super.completeDuration = const Duration(milliseconds: 600),
     this.failed,
-    this.waterDropColor: Colors.grey,
-    this.idleIcon: const Icon(
+    this.waterDropColor = Colors.grey,
+    this.idleIcon = const Icon(
       Icons.autorenew,
       size: 15,
       color: Colors.white,
     ),
   }) : super(
-            key: key,
             height: 60.0,
-            completeDuration: completeDuration,
             refreshStyle: RefreshStyle.UnFollow);
 
   @override
@@ -67,8 +62,9 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
     final double realOffset =
         offset - 44.0; //55.0 mean circleHeight(24) + originH (20) in Painter
     // when readyTorefresh
-    if (!_animationController!.isAnimating)
+    if (!_animationController!.isAnimating) {
       _animationController!.value = realOffset;
+    }
   }
 
   @override
@@ -82,12 +78,11 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
   void initState() {
     // TODO: implement initState
     _dismissCtl = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 400), value: 1.0);
+        vsync: this, duration: const Duration(milliseconds: 400), value: 1.0);
     _animationController = AnimationController(
         vsync: this,
-        lowerBound: 0.0,
         upperBound: 50.0,
-        duration: Duration(milliseconds: 400));
+        duration: const Duration(milliseconds: 400));
     super.initState();
   }
 
@@ -126,7 +121,7 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                 (RefreshLocalizations.of(context)?.currentLocalization ??
                         EnRefreshString())
                     .refreshCompleteText!,
-                style: TextStyle(color: Colors.grey),
+                style: const TextStyle(color: Colors.grey),
               )
             ],
           );
@@ -146,47 +141,47 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                   (RefreshLocalizations.of(context)?.currentLocalization ??
                           EnRefreshString())
                       .refreshFailedText!,
-                  style: TextStyle(color: Colors.grey))
+                  style: const TextStyle(color: Colors.grey))
             ],
           );
     } else if (mode == RefreshStatus.idle || mode == RefreshStatus.canRefresh) {
       return FadeTransition(
-          child: Container(
+          opacity: _dismissCtl,
+          child: SizedBox(
+            height: 60.0,
             child: Stack(
               children: <Widget>[
                 RotatedBox(
+                  quarterTurns:
+                      Scrollable.of(context).axisDirection == AxisDirection.up
+                          ? 10
+                          : 0,
                   child: CustomPaint(
-                    child: Container(
-                      height: 60.0,
-                    ),
                     painter: _QqPainter(
                       color: widget.waterDropColor,
                       listener: _animationController,
                     ),
+                    child: Container(
+                      height: 60.0,
+                    ),
                   ),
-                  quarterTurns:
-                      Scrollable.of(context)!.axisDirection == AxisDirection.up
-                          ? 10
-                          : 0,
                 ),
                 Container(
                   alignment:
-                      Scrollable.of(context)!.axisDirection == AxisDirection.up
+                      Scrollable.of(context).axisDirection == AxisDirection.up
                           ? Alignment.bottomCenter
                           : Alignment.topCenter,
                   margin:
-                      Scrollable.of(context)!.axisDirection == AxisDirection.up
-                          ? EdgeInsets.only(bottom: 12.0)
-                          : EdgeInsets.only(top: 12.0),
+                      Scrollable.of(context).axisDirection == AxisDirection.up
+                          ? const EdgeInsets.only(bottom: 12.0)
+                          : const EdgeInsets.only(top: 12.0),
                   child: widget.idleIcon,
                 )
               ],
             ),
-            height: 60.0,
-          ),
-          opacity: _dismissCtl);
+          ));
     }
-    return Container(
+    return SizedBox(
       height: 60.0,
       child: Center(
         child: child,
@@ -221,18 +216,18 @@ class _QqPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final double originH = 20.0;
+    const double originH = 20.0;
     final double middleW = size.width / 2;
 
-    final double circleSize = 12.0;
+    const double circleSize = 12.0;
 
-    final double scaleRatio = 0.1;
+    const double scaleRatio = 0.1;
 
     final double offset = value;
 
     painter.color = color!;
     canvas.drawCircle(Offset(middleW, originH), circleSize, painter);
-    Path path = Path();
+    final Path path = Path();
     path.moveTo(middleW - circleSize, originH);
 
     //drawleft
@@ -256,7 +251,7 @@ class _QqPainter extends CustomPainter {
     //draw upper circle
     path.moveTo(middleW - circleSize, originH);
     path.arcToPoint(Offset(middleW + circleSize, originH),
-        radius: Radius.circular(circleSize));
+        radius: const Radius.circular(circleSize));
 
     //draw lowwer circle
     path.moveTo(

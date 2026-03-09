@@ -4,11 +4,13 @@
  * Time:  2019-05-26 23:09
  */
 
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
 
 class RunningHeader extends RefreshIndicator {
+  const RunningHeader({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -18,9 +20,9 @@ class RunningHeader extends RefreshIndicator {
 
 class RunningHeaderState extends RefreshIndicatorState<RunningHeader>
     with TickerProviderStateMixin {
-  AnimationController _scaleAnimation;
-  AnimationController _offsetController;
-  Tween<Offset> offsetTween;
+  late AnimationController _scaleAnimation;
+  late AnimationController _offsetController;
+  late Tween<Offset> offsetTween;
 
   @override
   void initState() {
@@ -66,13 +68,13 @@ class RunningHeaderState extends RefreshIndicatorState<RunningHeader>
   Widget buildContent(BuildContext context, RefreshStatus mode) {
     // TODO: implement buildContent
     return SlideTransition(
+      position: offsetTween.animate(_offsetController),
       child: ScaleTransition(
+        scale: _scaleAnimation,
         child: (mode != RefreshStatus.idle || mode != RefreshStatus.canRefresh)
             ? Image.asset("images/custom_2.gif")
             : Image.asset("images/custom_1.jpg"),
-        scale: _scaleAnimation,
       ),
-      position: offsetTween.animate(_offsetController),
     );
   }
 }

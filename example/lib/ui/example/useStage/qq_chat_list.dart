@@ -5,7 +5,7 @@
  */
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 import '../../../other/expanded_viewport.dart';
 
 /*
@@ -16,6 +16,8 @@ import '../../../other/expanded_viewport.dart';
    布局先探测一下他们的布局情况,第二次布局假如不满一屏,就在SliverExpanded后面的所有slivers调整主轴偏距。
  */
 class QQChatList extends StatefulWidget {
+  const QQChatList({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -27,9 +29,9 @@ const String myUrl =
     "https://avatars1.githubusercontent.com/u/19425362?s=400&u=1a30f9fdf71cc9a51e20729b2fa1410c710d0f2f&v=4";
 
 class _QQChatListState extends State<QQChatList> {
-  RefreshController _refreshController = RefreshController();
-  ScrollController _scrollController = ScrollController();
-  TextEditingController _textController = TextEditingController();
+  final RefreshController _refreshController = RefreshController();
+  final ScrollController _scrollController = ScrollController();
+  final TextEditingController _textController = TextEditingController();
   List<_MessageItem> data = [
     _MessageItem(
       content: "你好...................asdasdasdasdasdasdasdasdasda",
@@ -122,25 +124,28 @@ class _QQChatListState extends State<QQChatList> {
                       loadStyle: LoadStyle.ShowAlways,
                       builder: (context, mode) {
                         if (mode == LoadStatus.loading) {
-                          return Container(
+                          return SizedBox(
                             height: 60.0,
-                            child: Container(
+                            child: SizedBox(
                               height: 20.0,
                               width: 20.0,
                               child: CupertinoActivityIndicator(),
                             ),
                           );
-                        } else
+                        } else {
                           return Container();
+                        }
                       },
                     ),
                     enablePullUp: true,
+                    controller: _refreshController,
                     child: Scrollable(
                       controller: _scrollController,
                       axisDirection: AxisDirection.up,
                       viewportBuilder: (context, offset) {
                         return ExpandedViewport(
-                          offset: offset,
+                          offset: offset as ScrollPosition,
+                          center: null,
                           axisDirection: AxisDirection.up,
                           slivers: <Widget>[
                             SliverExpanded(),
@@ -153,7 +158,6 @@ class _QQChatListState extends State<QQChatList> {
                         );
                       },
                     ),
-                    controller: _refreshController,
                   ),
                 ),
                 Container(
@@ -163,6 +167,7 @@ class _QQChatListState extends State<QQChatList> {
                     children: <Widget>[
                       Expanded(
                         child: Container(
+                          margin: EdgeInsets.all(10.0),
                           child: CupertinoTextField(
                             controller: _textController,
                             placeholder: "输入你想发送的信息",
@@ -180,12 +185,10 @@ class _QQChatListState extends State<QQChatList> {
                               _textController.clear();
                             },
                           ),
-                          margin: EdgeInsets.all(10.0),
                         ),
                       ),
-                      RaisedButton(
-                        child: Text("发送"),
-                        color: Colors.blueAccent,
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
                         onPressed: () {
                           _scrollController.jumpTo(0.0);
                           data.insert(
@@ -199,6 +202,7 @@ class _QQChatListState extends State<QQChatList> {
                           setState(() {});
                           _textController.clear();
                         },
+                        child: Text("发送"),
                       )
                     ],
                   ),
@@ -218,7 +222,7 @@ class _MessageItem extends StatelessWidget {
   final bool isMe;
   final String url;
 
-  _MessageItem({this.content, this.author, this.isMe, this.url});
+  const _MessageItem({required this.content, required this.author, required this.isMe, required this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -256,11 +260,11 @@ class _MessageItem extends StatelessWidget {
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(10),
                 ),
+                padding: EdgeInsets.all(10.0),
                 child: Text(
                   content,
                   style: TextStyle(color: Colors.black),
                 ),
-                padding: EdgeInsets.all(10.0),
               )
             ],
           )

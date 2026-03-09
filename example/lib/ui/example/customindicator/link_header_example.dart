@@ -11,10 +11,12 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_refresher/smart_refresher.dart';
 import '../../Item.dart';
 
 class LinkHeaderExample extends StatefulWidget {
+  const LinkHeaderExample({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -23,7 +25,7 @@ class LinkHeaderExample extends StatefulWidget {
 }
 
 class _LinkHeaderExampleState extends State<LinkHeaderExample> {
-  RefreshController _refreshController = RefreshController();
+  final RefreshController _refreshController = RefreshController();
   final Key linkKey = GlobalKey();
   List<String> data = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
   final ScrollController _scrollController = ScrollController();
@@ -55,6 +57,7 @@ class _LinkHeaderExampleState extends State<LinkHeaderExample> {
     // TODO: implement build
     return RefreshConfiguration.copyAncestor(
       context: context,
+      maxOverScrollExtent: 100,
       child: Scaffold(
         body: Stack(
           children: <Widget>[
@@ -96,7 +99,7 @@ class _LinkHeaderExampleState extends State<LinkHeaderExample> {
                 )
               ],
             ),
-            Container(
+            SizedBox(
               height: 64.0,
               child: AppBar(
                 backgroundColor:
@@ -110,13 +113,12 @@ class _LinkHeaderExampleState extends State<LinkHeaderExample> {
           ],
         ),
       ),
-      maxOverScrollExtent: 100,
     );
   }
 }
 
 class SimpleLinkBar extends StatefulWidget {
-  SimpleLinkBar({Key key}) : super(key: key);
+  const SimpleLinkBar({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -128,7 +130,7 @@ class SimpleLinkBar extends StatefulWidget {
 class _SimpleLinkBarState extends State<SimpleLinkBar>
     with RefreshProcessor, SingleTickerProviderStateMixin {
   RefreshStatus _status = RefreshStatus.idle;
-  AnimationController _animationController;
+  late AnimationController _animationController;
 
   @override
   void dispose() {
@@ -153,8 +155,9 @@ class _SimpleLinkBarState extends State<SimpleLinkBar>
   @override
   void onOffsetChange(double offset) {
     // TODO: implement onOffsetChange
-    if (_status != RefreshStatus.refreshing)
+    if (_status != RefreshStatus.refreshing) {
       _animationController.value = offset / 80.0;
+    }
     super.onOffsetChange(offset);
   }
 
@@ -162,16 +165,16 @@ class _SimpleLinkBarState extends State<SimpleLinkBar>
   Widget build(BuildContext context) {
     // TODO: implement build
     return ScaleTransition(
-      child: CupertinoActivityIndicator(),
       scale: _animationController,
+      child: CupertinoActivityIndicator(),
     );
   }
 
   @override
-  void onModeChange(RefreshStatus mode) {
+  void onModeChange(RefreshStatus? mode) {
     // TODO: implement onModeChange
     super.onModeChange(mode);
-    _status = mode;
+    _status = mode ?? RefreshStatus.idle;
     setState(() {});
   }
 }

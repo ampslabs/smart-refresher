@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart' hide RefreshIndicator;
+import 'package:smart_refresher/smart_refresher.dart' hide RefreshIndicator;
 
 /*
    NestedScrollView+SmartRefresher,implements such effect ,refreshing under the SliverAppbar,
@@ -11,7 +11,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart' hide RefreshIndicator;
    this bug I have no idea how to fix this,only waiting for flutter fix this bug.
  */
 class NestedRefresh extends StatefulWidget {
-  NestedRefresh({Key key}) : super(key: key);
+  const NestedRefresh({super.key});
 
   @override
   NestedRefreshState createState() => NestedRefreshState();
@@ -21,7 +21,7 @@ class NestedRefreshState extends State<NestedRefresh>
     with SingleTickerProviderStateMixin {
 //  RefreshMode  refreshing = RefreshMode.idle;
 //  LoadMode loading = LoadMode.idle;
-  RefreshController _refreshController;
+  late RefreshController _refreshController;
   List<Widget> data = [];
 
   void _getDatas() {
@@ -97,6 +97,8 @@ class NestedRefreshState extends State<NestedRefresh>
 }
 
 class RefreshListView extends StatefulWidget {
+  const RefreshListView({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -106,7 +108,7 @@ class RefreshListView extends StatefulWidget {
 
 class _RefreshListViewState extends State<RefreshListView> {
   List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
-  RefreshController _refreshController =
+  final RefreshController _refreshController =
       RefreshController(initialRefresh: true);
 
   void _onRefresh() async {
@@ -132,7 +134,7 @@ class _RefreshListViewState extends State<RefreshListView> {
       enablePullUp: true,
       header: WaterDropHeader(),
       footer: CustomFooter(
-        builder: (BuildContext context, LoadStatus mode) {
+        builder: (BuildContext context, LoadStatus? mode) {
           Widget body;
           if (mode == LoadStatus.idle) {
             body = Text("pull up load");
@@ -145,7 +147,7 @@ class _RefreshListViewState extends State<RefreshListView> {
           } else {
             body = Text("No more Data");
           }
-          return Container(
+          return SizedBox(
             height: 55.0,
             child: Center(child: body),
           );
