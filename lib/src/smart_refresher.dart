@@ -99,6 +99,9 @@ class SmartRefresher extends StatefulWidget {
   /// Determines the way that drag start behavior is handled.
   final DragStartBehavior? dragStartBehavior;
 
+  /// A list of slivers to use as the body.
+  final List<Widget>? slivers;
+
   /// Creates a [SmartRefresher].
   const SmartRefresher(
       {super.key,
@@ -120,7 +123,8 @@ class SmartRefresher extends StatefulWidget {
       this.physics,
       this.scrollDirection,
       this.scrollController})
-      : builder = null;
+      : builder = null,
+        slivers = null;
 
   /// Creates a [SmartRefresher] using a custom builder.
   const SmartRefresher.builder({
@@ -143,7 +147,32 @@ class SmartRefresher extends StatefulWidget {
         semanticChildCount = null,
         dragStartBehavior = null,
         cacheExtent = null,
-        primary = null;
+        primary = null,
+        slivers = null;
+
+  /// Creates a [SmartRefresher] with a list of slivers.
+  const SmartRefresher.slivers({
+    super.key,
+    required this.controller,
+    required this.slivers,
+    this.header,
+    this.footer,
+    this.enablePullDown = true,
+    this.enablePullUp = false,
+    this.enableTwoLevel = false,
+    this.onRefresh,
+    this.onLoading,
+    this.onTwoLevel,
+    this.dragStartBehavior,
+    this.primary,
+    this.cacheExtent,
+    this.semanticChildCount,
+    this.reverse,
+    this.physics,
+    this.scrollDirection,
+    this.scrollController,
+  })  : child = null,
+        builder = null;
 
   /// Returns the [SmartRefresher] from the given [context].
   static SmartRefresher? of(BuildContext? context) {
@@ -182,7 +211,9 @@ class SmartRefresherState extends State<SmartRefresher> {
   List<Widget>? _buildSliversByChild(BuildContext context, Widget? child,
       RefreshConfiguration? configuration) {
     List<Widget>? slivers;
-    if (child is ScrollView) {
+    if (widget.slivers != null) {
+      slivers = List<Widget>.from(widget.slivers!);
+    } else if (child is ScrollView) {
       if (child is BoxScrollView) {
         final Widget sliver = child.buildChildLayout(context);
         if (child.padding != null) {
@@ -241,6 +272,8 @@ class SmartRefresherState extends State<SmartRefresher> {
             updateFlag: _updatePhysics ? 0 : 1,
             enableScrollWhenRefreshCompleted:
                 conf?.enableScrollWhenRefreshCompleted ?? false,
+            enablePullDown: widget.enablePullDown || widget.enableTwoLevel,
+            enablePullUp: widget.enablePullUp,
             maxUnderScrollExtent: conf?.maxUnderScrollExtent ??
                 (isBouncingPhysics ? double.infinity : 100.0),
             maxOverScrollExtent: conf?.maxOverScrollExtent ??
@@ -425,7 +458,7 @@ class SmartRefresherState extends State<SmartRefresher> {
     if (configuration == null) {
       body = RefreshConfiguration(child: body!);
     }
-    Widget footerFollowBody = LayoutBuilder(
+    final Widget footerFollowBody = LayoutBuilder(
       builder: (c2, cons) {
         viewportExtent = cons.biggest.height;
         return body!;

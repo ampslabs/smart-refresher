@@ -35,8 +35,9 @@ void main() {
         anyOf(RefreshStatus.canRefresh, RefreshStatus.refreshing));
 
     await gesture.up();
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 10; i++) {
       await tester.pump(const Duration(milliseconds: 100));
+    }
 
     expect(refreshTriggered, true);
   });

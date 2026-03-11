@@ -32,8 +32,9 @@ void main() {
     expect(refreshController.headerStatus, RefreshStatus.canRefresh);
 
     // Pump to start ballistic
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 10; i++) {
       await tester.pump(const Duration(milliseconds: 100));
+    }
 
     expect(refreshController.headerStatus, RefreshStatus.refreshing);
     expect(refreshTriggered, true);

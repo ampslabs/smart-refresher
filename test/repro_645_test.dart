@@ -27,8 +27,9 @@ void main() {
 
     refreshController.requestLoading();
     // Pump enough frames to trigger the loading
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 5; i++) {
       await tester.pump(const Duration(milliseconds: 100));
+    }
 
     expect(loadingTriggered, true,
         reason: 'requestLoading should trigger onLoading even with short list');
@@ -57,8 +58,9 @@ void main() {
 
     refreshController.requestRefresh();
     // Pump enough frames to trigger the refresh
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 5; i++) {
       await tester.pump(const Duration(milliseconds: 100));
+    }
 
     expect(refreshTriggered, true,
         reason: 'requestRefresh should trigger onRefresh even with short list');

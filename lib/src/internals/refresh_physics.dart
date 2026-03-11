@@ -53,6 +53,12 @@ class RefreshPhysics extends ScrollPhysics {
   /// A flag used to force a physics update.
   final int? updateFlag;
 
+  /// Whether pull-down refresh is enabled (authoritative from widget).
+  final bool enablePullDown;
+
+  /// Whether pull-up loading is enabled (authoritative from widget).
+  final bool enablePullUp;
+
   /// The cached [RenderViewport] used for computing layout extents.
   RenderViewport? viewportRender;
 
@@ -68,6 +74,8 @@ class RefreshPhysics extends ScrollPhysics {
       this.bottomHitBoundary,
       this.enableScrollWhenRefreshCompleted,
       this.enableScrollWhenTwoLevel,
+      this.enablePullDown = true,
+      this.enablePullUp = false,
       this.maxOverScrollExtent});
 
   @override
@@ -82,6 +90,8 @@ class RefreshPhysics extends ScrollPhysics {
         bottomHitBoundary: bottomHitBoundary,
         controller: controller,
         enableScrollWhenRefreshCompleted: enableScrollWhenRefreshCompleted,
+        enablePullDown: enablePullDown,
+        enablePullUp: enablePullUp,
         maxUnderScrollExtent: maxUnderScrollExtent,
         maxOverScrollExtent: maxOverScrollExtent);
   }
@@ -124,15 +134,23 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
     final ScrollPosition scrollPosition = position as ScrollPosition;
-    viewportRender ??= findViewport(scrollPosition.context.storageContext);
+    try {
+      viewportRender ??= findViewport(scrollPosition.context.storageContext);
+    } catch (_) {
+      // context may be unmounted
+    }
+    final bool hasPullDown = viewportRender == null
+        ? enablePullDown
+        : viewportRender!.firstChild is RenderSliverRefresh;
+    final bool hasPullUp = viewportRender == null
+        ? enablePullUp
+        : viewportRender!.lastChild is RenderSliverLoading;
     if (controller!.headerMode!.value == RefreshStatus.twoLeveling) {
       if (offset > 0.0) {
         return parent!.applyPhysicsToUserOffset(position, offset);
       }
     } else {
-      if ((offset > 0.0 &&
-              viewportRender?.firstChild is! RenderSliverRefresh) ||
-          (offset < 0 && viewportRender?.lastChild is! RenderSliverLoading)) {
+      if ((offset > 0.0 && !hasPullDown) || (offset < 0 && !hasPullUp)) {
         return parent!.applyPhysicsToUserOffset(position, offset);
       }
     }
@@ -184,34 +202,38 @@ class RefreshPhysics extends ScrollPhysics {
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
     final ScrollPosition scrollPosition = position as ScrollPosition;
-    viewportRender ??= findViewport(scrollPosition.context.storageContext);
+    try {
+      viewportRender ??= findViewport(scrollPosition.context.storageContext);
+    } catch (_) {
+      // context may be unmounted
+    }
     final bool notFull = position.minScrollExtent == position.maxScrollExtent;
-    final bool enablePullDown = viewportRender == null
-        ? (maxOverScrollExtent! > 0 || maxOverScrollExtent == double.infinity)
+    final bool resolvedEnablePullDown = viewportRender == null
+        ? enablePullDown
         : viewportRender!.firstChild is RenderSliverRefresh;
-    final bool enablePullUp = viewportRender == null
-        ? (maxUnderScrollExtent! > 0 || maxUnderScrollExtent == double.infinity)
+    final bool resolvedEnablePullUp = viewportRender == null
+        ? enablePullUp
         : viewportRender!.lastChild is RenderSliverLoading;
     if (controller!.headerMode!.value == RefreshStatus.twoLeveling) {
       if (position.pixels - value > 0.0) {
         return parent!.applyBoundaryConditions(position, value);
       }
     } else {
-      if ((position.pixels - value > 0.0 && !enablePullDown) ||
-          (position.pixels - value < 0 && !enablePullUp)) {
+      if ((position.pixels - value > 0.0 && !resolvedEnablePullDown) ||
+          (position.pixels - value < 0 && !resolvedEnablePullUp)) {
         return parent!.applyBoundaryConditions(position, value);
       }
     }
     double topExtra = 0.0;
     double bottomExtra = 0.0;
-    if (enablePullDown) {
+    if (resolvedEnablePullDown) {
       final RenderSliverRefresh sliverHeader =
           viewportRender!.firstChild! as RenderSliverRefresh;
       topExtra = sliverHeader.hasLayoutExtent
           ? 0.0
           : sliverHeader.refreshIndicatorLayoutExtent;
     }
-    if (enablePullUp) {
+    if (resolvedEnablePullUp) {
       final RenderSliverLoading? sliverFooter =
           viewportRender!.lastChild as RenderSliverLoading?;
       bottomExtra = (!notFull && sliverFooter!.geometry!.scrollExtent != 0) ||
@@ -286,19 +308,19 @@ class RefreshPhysics extends ScrollPhysics {
       final ScrollPosition scrollPosition = position as ScrollPosition;
       viewportRender ??= findViewport(scrollPosition.context.storageContext);
 
-      final bool enablePullDown = viewportRender == null
-          ? false
+      final bool resolvedEnablePullDown = viewportRender == null
+          ? enablePullDown
           : viewportRender!.firstChild is RenderSliverRefresh;
-      final bool enablePullUp = viewportRender == null
-          ? false
+      final bool resolvedEnablePullUp = viewportRender == null
+          ? enablePullUp
           : viewportRender!.lastChild is RenderSliverLoading;
       if (controller!.headerMode!.value == RefreshStatus.twoLeveling) {
         if (velocity < 0.0) {
           return parent!.createBallisticSimulation(position, velocity);
         }
       } else if (!position.outOfRange) {
-        if ((velocity < 0.0 && !enablePullDown) ||
-            (velocity > 0 && !enablePullUp)) {
+        if ((velocity < 0.0 && !resolvedEnablePullDown) ||
+            (velocity > 0 && !resolvedEnablePullUp)) {
           return parent!.createBallisticSimulation(position, velocity);
         }
       }

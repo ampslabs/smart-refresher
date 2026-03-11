@@ -79,7 +79,7 @@ These are unresolved issues and unmerged PRs from `https://github.com/peng8350/f
 **Goal:** Expand the range of supported child widgets and ensure compatibility with modern deployment targets like WASM and Desktop.
 
 #### Tasks
-1. **Non-ScrollView child detection** — Improve child widget introspection for `GroupedListView`, `AnimatedList`, etc.
+1. **[x] Non-ScrollView child detection** — Added `SmartRefresher.slivers` constructor for direct sliver support.
 2. **NestedScrollView workaround** — Implement `NestedScrollViewRefresher` for `BouncingScrollPhysics`.
 3. **WASM Support** — Audit and fix any JS-interop or platform-specific code to ensure full compatibility with Flutter's WASM target.
 4. **[x] Desktop Support (Mouse/Trackpad)** — Enabled mouse dragging support and robust physics.

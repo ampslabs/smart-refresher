@@ -37,8 +37,9 @@ void main() {
 
     // Start refresh in Tab 1
     refreshController1.requestRefresh();
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 5; i++) {
       await tester.pump(const Duration(milliseconds: 100));
+    }
 
     expect(refreshController1.isRefresh, true);
 
