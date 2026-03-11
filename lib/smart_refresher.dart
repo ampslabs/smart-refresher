@@ -15,5 +15,8 @@ export 'src/internals/indicator_wrap.dart';
 export 'src/indicator/link_indicator.dart';
 export 'src/indicator/material_indicator.dart';
 export 'src/indicator/bezier_indicator.dart';
+export 'src/indicator/shimmer.dart';
+export 'src/indicator/skeleton_bones.dart';
+export 'src/indicator/skeleton_footer.dart';
 export 'src/indicator/twolevel_indicator.dart';
 export 'src/internals/refresh_localizations.dart';

@@ -1,3 +1,8 @@
+## Unreleased
+
+- Added `SkeletonFooter`, reusable skeleton bone primitives, and a shared shimmer engine for pagination placeholders.
+- Added an example screen demonstrating the four built-in skeleton footer styles.
+
 ## 0.1.0
 
 - **Initial Fork Release**: Rebranded package as `smart_refresher` and initialized maintained fork release line.

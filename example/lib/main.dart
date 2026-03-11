@@ -1,29 +1,26 @@
 import 'package:example/other/refresh_glowindicator.dart';
 import 'package:example/ui/MainActivity.dart';
 import 'package:example/ui/SecondActivity.dart';
+import 'package:example/ui/example/skeleton_footer_example.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_refresher/smart_refresher.dart';
 import 'ui/indicator/base/IndicatorActivity.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
+/// The example application entry widget.
 class MyApp extends StatelessWidget {
+  /// Creates the example application root.
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return RefreshConfiguration(
-      footerTriggerDistance: 15,
       dragSpeedRatio: 0.91,
-      headerBuilder: () => MaterialClassicHeader(),
-      footerBuilder: () => ClassicFooter(),
-      enableLoadingWhenNoData: false,
-      enableRefreshVibrate: false,
-      enableLoadMoreVibrate: false,
+      headerBuilder: () => const MaterialClassicHeader(),
+      footerBuilder: () => const ClassicFooter(),
       shouldFooterFollowWhenNotFull: (state) {
-        // If you want load more with noMoreData state ,may be you should return false
         return false;
       },
       child: MaterialApp(
@@ -36,52 +33,47 @@ class MyApp extends StatelessWidget {
           );
         },
         theme: ThemeData(
-            // This is the theme of your application.
-            //s
-            // Try running your application with "flutter run". You'll see the
-            // application has a blue toolbar. Then, without quitting the app, try
-            // changing the primarySwatch below to Colors.green and then invoke
-            // "hot reload" (press "r" in the console where you ran "flutter run",
-            // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-            // counter didn't reset back to zero; the application is not restarted.
-            primarySwatch: Colors.blue,
-            primaryColor: Colors.greenAccent),
-        localizationsDelegates: [
+          primarySwatch: Colors.blue,
+          primaryColor: Colors.greenAccent,
+        ),
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
           RefreshLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate
+          GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: [
-          const Locale('en'),
-          const Locale('zh'),
-          const Locale('ja'),
-          const Locale('uk'),
-          const Locale('it'),
-          const Locale('ru'),
-          const Locale('fr'),
-          const Locale('es'),
-          const Locale('nl'),
-          const Locale('sv'),
-          const Locale('pt'),
-          const Locale('ko'),
+        supportedLocales: const <Locale>[
+          Locale('en'),
+          Locale('zh'),
+          Locale('ja'),
+          Locale('uk'),
+          Locale('it'),
+          Locale('ru'),
+          Locale('fr'),
+          Locale('es'),
+          Locale('nl'),
+          Locale('sv'),
+          Locale('pt'),
+          Locale('ko'),
         ],
         locale: const Locale('zh'),
         localeResolutionCallback:
             (Locale? locale, Iterable<Locale> supportedLocales) {
-          //print("change language");
           return locale;
         },
-        home: MainActivity(title: 'Pulltorefresh'),
-        routes: {
-          "sec": (BuildContext context) {
-            return SecondActivity(
-              title: "SecondAct",
+        home: const MainActivity(title: 'Pulltorefresh'),
+        routes: <String, WidgetBuilder>{
+          'sec': (BuildContext context) {
+            return const SecondActivity(
+              title: 'SecondAct',
             );
           },
-          "indicator": (BuildContext context) {
-            return IndicatorActivity(title: 'Indicators');
-          }
+          'indicator': (BuildContext context) {
+            return const IndicatorActivity(title: 'Indicators');
+          },
+          'skeleton-footer': (BuildContext context) {
+            return const SkeletonFooterExamplePage();
+          },
         },
       ),
     );
