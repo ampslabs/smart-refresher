@@ -1,3 +1,11 @@
+## Unreleased
+
+- Added a `SmartRefresherThemeData` theme extension and `SmartRefresherTheme`
+  inherited theme for package-wide and subtree indicator theming.
+- Added resolved `IndicatorThemeData` color resolution so classic and material
+  indicators can inherit colors from Flutter themes with Cupertino-safe
+  fallbacks.
+
 ## 0.1.0
 
 - **Initial Fork Release**: Rebranded package as `smart_refresher` and initialized maintained fork release line.

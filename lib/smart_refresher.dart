@@ -17,3 +17,5 @@ export 'src/indicator/material_indicator.dart';
 export 'src/indicator/bezier_indicator.dart';
 export 'src/indicator/twolevel_indicator.dart';
 export 'src/internals/refresh_localizations.dart';
+export 'src/theming/indicator_theme.dart';
+export 'src/theming/smart_refresher_theme.dart';
