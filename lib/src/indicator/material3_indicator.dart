@@ -4,6 +4,7 @@ import 'package:flutter/material.dart'
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
 import '../theming/indicator_theme.dart';
+import '../internals/refresh_localizations.dart';
 
 /// A Material 3 pull-to-refresh header that follows the 2024 circular indicator style.
 ///
@@ -34,6 +35,12 @@ class Material3Header extends RefreshIndicator {
   /// A custom widget shown when refresh fails.
   final Widget? failedIcon;
 
+  /// Custom accessibility label for the indicator.
+  final String? semanticsLabel;
+
+  /// Custom accessibility hint for the indicator.
+  final String? semanticsHint;
+
   /// Creates a Material 3 floating refresh header.
   const Material3Header({
     super.key,
@@ -42,6 +49,8 @@ class Material3Header extends RefreshIndicator {
     this.elevation = 6.0,
     this.completeIcon,
     this.failedIcon,
+    this.semanticsLabel,
+    this.semanticsHint,
     super.completeDuration = const Duration(milliseconds: 600),
     super.height = 80.0,
     super.refreshStyle = RefreshStyle.Front,
@@ -188,12 +197,32 @@ class Material3HeaderState extends RefreshIndicatorState<Material3Header>
 
     // Custom track gap fallback as it's not part of the standard indicator theme.
     final double trackGap = progressTheme.trackGap ?? _trackGap;
+    final RefreshString strings =
+        RefreshLocalizations.of(context)?.currentLocalization ??
+        EnRefreshString();
+
+    final String label =
+        widget.semanticsLabel ??
+        (_terminalState == _TerminalState.completed
+            ? strings.refreshCompleteText!
+            : _terminalState == _TerminalState.failed
+            ? strings.refreshFailedText!
+            : mode == RefreshStatus.refreshing
+            ? strings.refreshingText!
+            : mode == RefreshStatus.canRefresh
+            ? strings.canRefreshText!
+            : strings.idleRefreshText!);
+
     final Widget child = switch (_terminalState) {
       _TerminalState.completed => FadeTransition(
         opacity: _iconFadeController,
         child:
             widget.completeIcon ??
-            Icon(Icons.check_circle_outline, size: 20.0, color: indicatorTheme.iconColor),
+            Icon(
+              Icons.check_circle_outline,
+              size: 20.0,
+              color: indicatorTheme.iconColor,
+            ),
       ),
       _TerminalState.failed => FadeTransition(
         opacity: _iconFadeController,
@@ -214,9 +243,7 @@ class Material3HeaderState extends RefreshIndicatorState<Material3Header>
           strokeWidth: _strokeWidth,
           trackGap: trackGap,
           strokeCap: StrokeCap.round,
-          semanticsLabel: MaterialLocalizations.of(
-            context,
-          ).refreshIndicatorSemanticLabel,
+          semanticsLabel: label,
         ),
       ),
     };
@@ -226,14 +253,18 @@ class Material3HeaderState extends RefreshIndicatorState<Material3Header>
       child: Center(
         child: ScaleTransition(
           scale: _scaleAnimation,
-          child: Material(
-            elevation: indicatorTheme.material3Elevation,
-            shape: const CircleBorder(),
-            color: indicatorTheme.material3BackgroundColor,
-            child: SizedBox(
-              width: _containerSize,
-              height: _containerSize,
-              child: Center(child: child),
+          child: Semantics(
+            label: label,
+            hint: widget.semanticsHint,
+            child: Material(
+              elevation: indicatorTheme.material3Elevation,
+              shape: const CircleBorder(),
+              color: indicatorTheme.material3BackgroundColor,
+              child: SizedBox(
+                width: _containerSize,
+                height: _containerSize,
+                child: Center(child: child),
+              ),
             ),
           ),
         ),

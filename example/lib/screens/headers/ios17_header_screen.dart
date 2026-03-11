@@ -14,6 +14,7 @@ class _IOS17HeaderScreenState extends State<IOS17HeaderScreen> {
   double _radius = 10.0;
   bool _showLastUpdated = true;
   bool _enableHaptic = true;
+  String? _semanticsLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +24,7 @@ class _IOS17HeaderScreenState extends State<IOS17HeaderScreen> {
         radius: _radius,
         showLastUpdated: _showLastUpdated,
         enableHaptic: _enableHaptic,
+        semanticsLabel: _semanticsLabel,
       ),
       footerBuilder: () => const ClassicFooter(),
       topContent: Card(
@@ -43,6 +45,17 @@ class _IOS17HeaderScreenState extends State<IOS17HeaderScreen> {
                 onChanged: (double value) => setState(() => _radius = value),
               ),
             ),
+            TextField(
+              decoration: const InputDecoration(
+                labelText: 'Custom Accessibility Label',
+                hintText: 'Enter a label for screen readers',
+                isDense: true,
+              ),
+              onChanged: (String value) => setState(() {
+                _semanticsLabel = value.isEmpty ? null : value;
+              }),
+            ),
+            const SizedBox(height: 8.0),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('Show last updated'),

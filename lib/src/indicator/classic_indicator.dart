@@ -86,6 +86,12 @@ class ClassicHeader extends RefreshIndicator {
   /// The color used by the default completion and failure icons.
   final Color? iconColor;
 
+  /// Custom accessibility label for the indicator.
+  final String? semanticsLabel;
+
+  /// Custom accessibility hint for the indicator.
+  final String? semanticsHint;
+
   /// Creates a [ClassicHeader].
   const ClassicHeader({
     super.key,
@@ -112,6 +118,8 @@ class ClassicHeader extends RefreshIndicator {
     this.completeIcon,
     this.idleIcon,
     this.releaseIcon,
+    this.semanticsLabel,
+    this.semanticsHint,
   });
 
   @override
@@ -211,11 +219,37 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
       alignment: WrapAlignment.center,
       children: children,
     );
+
+    final RefreshString strings =
+        RefreshLocalizations.of(context)?.currentLocalization ??
+        EnRefreshString();
+    final String label =
+        widget.semanticsLabel ??
+        (mode == RefreshStatus.canRefresh
+            ? widget.releaseText ?? strings.canRefreshText!
+            : mode == RefreshStatus.completed
+            ? widget.completeText ?? strings.refreshCompleteText!
+            : mode == RefreshStatus.failed
+            ? widget.failedText ?? strings.refreshFailedText!
+            : mode == RefreshStatus.refreshing
+            ? widget.refreshingText ?? strings.refreshingText!
+            : mode == RefreshStatus.idle
+            ? widget.idleText ?? strings.idleRefreshText!
+            : mode == RefreshStatus.canTwoLevel
+            ? widget.canTwoLevelText ?? strings.canTwoLevelText!
+            : '');
+
+    final Widget semanticsContainer = Semantics(
+      label: label,
+      hint: widget.semanticsHint,
+      child: container,
+    );
+
     return widget.outerBuilder != null
-        ? widget.outerBuilder!(container)
+        ? widget.outerBuilder!(semanticsContainer)
         : SizedBox(
             height: widget.height,
-            child: Center(child: container),
+            child: Center(child: semanticsContainer),
           );
   }
 }
@@ -257,6 +291,12 @@ class ClassicFooter extends LoadIndicator {
   /// The primary color used by the default spinner, icons, and text.
   final Color? color;
 
+  /// Custom accessibility label for the indicator.
+  final String? semanticsLabel;
+
+  /// Custom accessibility hint for the indicator.
+  final String? semanticsHint;
+
   /// The duration the "complete" state is displayed. Only works for [LoadStyle.ShowWhenLoading].
   final Duration completeDuration;
 
@@ -282,6 +322,8 @@ class ClassicFooter extends LoadIndicator {
     this.loadingIcon,
     this.canLoadingIcon,
     this.idleIcon,
+    this.semanticsLabel,
+    this.semanticsHint,
   });
 
   @override
@@ -371,11 +413,33 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
       alignment: WrapAlignment.center,
       children: children,
     );
+
+    final RefreshString strings =
+        RefreshLocalizations.of(context)?.currentLocalization ??
+        EnRefreshString();
+    final String label =
+        widget.semanticsLabel ??
+        (mode == LoadStatus.loading
+            ? widget.loadingText ?? strings.loadingText!
+            : LoadStatus.noMore == mode
+            ? widget.noDataText ?? strings.noMoreText!
+            : LoadStatus.failed == mode
+            ? widget.failedText ?? strings.loadFailedText!
+            : LoadStatus.canLoading == mode
+            ? widget.canLoadingText ?? strings.canLoadingText!
+            : widget.idleText ?? strings.idleLoadingText!);
+
+    final Widget semanticsContainer = Semantics(
+      label: label,
+      hint: widget.semanticsHint,
+      child: container,
+    );
+
     return widget.outerBuilder != null
-        ? widget.outerBuilder!(container)
+        ? widget.outerBuilder!(semanticsContainer)
         : SizedBox(
             height: widget.height,
-            child: Center(child: container),
+            child: Center(child: semanticsContainer),
           );
   }
 }

@@ -28,6 +28,12 @@ class WaterDropHeader extends RefreshIndicator {
   /// The color of the waterdrop.
   final Color waterDropColor;
 
+  /// Custom accessibility label for the indicator.
+  final String? semanticsLabel;
+
+  /// Custom accessibility hint for the indicator.
+  final String? semanticsHint;
+
   /// Creates a [WaterDropHeader].
   const WaterDropHeader({
     super.key,
@@ -41,6 +47,8 @@ class WaterDropHeader extends RefreshIndicator {
       size: 15,
       color: Colors.white,
     ),
+    this.semanticsLabel,
+    this.semanticsHint,
   }) : super(
             height: 60.0,
             refreshStyle: RefreshStyle.UnFollow);
@@ -89,6 +97,21 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
 
   @override
   Widget buildContent(BuildContext context, RefreshStatus? mode) {
+    final RefreshString strings =
+        RefreshLocalizations.of(context)?.currentLocalization ??
+        EnRefreshString();
+    final String label =
+        widget.semanticsLabel ??
+        (mode == RefreshStatus.completed
+            ? strings.refreshCompleteText!
+            : mode == RefreshStatus.failed
+            ? strings.refreshFailedText!
+            : mode == RefreshStatus.refreshing
+            ? strings.refreshingText!
+            : mode == RefreshStatus.canRefresh
+            ? strings.canRefreshText!
+            : strings.idleRefreshText!);
+
     Widget? child;
     if (mode == RefreshStatus.refreshing) {
       child = widget.refresh ??
@@ -112,9 +135,7 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                 width: 15.0,
               ),
               Text(
-                (RefreshLocalizations.of(context)?.currentLocalization ??
-                        EnRefreshString())
-                    .refreshCompleteText!,
+                strings.refreshCompleteText!,
                 style: const TextStyle(color: Colors.grey),
               )
             ],
@@ -131,54 +152,59 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
               const SizedBox(
                 width: 15.0,
               ),
-              Text(
-                  (RefreshLocalizations.of(context)?.currentLocalization ??
-                          EnRefreshString())
-                      .refreshFailedText!,
+              Text(strings.refreshFailedText!,
                   style: const TextStyle(color: Colors.grey))
             ],
           );
     } else if (mode == RefreshStatus.idle || mode == RefreshStatus.canRefresh) {
-      return FadeTransition(
-          opacity: _dismissCtl,
-          child: SizedBox(
-            height: 60.0,
-            child: Stack(
-              children: <Widget>[
-                RotatedBox(
-                  quarterTurns:
-                      Scrollable.of(context).axisDirection == AxisDirection.up
-                          ? 10
-                          : 0,
-                  child: CustomPaint(
-                    painter: _QqPainter(
-                      color: widget.waterDropColor,
-                      listener: _animationController,
-                    ),
-                    child: Container(
-                      height: 60.0,
+      return Semantics(
+        label: label,
+        hint: widget.semanticsHint,
+        child: FadeTransition(
+            opacity: _dismissCtl,
+            child: SizedBox(
+              height: 60.0,
+              child: Stack(
+                children: <Widget>[
+                  RotatedBox(
+                    quarterTurns:
+                        Scrollable.of(context).axisDirection == AxisDirection.up
+                            ? 10
+                            : 0,
+                    child: CustomPaint(
+                      painter: _QqPainter(
+                        color: widget.waterDropColor,
+                        listener: _animationController,
+                      ),
+                      child: Container(
+                        height: 60.0,
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  alignment:
-                      Scrollable.of(context).axisDirection == AxisDirection.up
-                          ? Alignment.bottomCenter
-                          : Alignment.topCenter,
-                  margin:
-                      Scrollable.of(context).axisDirection == AxisDirection.up
-                          ? const EdgeInsets.only(bottom: 12.0)
-                          : const EdgeInsets.only(top: 12.0),
-                  child: widget.idleIcon,
-                )
-              ],
-            ),
-          ));
+                  Container(
+                    alignment:
+                        Scrollable.of(context).axisDirection == AxisDirection.up
+                            ? Alignment.bottomCenter
+                            : Alignment.topCenter,
+                    margin:
+                        Scrollable.of(context).axisDirection == AxisDirection.up
+                            ? const EdgeInsets.only(bottom: 12.0)
+                            : const EdgeInsets.only(top: 12.0),
+                    child: widget.idleIcon,
+                  )
+                ],
+              ),
+            )),
+      );
     }
     return SizedBox(
       height: 60.0,
       child: Center(
-        child: child,
+        child: Semantics(
+          label: label,
+          hint: widget.semanticsHint,
+          child: child,
+        ),
       ),
     );
   }
