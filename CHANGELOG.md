@@ -1,18 +1,25 @@
-## Unreleased
+## 0.2.0
 
-- Added a `SmartRefresherThemeData` theme extension and `SmartRefresherTheme`
-  inherited theme for package-wide and subtree indicator theming.
-- Added resolved `IndicatorThemeData` color resolution so classic and material
-  indicators can inherit colors from Flutter themes with Cupertino-safe
-  fallbacks.
-- Added `SkeletonFooter`, reusable skeleton bone primitives, and a shared shimmer engine for pagination placeholders.
-- Added an example screen demonstrating the four built-in skeleton footer styles.
-- Added `iOS17Header`, a Cupertino-style pull-to-refresh header with iOS 17 tick geometry, threshold scale pop, spin gradient fade-in, fixed-duration dismiss animation, optional last-updated text, and `RefreshStyle.Follow` behavior.
-- Added `Material3Header`, a Material 3 floating pull-to-refresh indicator with
-  theme-aware colors, modern circular progress styling, and dedicated complete
-  and error states.
-- Exported `Material3Header` from the package root and added an example screen
-  demonstrating seeded light and dark Material 3 themes.
+### New Indicators & Theming
+- **Material 3 Header**: Added `Material3Header`, a floating pull-to-refresh indicator using the 2024 circular progress design with theme-aware colors and dedicated completion/error states.
+- **iOS 17 Header**: Added `iOS17Header`, featuring native iOS 17 tick geometry, threshold scale pop, haptic feedback (iOS only), and optional last-updated text.
+- **Skeleton Footer**: Added `SkeletonFooter` with four built-in bone styles (`listTile`, `card`, `textBlock`, `imageRow`) and a shared shimmer engine for modern pagination placeholders.
+- **Advanced Theming**: Introduced `SmartRefresherThemeData` (ThemeData extension) and `SmartRefresherTheme` (InheritedWidget) for app-wide or subtree indicator styling.
+- **Color Resolution**: Implemented `IndicatorThemeData` to automatically resolve indicator colors from `ColorScheme` with safe Cupertino fallbacks.
+
+### Accessibility
+- **Semantic Labels**: Added `semanticsLabel` and `semanticsHint` to all built-in indicators.
+- **Localized Defaults**: Proper localized labels (e.g., "Pull down Refresh", "Refreshing…") are now announced by screen readers out of the box.
+
+### Layout & Compatibility
+- **Multi-Sliver Support**: Added `center` property to `SmartRefresher` and `SmartRefresher.slivers` to support bidirectional scrolling and complex sliver layouts.
+- **Sliver Geometry Fixes**: Improved `SliverRefresh` to correctly respect `constraints.overlap` from pinned slivers, preventing headers from being hidden under app bars.
+- **WASM Compatible**: Audited and confirmed full compatibility with Flutter's WASM web target.
+- **Smart Insertion**: Updated `SmartRefresher.slivers` to detect if indicators are manually placed in the sliver list, avoiding redundant auto-insertion.
+
+### Infrastructure & Testing
+- **New Test Suites**: Added `test/accessibility_test.dart`, `test/complex_slivers_test.dart`, and `test/scrollbar_test.dart` covering edge cases in complex layouts.
+- **Dependency Update**: Raised minimum Flutter SDK to 3.27.0 to support modern Material 3 color roles.
 
 ## 0.1.0
 
@@ -21,12 +28,9 @@
   - Added comprehensive English documentation comments to all public members.
   - Translated all source code comments and header timestamps from Chinese to English.
   - Fully localized the example application UI and developer comments into English.
-  - Enabled and fulfilled `public_member_api_docs`, `comment_references`, and other documentation lint rules.
 - **Bug Fixes**:
-  - Resolved a state transition bug in "Two-Level" (Second Floor) mode where layout compensation incorrectly triggered premature closure.
-  - Fixed a compilation error caused by an invalid `const` instance field in `SmartRefresher`.
-  - Improved type safety for callbacks and `Future` return types to comply with `strict-raw-types`.
+  - Resolved a state transition bug in "Two-Level" (Second Floor) mode.
+  - Fixed a compilation error caused by an invalid `const` instance field.
 - **Infrastructure**:
-  - Updated CI configuration to trigger on pushes to the `main` branch.
-  - Fixed various analyzer warnings and improved codebase consistency.
+  - Updated CI configuration.
   - Added `SECURITY.md` and Mintlify-style documentation in `doc/`.

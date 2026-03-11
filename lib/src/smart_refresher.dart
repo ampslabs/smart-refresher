@@ -102,6 +102,11 @@ class SmartRefresher extends StatefulWidget {
   /// A list of slivers to use as the body.
   final List<Widget>? slivers;
 
+  /// The first sliver in the "forward" direction.
+  ///
+  /// See [CustomScrollView.center].
+  final Key? center;
+
   /// Creates a [SmartRefresher].
   const SmartRefresher(
       {super.key,
@@ -122,7 +127,8 @@ class SmartRefresher extends StatefulWidget {
       this.reverse,
       this.physics,
       this.scrollDirection,
-      this.scrollController})
+      this.scrollController,
+      this.center})
       : builder = null,
         slivers = null;
 
@@ -148,7 +154,8 @@ class SmartRefresher extends StatefulWidget {
         dragStartBehavior = null,
         cacheExtent = null,
         primary = null,
-        slivers = null;
+        slivers = null,
+        center = null;
 
   /// Creates a [SmartRefresher] with a list of slivers.
   const SmartRefresher.slivers({
@@ -171,6 +178,7 @@ class SmartRefresher extends StatefulWidget {
     this.physics,
     this.scrollDirection,
     this.scrollController,
+    this.center,
   })  : child = null,
         builder = null;
 
@@ -232,20 +240,28 @@ class SmartRefresherState extends State<SmartRefresher> {
       ];
     }
     if (widget.enablePullDown || widget.enableTwoLevel) {
-      slivers?.insert(
-          0,
-          widget.header ??
-              (configuration?.headerBuilder != null
-                  ? configuration?.headerBuilder!()
-                  : null) ??
-              defaultHeader);
+      final Widget header = widget.header ??
+          (configuration?.headerBuilder != null
+              ? configuration?.headerBuilder!()
+              : null) ??
+          defaultHeader;
+      if (slivers != null && !slivers.contains(header)) {
+        slivers.insert(0, header);
+      } else {
+        slivers ??= [header];
+      }
     }
     if (widget.enablePullUp) {
-      slivers?.add(widget.footer ??
+      final Widget footer = widget.footer ??
           (configuration?.footerBuilder != null
               ? configuration?.footerBuilder!()
               : null) ??
-          defaultFooter);
+          defaultFooter;
+      if (slivers != null && !slivers.contains(footer)) {
+        slivers.add(footer);
+      } else {
+        slivers ??= [footer];
+      }
     }
 
     return slivers;
@@ -334,7 +350,7 @@ class SmartRefresherState extends State<SmartRefresher> {
             keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.manual,
         anchor: anchor ?? 0.0,
         restorationId: restorationId,
-        center: center,
+        center: widget.center ?? center,
         physics: _getScrollPhysics(
             conf, physics ?? const AlwaysScrollableScrollPhysics()),
         slivers: slivers!,

@@ -81,10 +81,10 @@ These are unresolved issues and unmerged PRs from `https://github.com/peng8350/f
 #### Tasks
 1. **[x] Non-ScrollView child detection** — Added `SmartRefresher.slivers` constructor for direct sliver support.
 2. **NestedScrollView workaround** — Implement `NestedScrollViewRefresher` for `BouncingScrollPhysics`.
-3. **WASM Support** — Audit and fix any JS-interop or platform-specific code to ensure full compatibility with Flutter's WASM target.
+3. **[x] WASM Support** — Audit and fix any JS-interop or platform-specific code to ensure full compatibility with Flutter's WASM target.
 4. **[x] Desktop Support (Mouse/Trackpad)** — Enabled mouse dragging support and robust physics.
-5. **Multi-Sliver Support** — Improve handling of complex layouts with multiple slivers and overlapping areas.
-6. **ScrollBar compatibility** — Fix sliver composition order.
+5. **[x] Multi-Sliver Support** — Improve handling of complex layouts with multiple slivers and overlapping areas.
+6. **[x] ScrollBar compatibility** — Fix sliver composition order.
 7. **[x] PageView / TabBarView safety** — Resolved context safety and deactivation crashes.
 
 **Deliverable:** v0.3.0 — support for more child widget types, no known critical layout bugs.

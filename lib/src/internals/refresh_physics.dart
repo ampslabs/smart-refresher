@@ -161,7 +161,7 @@ class RefreshPhysics extends ScrollPhysics {
       final double overscrollPastEnd = math.max(
           position.pixels -
               (controller!.headerMode!.value == RefreshStatus.twoLeveling
-                  ? 0.0
+                  ? position.minScrollExtent
                   : position.maxScrollExtent),
           0.0);
       final double overscrollPast =
@@ -324,7 +324,7 @@ class RefreshPhysics extends ScrollPhysics {
           return parent!.createBallisticSimulation(position, velocity);
         }
       }
-      if ((position.pixels > 0 &&
+      if ((position.pixels > position.minScrollExtent &&
               controller!.headerMode!.value == RefreshStatus.twoLeveling) ||
           position.outOfRange) {
         return BouncingScrollSimulation(
@@ -334,7 +334,7 @@ class RefreshPhysics extends ScrollPhysics {
           leadingExtent: position.minScrollExtent,
           trailingExtent:
               controller!.headerMode!.value == RefreshStatus.twoLeveling
-                  ? 0.0
+                  ? position.minScrollExtent
                   : position.maxScrollExtent,
           tolerance: toleranceFor(position),
         );
