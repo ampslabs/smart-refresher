@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_refresher/smart_refresher.dart';
 
-import '../../theme/app_theme.dart';
 import '../../widgets/demo_scaffold.dart';
 
 class ClassicFooterScreen extends StatefulWidget {
@@ -16,19 +15,13 @@ class _ClassicFooterScreenState extends State<ClassicFooterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final IndicatorResolution resolution = resolveIndicatorTheme(
-      context,
-      themedDefaults: SmartRefresherThemeData.fallback(context).classicFooter,
-      schemePrimary: Theme.of(context).colorScheme.secondary,
-      schemeTrack: Theme.of(context).colorScheme.surfaceContainerHighest,
-      schemeContainer: Theme.of(context).colorScheme.surface,
-    );
+    final IndicatorThemeData resolution = IndicatorThemeData.resolve(context);
     return DemoScaffold(
       title: 'ClassicFooter',
       headerBuilder: () => const ClassicHeader(),
       footerBuilder: () => ClassicFooter(
-        textStyle: resolution.data.textStyle.copyWith(
-          color: resolution.data.primaryColor,
+        textStyle: resolution.textStyle.copyWith(
+          color: resolution.primaryColor,
         ),
         loadingIcon: _textOnly
             ? const SizedBox.shrink()
@@ -37,18 +30,18 @@ class _ClassicFooterScreenState extends State<ClassicFooterScreen> {
                 height: 18.0,
                 child: CircularProgressIndicator(
                   strokeWidth: 2.0,
-                  color: resolution.data.primaryColor,
+                  color: resolution.primaryColor,
                 ),
               ),
         idleIcon: _textOnly
             ? const SizedBox.shrink()
             : Icon(
                 Icons.expand_less_rounded,
-                color: resolution.data.primaryColor,
+                color: resolution.primaryColor,
               ),
         canLoadingIcon: _textOnly
             ? const SizedBox.shrink()
-            : Icon(Icons.sync_rounded, color: resolution.data.primaryColor),
+            : Icon(Icons.sync_rounded, color: resolution.primaryColor),
       ),
       topContent: Card(
         margin: const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 4.0),

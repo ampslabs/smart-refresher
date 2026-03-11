@@ -53,13 +53,13 @@ class _FooterComparisonScreenState extends State<FooterComparisonScreen> {
             loadingIcon: SizedBox.shrink(),
           ),
         _FooterOption.skeletonList => const SkeletonFooter(
-            boneStyle: BoneStyle.list,
+            boneStyle: SkeletonBoneStyle.listTile,
           ),
         _FooterOption.skeletonCard => const SkeletonFooter(
-            boneStyle: BoneStyle.card,
+            boneStyle: SkeletonBoneStyle.card,
           ),
         _FooterOption.skeletonText => const SkeletonFooter(
-            boneStyle: BoneStyle.text,
+            boneStyle: SkeletonBoneStyle.textBlock,
           ),
       };
 

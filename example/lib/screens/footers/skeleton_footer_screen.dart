@@ -12,7 +12,7 @@ class SkeletonFooterScreen extends StatefulWidget {
 }
 
 class _SkeletonFooterScreenState extends State<SkeletonFooterScreen> {
-  BoneStyle _style = BoneStyle.list;
+  SkeletonBoneStyle _style = SkeletonBoneStyle.listTile;
   int _count = 3;
   bool _staggered = true;
 
@@ -21,26 +21,30 @@ class _SkeletonFooterScreenState extends State<SkeletonFooterScreen> {
     return DemoScaffold(
       title: 'SkeletonFooter',
       headerBuilder: () => const Material3Header(),
-      footerBuilder: () => SkeletonFooter(
-        boneStyle: _style,
-        skeletonCount: _count,
-        staggered: _staggered,
-      ),
+      footerBuilder: () => _staggered
+          ? SkeletonFooter.staggered(
+              boneStyle: _style,
+              skeletonCount: _count,
+            )
+          : SkeletonFooter(
+              boneStyle: _style,
+              skeletonCount: _count,
+            ),
       topContent: Card(
         margin: const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 4.0),
         child: ExpansionTile(
           title: const Text('Options'),
           childrenPadding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
           children: <Widget>[
-            IndicatorChipSelector<BoneStyle>(
-              options: const <(String, BoneStyle)>[
-                ('List', BoneStyle.list),
-                ('Card', BoneStyle.card),
-                ('Text', BoneStyle.text),
-                ('Compact', BoneStyle.compact),
+            IndicatorChipSelector<SkeletonBoneStyle>(
+              options: const <(String, SkeletonBoneStyle)>[
+                ('List', SkeletonBoneStyle.listTile),
+                ('Card', SkeletonBoneStyle.card),
+                ('Text', SkeletonBoneStyle.textBlock),
+                ('Image', SkeletonBoneStyle.imageRow),
               ],
               selected: _style,
-              onSelected: (BoneStyle value) => setState(() => _style = value),
+              onSelected: (SkeletonBoneStyle value) => setState(() => _style = value),
             ),
             Row(
               children: <Widget>[

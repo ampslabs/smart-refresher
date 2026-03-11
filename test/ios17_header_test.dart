@@ -297,6 +297,37 @@ void main() {
       });
     }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
 
+    testWidgets(
+        'does not fire haptic if enableHaptic is false',
+        (WidgetTester tester) async {
+      final GlobalKey<iOS17HeaderState> key = GlobalKey<iOS17HeaderState>();
+      final RefreshController controller = RefreshController();
+      final List<MethodCall> calls = <MethodCall>[];
+
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.platform, (MethodCall call) async {
+        calls.add(call);
+        return null;
+      });
+
+      await tester.pumpWidget(_refresherHarness(
+        controller: controller,
+        header: iOS17Header(key: key, enableHaptic: false),
+      ));
+
+      key.currentState!.debugSetVisualMode(RefreshStatus.refreshing);
+      await tester.pump();
+
+      expect(
+        calls.where((MethodCall call) => call.method == 'HapticFeedback.vibrate'),
+        isEmpty,
+      );
+      addTearDown(() {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(SystemChannels.platform, null);
+      });
+    }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
+
     testWidgets('dispose during animation does not throw', (WidgetTester tester) async {
       final GlobalKey<iOS17HeaderState> key = GlobalKey<iOS17HeaderState>();
       final RefreshController controller = RefreshController();

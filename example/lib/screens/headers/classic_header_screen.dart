@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_refresher/smart_refresher.dart';
 
-import '../../theme/app_theme.dart';
 import '../../widgets/demo_scaffold.dart';
 
 class ClassicHeaderScreen extends StatefulWidget {
@@ -21,13 +20,7 @@ class _ClassicHeaderScreenState extends State<ClassicHeaderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final IndicatorResolution resolution = resolveIndicatorTheme(
-      context,
-      themedDefaults: SmartRefresherThemeData.fallback(context).classicHeader,
-      schemePrimary: Theme.of(context).colorScheme.primary,
-      schemeTrack: Theme.of(context).colorScheme.surfaceContainerHighest,
-      schemeContainer: Theme.of(context).colorScheme.surface,
-    );
+    final IndicatorThemeData resolution = IndicatorThemeData.resolve(context);
 
     return DemoScaffold(
       title: 'ClassicHeader',
@@ -37,20 +30,20 @@ class _ClassicHeaderScreenState extends State<ClassicHeaderScreen> {
         releaseText: _canRefresh,
         refreshingText: _refreshing,
         completeText: _completed,
-        textStyle: resolution.data.textStyle.copyWith(
-          color: resolution.data.primaryColor,
+        textStyle: resolution.textStyle.copyWith(
+          color: resolution.primaryColor,
         ),
         idleIcon: _showIcons
             ? Icon(
                 Icons.arrow_downward_rounded,
-                color: resolution.data.primaryColor,
+                color: resolution.primaryColor,
               )
             : null,
         releaseIcon: _showIcons
-            ? Icon(Icons.refresh_rounded, color: resolution.data.primaryColor)
+            ? Icon(Icons.refresh_rounded, color: resolution.primaryColor)
             : null,
         completeIcon: _showIcons
-            ? Icon(Icons.check_rounded, color: resolution.data.primaryColor)
+            ? Icon(Icons.check_rounded, color: resolution.primaryColor)
             : null,
         refreshingIcon: _showIcons
             ? SizedBox(
@@ -58,7 +51,7 @@ class _ClassicHeaderScreenState extends State<ClassicHeaderScreen> {
                 height: 20.0,
                 child: CircularProgressIndicator(
                   strokeWidth: 2.0,
-                  color: resolution.data.primaryColor,
+                  color: resolution.primaryColor,
                 ),
               )
             : null,

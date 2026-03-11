@@ -145,6 +145,7 @@ class iOS17Header extends RefreshIndicator {
     this.color,
     this.radius = 10.0,
     this.showLastUpdated = false,
+    this.enableHaptic = true,
     this.lastUpdatedTextBuilder,
     super.height = 60.0,
     super.completeDuration = const Duration(milliseconds: 300),
@@ -159,6 +160,9 @@ class iOS17Header extends RefreshIndicator {
 
   /// Whether to show a timestamp after a successful refresh.
   final bool showLastUpdated;
+
+  /// Whether to trigger haptic feedback when entering refreshing mode.
+  final bool enableHaptic;
 
   /// Optional custom formatter for the completion timestamp.
   final String Function(DateTime updatedAt)? lastUpdatedTextBuilder;
@@ -319,7 +323,9 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
       case RefreshStatus.canRefresh:
         break;
       case RefreshStatus.refreshing:
-        if (defaultTargetPlatform == TargetPlatform.iOS && !_didFireHaptic) {
+        if (defaultTargetPlatform == TargetPlatform.iOS &&
+            !_didFireHaptic &&
+            widget.enableHaptic) {
           HapticFeedback.mediumImpact();
           _didFireHaptic = true;
         }

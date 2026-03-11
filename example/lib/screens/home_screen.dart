@@ -78,23 +78,23 @@ class HomeScreen extends StatelessWidget {
           children: <Widget>[
             _IntroCard(scheme: scheme),
             const SizedBox(height: 20.0),
-            _SectionCard(
+            const _SectionCard(
               title: 'HEADERS',
               entries: _headers,
               actionLabel: 'Compare All Headers →',
               actionRoute: AppRoutes.headerCompare,
             ),
             const SizedBox(height: 16.0),
-            _SectionCard(
+            const _SectionCard(
               title: 'FOOTERS',
               entries: _footers,
               actionLabel: 'Compare All Footers →',
               actionRoute: AppRoutes.footerCompare,
             ),
             const SizedBox(height: 16.0),
-            _SectionCard(
+            const _SectionCard(
               title: 'THEMING',
-              entries: const <IndicatorEntry>[
+              entries: <IndicatorEntry>[
                 IndicatorEntry(
                   name: 'Live Theme Switcher',
                   tagline: 'Trace color resolution in real time',
