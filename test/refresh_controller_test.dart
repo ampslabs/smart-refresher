@@ -123,6 +123,138 @@ void main() {
     expect(refreshController.footerMode!.value, LoadStatus.noMore);
   });
 
+  group('controller lifecycle widget flow', () {
+    testWidgets('requestRefresh enters refreshing and calls onRefresh',
+        (tester) async {
+      final RefreshController refreshController = RefreshController();
+      int refreshCalls = 0;
+
+      await tester.pumpWidget(Directionality(
+        textDirection: TextDirection.ltr,
+        child: SizedBox(
+          width: 375.0,
+          height: 690.0,
+          child: SmartRefresher(
+            header: const TestHeader(),
+            footer: const TestFooter(),
+            enablePullUp: true,
+            onRefresh: () {
+              refreshCalls++;
+            },
+            controller: refreshController,
+            child: ListView.builder(
+              itemBuilder: (c, i) => Text(data[i]),
+              itemCount: 20,
+              itemExtent: 100,
+            ),
+          ),
+        ),
+      ));
+
+      refreshController.requestRefresh();
+      await tester.pumpAndSettle();
+
+      expect(refreshController.headerStatus, RefreshStatus.refreshing);
+      expect(refreshCalls, 1);
+    });
+
+    testWidgets('requestLoading enters loading and calls onLoading',
+        (tester) async {
+      final RefreshController refreshController = RefreshController();
+      int loadCalls = 0;
+
+      await tester.pumpWidget(Directionality(
+        textDirection: TextDirection.ltr,
+        child: SizedBox(
+          width: 375.0,
+          height: 690.0,
+          child: SmartRefresher(
+            header: const TestHeader(),
+            footer: const TestFooter(),
+            enablePullUp: true,
+            onLoading: () {
+              loadCalls++;
+            },
+            controller: refreshController,
+            child: ListView.builder(
+              itemBuilder: (c, i) => Text(data[i]),
+              itemCount: 20,
+              itemExtent: 100,
+            ),
+          ),
+        ),
+      ));
+
+      refreshController.requestLoading();
+      await tester.pumpAndSettle();
+
+      expect(refreshController.footerStatus, LoadStatus.loading);
+      expect(loadCalls, 1);
+    });
+
+    testWidgets('refreshCompleted returns header to idle after requestRefresh',
+        (tester) async {
+      final RefreshController refreshController = RefreshController();
+
+      await tester.pumpWidget(buildRefresher(refreshController));
+
+      refreshController.requestRefresh();
+      await tester.pumpAndSettle();
+      expect(refreshController.headerStatus, RefreshStatus.refreshing);
+
+      refreshController.refreshCompleted();
+      await tester.pump();
+
+      expect(refreshController.headerStatus, RefreshStatus.completed);
+
+      await tester.pumpAndSettle(const Duration(milliseconds: 600));
+
+      expect(refreshController.headerStatus, RefreshStatus.idle);
+    });
+
+    testWidgets('loadComplete returns footer to idle after requestLoading',
+        (tester) async {
+      final RefreshController refreshController = RefreshController();
+
+      await tester.pumpWidget(buildRefresher(refreshController));
+
+      refreshController.requestLoading();
+      await tester.pumpAndSettle();
+      expect(refreshController.footerStatus, LoadStatus.loading);
+
+      refreshController.loadComplete();
+      refreshController.position!
+          .jumpTo(refreshController.position!.maxScrollExtent - 30);
+      await tester.pump();
+      await tester.pumpAndSettle(const Duration(milliseconds: 600));
+
+      expect(refreshController.footerStatus, LoadStatus.idle);
+    });
+
+    testWidgets('dispose detaches widget state and disposes controller',
+        (tester) async {
+      final RefreshController refreshController = RefreshController();
+
+      await tester.pumpWidget(buildRefresher(refreshController));
+
+      expect(refreshController.position, isNotNull);
+      expect(refreshController.headerMode, isNotNull);
+      expect(refreshController.footerMode, isNotNull);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+
+      expect(refreshController.position, isNotNull);
+      expect(refreshController.headerStatus, RefreshStatus.idle);
+
+      refreshController.dispose();
+
+      expect(refreshController.headerMode, isNull);
+      expect(refreshController.footerMode, isNull);
+      expect(refreshController.headerStatus, isNull);
+      expect(refreshController.footerStatus, isNull);
+    });
+  });
+
   testWidgets(
       'resetNoMoreData only can reset when footer mode is Nomore,if state is loading,may disable change state',
       (tester) async {

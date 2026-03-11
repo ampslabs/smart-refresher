@@ -12,6 +12,21 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        flutter:
+          - label: stable
+            channel: stable
+          - label: beta
+            channel: beta
+          - label: stable-3.38.0
+            channel: stable
+            version: 3.38.0
+          - label: stable-3.35.0
+            channel: stable
+            version: 3.35.0
+    name: Verify (${{ matrix.flutter.label }})
 
     steps:
       - name: Checkout
@@ -20,21 +35,24 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: stable
+          channel: ${{ matrix.flutter.channel }}
+          flutter-version: ${{ matrix.flutter.version }}
 
       - name: Install dependencies
         run: flutter pub get
 
       - name: Analyze
-        run: flutter analyze
+        run: flutter analyze --fatal-infos --fatal-warnings
 
       - name: Run tests
         run: flutter test
 
       - name: Clean environment for publish
+        if: matrix.flutter.label == 'stable'
         run: |
           git checkout example/ios/Flutter/flutter_export_environment.sh || true
           git status
 
       - name: Package publish dry-run
+        if: matrix.flutter.label == 'stable'
         run: dart pub publish --dry-run
