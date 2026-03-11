@@ -1,89 +1,113 @@
-import 'package:example/other/refresh_glowindicator.dart';
-import 'package:example/ui/MainActivity.dart';
-import 'package:example/ui/SecondActivity.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_refresher/smart_refresher.dart';
-import 'ui/indicator/base/IndicatorActivity.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() => runApp(MyApp());
+import 'app_router.dart';
+import 'screens/footers/classic_footer_screen.dart';
+import 'screens/footers/footer_comparison_screen.dart';
+import 'screens/footers/skeleton_footer_screen.dart';
+import 'screens/headers/classic_header_screen.dart';
+import 'screens/headers/header_comparison_screen.dart';
+import 'screens/headers/ios17_header_screen.dart';
+import 'screens/headers/material3_header_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/theming/theming_screen.dart';
+import 'theme/app_theme.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+void main() => runApp(const SmartRefresherDemoApp());
 
-  // This widget is the root of your application.
+class SmartRefresherDemoApp extends StatefulWidget {
+  const SmartRefresherDemoApp({super.key});
+
+  @override
+  State<SmartRefresherDemoApp> createState() => _SmartRefresherDemoAppState();
+}
+
+class _SmartRefresherDemoAppState extends State<SmartRefresherDemoApp> {
+  ThemeMode _themeMode = ThemeMode.light;
+  Color _seedColor = Colors.deepPurple;
+
+  void _toggleTheme() {
+    setState(() {
+      _themeMode = _themeMode == ThemeMode.light
+          ? ThemeMode.dark
+          : ThemeMode.light;
+    });
+  }
+
+  void _setSeedColor(Color color) {
+    setState(() {
+      _seedColor = color;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return RefreshConfiguration(
-      footerTriggerDistance: 15,
-      dragSpeedRatio: 0.91,
-      headerBuilder: () => MaterialClassicHeader(),
-      footerBuilder: () => ClassicFooter(),
-      enableLoadingWhenNoData: false,
-      enableRefreshVibrate: false,
-      enableLoadMoreVibrate: false,
-      shouldFooterFollowWhenNotFull: (state) {
-        // If you want load more with noMoreData state ,may be you should return false
-        return false;
-      },
+    return DemoAppStateScope(
+      themeMode: _themeMode,
+      seedColor: _seedColor,
+      toggleTheme: _toggleTheme,
+      setSeedColor: _setSeedColor,
       child: MaterialApp(
-        title: 'Pulltorefresh Demo',
+        title: 'smart_refresher demo',
         debugShowCheckedModeBanner: false,
-        builder: (context, child) {
-          return ScrollConfiguration(
-            behavior: RefreshScrollBehavior(),
-            child: child!,
-          );
-        },
-        theme: ThemeData(
-            // This is the theme of your application.
-            //s
-            // Try running your application with "flutter run". You'll see the
-            // application has a blue toolbar. Then, without quitting the app, try
-            // changing the primarySwatch below to Colors.green and then invoke
-            // "hot reload" (press "r" in the console where you ran "flutter run",
-            // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-            // counter didn't reset back to zero; the application is not restarted.
-            primarySwatch: Colors.blue,
-            primaryColor: Colors.greenAccent),
-        localizationsDelegates: [
-          RefreshLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate
-        ],
-        supportedLocales: [
-          const Locale('en'),
-          const Locale('zh'),
-          const Locale('ja'),
-          const Locale('uk'),
-          const Locale('it'),
-          const Locale('ru'),
-          const Locale('fr'),
-          const Locale('es'),
-          const Locale('nl'),
-          const Locale('sv'),
-          const Locale('pt'),
-          const Locale('ko'),
-        ],
-        locale: const Locale('zh'),
-        localeResolutionCallback:
-            (Locale? locale, Iterable<Locale> supportedLocales) {
-          //print("change language");
-          return locale;
-        },
-        home: MainActivity(title: 'Pulltorefresh'),
-        routes: {
-          "sec": (BuildContext context) {
-            return SecondActivity(
-              title: "SecondAct",
-            );
-          },
-          "indicator": (BuildContext context) {
-            return IndicatorActivity(title: 'Indicators');
-          }
+        themeMode: _themeMode,
+        theme: AppTheme.light(_seedColor),
+        darkTheme: AppTheme.dark(_seedColor),
+        initialRoute: AppRoutes.home,
+        routes: <String, WidgetBuilder>{
+          AppRoutes.home: (_) => const HomeScreen(),
+          AppRoutes.classicHeader: (_) => const ClassicHeaderScreen(),
+          AppRoutes.material3Header: (_) => const Material3HeaderScreen(),
+          AppRoutes.ios17Header: (_) => const IOS17HeaderScreen(),
+          AppRoutes.headerCompare: (_) => const HeaderComparisonScreen(),
+          AppRoutes.classicFooter: (_) => const ClassicFooterScreen(),
+          AppRoutes.skeletonFooter: (_) => const SkeletonFooterScreen(),
+          AppRoutes.footerCompare: (_) => const FooterComparisonScreen(),
+          AppRoutes.theming: (_) => const ThemingScreen(),
         },
       ),
+    );
+  }
+}
+
+class DemoAppStateScope extends InheritedWidget {
+  const DemoAppStateScope({
+    super.key,
+    required this.themeMode,
+    required this.seedColor,
+    required this.toggleTheme,
+    required this.setSeedColor,
+    required super.child,
+  });
+
+  final ThemeMode themeMode;
+  final Color seedColor;
+  final VoidCallback toggleTheme;
+  final ValueChanged<Color> setSeedColor;
+
+  static DemoAppStateScope of(BuildContext context) {
+    final DemoAppStateScope? scope = context
+        .dependOnInheritedWidgetOfExactType<DemoAppStateScope>();
+    assert(scope != null, 'DemoAppStateScope is missing in the widget tree.');
+    return scope!;
+  }
+
+  @override
+  bool updateShouldNotify(DemoAppStateScope oldWidget) {
+    return themeMode != oldWidget.themeMode || seedColor != oldWidget.seedColor;
+  }
+}
+
+class ThemeModeToggle extends StatelessWidget {
+  const ThemeModeToggle({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final DemoAppStateScope scope = DemoAppStateScope.of(context);
+    final bool isDark = scope.themeMode == ThemeMode.dark;
+    return IconButton(
+      tooltip: isDark ? 'Switch to light mode' : 'Switch to dark mode',
+      onPressed: scope.toggleTheme,
+      icon: Icon(isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded),
     );
   }
 }

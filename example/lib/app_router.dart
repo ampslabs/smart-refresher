@@ -1,0 +1,11 @@
+abstract final class AppRoutes {
+  static const String home = '/';
+  static const String classicHeader = '/headers/classic';
+  static const String material3Header = '/headers/material3';
+  static const String ios17Header = '/headers/ios17';
+  static const String headerCompare = '/headers/compare';
+  static const String classicFooter = '/footers/classic';
+  static const String skeletonFooter = '/footers/skeleton';
+  static const String footerCompare = '/footers/compare';
+  static const String theming = '/theming';
+}
