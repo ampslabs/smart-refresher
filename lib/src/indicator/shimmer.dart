@@ -5,19 +5,7 @@
 
 import 'package:flutter/material.dart';
 
-const LinearGradient _kLightShimmerGradient = LinearGradient(
-  colors: <Color>[Color(0xFFEBEBF4), Color(0xFFF4F4F4), Color(0xFFEBEBF4)],
-  stops: <double>[0.1, 0.3, 0.4],
-  begin: Alignment(-1.0, -0.3),
-  end: Alignment(1.0, 0.3),
-);
-
-const LinearGradient _kDarkShimmerGradient = LinearGradient(
-  colors: <Color>[Color(0xFF2A2A2A), Color(0xFF3A3A3A), Color(0xFF2A2A2A)],
-  stops: <double>[0.1, 0.3, 0.4],
-  begin: Alignment(-1.0, -0.3),
-  end: Alignment(1.0, 0.3),
-);
+import '../theming/indicator_theme.dart';
 
 class _SlidingGradientTransform extends GradientTransform {
   const _SlidingGradientTransform({required this.slidePercent});
@@ -98,10 +86,18 @@ class ShimmerState extends State<Shimmer> with TickerProviderStateMixin {
 
   /// The active shimmer gradient with the current slide transform applied.
   LinearGradient get gradient {
+    final IndicatorThemeData theme = IndicatorThemeData.resolve(context);
     final LinearGradient base = widget.gradient ??
-        (Theme.of(context).brightness == Brightness.dark
-            ? _kDarkShimmerGradient
-            : _kLightShimmerGradient);
+        LinearGradient(
+          colors: <Color>[
+            theme.skeletonShimmerBaseColor,
+            theme.skeletonShimmerHighlightColor,
+            theme.skeletonShimmerBaseColor,
+          ],
+          stops: const <double>[0.1, 0.3, 0.4],
+          begin: const Alignment(-1.0, -0.3),
+          end: const Alignment(1.0, 0.3),
+        );
     return LinearGradient(
       colors: base.colors,
       stops: base.stops,

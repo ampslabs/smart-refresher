@@ -5,9 +5,10 @@
 
 import 'package:flutter/material.dart';
 
+import '../theming/indicator_theme.dart';
+
 Color _defaultBoneColor(BuildContext context) {
-  final Color color = Theme.of(context).colorScheme.surfaceContainerHighest;
-  return color.withValues(alpha: 1.0);
+  return IndicatorThemeData.resolve(context).skeletonBoneColor;
 }
 
 /// A rounded rectangular placeholder block used to compose skeleton layouts.

@@ -118,7 +118,7 @@ These are unresolved issues and unmerged PRs from `https://github.com/peng8350/f
 2. **[x] iOS 17-style indicator** — Native activity indicator style introduced in iOS 17.
 3. **Accessibility (Semantics)** — Add proper semantic labels and hints to all indicators so they are correctly announced by TalkBack/VoiceOver.
 4. **[x] Skeleton loading footer** — Animated shimmer/skeleton footer indicator for paginating.
-5. **Indicator theming API** — Automatic picking of colors from `ThemeData`.
+5. **[x] Indicator theming API** — Automatic picking of colors from `ThemeData`.
 6. **Demo app update** — Updated example app to showcase all new indicators and accessibility features.
 
 **Deliverable:** v0.5.0 — 2 new headers, 1 new footer, theming support.

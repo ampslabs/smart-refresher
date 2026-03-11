@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
+import '../theming/indicator_theme.dart';
 
 const int _kTickCount = 12;
 const double _kTwoPi = math.pi * 2.0;
@@ -182,9 +183,10 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
   bool _didFireHaptic = false;
   DateTime? _lastUpdatedAt;
 
-  Color get _resolvedColor =>
-      widget.color ??
-      CupertinoDynamicColor.resolve(CupertinoColors.systemFill, context);
+  Color get _resolvedColor => IndicatorThemeData.resolve(
+        context,
+        widgetIosTickColor: widget.color,
+      ).iosTickColor;
 
   @visibleForTesting
   /// Returns the current drag progress used by the indicator.

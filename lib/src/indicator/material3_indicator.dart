@@ -3,6 +3,7 @@ import 'package:flutter/material.dart'
 
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
+import '../theming/indicator_theme.dart';
 
 /// A Material 3 pull-to-refresh header that follows the 2024 circular indicator style.
 ///
@@ -175,25 +176,24 @@ class Material3HeaderState extends RefreshIndicatorState<Material3Header>
   Widget buildContent(BuildContext context, RefreshStatus? mode) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
-    final ProgressIndicatorThemeData indicatorTheme = ProgressIndicatorTheme.of(
+    final ProgressIndicatorThemeData progressTheme = ProgressIndicatorTheme.of(context);
+
+    final IndicatorThemeData indicatorTheme = IndicatorThemeData.resolve(
       context,
+      widgetPrimaryColor: widget.color ?? progressTheme.color,
+      widgetTrackColor: progressTheme.circularTrackColor ?? colorScheme.surfaceContainerHighest,
+      widgetMaterial3BackgroundColor: widget.backgroundColor ?? colorScheme.surfaceContainerLow,
+      widgetMaterial3Elevation: widget.elevation,
     );
 
-    final Color spinnerColor =
-        widget.color ?? indicatorTheme.color ?? colorScheme.primary;
-    final Color trackColor =
-        indicatorTheme.circularTrackColor ??
-        colorScheme.surfaceContainerHighest;
-    final Color containerColor =
-        widget.backgroundColor ?? colorScheme.surfaceContainerLow;
-    final double trackGap = indicatorTheme.trackGap ?? _trackGap;
-
+    // Custom track gap fallback as it's not part of the standard indicator theme.
+    final double trackGap = progressTheme.trackGap ?? _trackGap;
     final Widget child = switch (_terminalState) {
       _TerminalState.completed => FadeTransition(
         opacity: _iconFadeController,
         child:
             widget.completeIcon ??
-            Icon(Icons.check_circle_outline, size: 20.0, color: spinnerColor),
+            Icon(Icons.check_circle_outline, size: 20.0, color: indicatorTheme.iconColor),
       ),
       _TerminalState.failed => FadeTransition(
         opacity: _iconFadeController,
@@ -209,8 +209,8 @@ class Material3HeaderState extends RefreshIndicatorState<Material3Header>
           // ignore: deprecated_member_use
           year2023: false,
           value: mode == RefreshStatus.refreshing ? null : _dragProgress,
-          color: spinnerColor,
-          backgroundColor: trackColor,
+          color: indicatorTheme.primaryColor,
+          backgroundColor: indicatorTheme.trackColor,
           strokeWidth: _strokeWidth,
           trackGap: trackGap,
           strokeCap: StrokeCap.round,
@@ -227,9 +227,9 @@ class Material3HeaderState extends RefreshIndicatorState<Material3Header>
         child: ScaleTransition(
           scale: _scaleAnimation,
           child: Material(
-            elevation: widget.elevation,
+            elevation: indicatorTheme.material3Elevation,
             shape: const CircleBorder(),
-            color: containerColor,
+            color: indicatorTheme.material3BackgroundColor,
             child: SizedBox(
               width: _containerSize,
               height: _containerSize,
