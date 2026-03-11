@@ -2,6 +2,7 @@ import 'package:example/other/refresh_glowindicator.dart';
 import 'package:example/ui/MainActivity.dart';
 import 'package:example/ui/SecondActivity.dart';
 import 'package:example/ui/example/skeleton_footer_example.dart';
+import 'package:example/ui/example/material3_header_example.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_refresher/smart_refresher.dart';
 import 'ui/indicator/base/IndicatorActivity.dart';
@@ -73,6 +74,9 @@ class MyApp extends StatelessWidget {
           },
           'skeleton-footer': (BuildContext context) {
             return const SkeletonFooterExamplePage();
+          },
+          'material3_header': (BuildContext context) {
+            return const Material3HeaderExample();
           },
         },
       ),

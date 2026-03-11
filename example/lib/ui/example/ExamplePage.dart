@@ -20,6 +20,8 @@ import 'package:example/ui/example/customindicator/spinkit_header.dart';
 import 'package:example/ui/example/useStage/basic.dart';
 import 'package:example/ui/example/otherwidget/refresh_pageView_example.dart';
 import 'package:example/ui/example/customindicator/link_header_example.dart';
+import 'package:example/ui/example/ios17_header_example.dart';
+import 'package:example/ui/example/material3_header_example.dart';
 import 'package:example/ui/example/useStage/twolevel_refresh.dart';
 import 'useStage/qq_chat_list.dart';
 import 'otherwidget/refresh_recordable_listview_example.dart';
@@ -288,6 +290,31 @@ class _ExamplePageState extends State<ExamplePage>
     ];
 
     final List<ExampleItem> items3 = [
+      ExampleItem(
+      ExampleItem(
+        title: "Material 3 Header",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return const Material3HeaderExample();
+              },
+            ),
+          );
+        },
+      ),
+      ExampleItem(
+        title: "iOS 17 Header",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return const IOS17HeaderExample();
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
         title: "Simple Custom Header",
         onClick: () {

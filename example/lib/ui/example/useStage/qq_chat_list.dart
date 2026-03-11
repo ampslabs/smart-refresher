@@ -147,7 +147,7 @@ class _QQChatListState extends State<QQChatList> {
                           center: null,
                           axisDirection: AxisDirection.up,
                           slivers: <Widget>[
-                            const SliverExpanded(),
+                            SliverExpanded(),
                             SliverList(
                               delegate: SliverChildBuilderDelegate(
                                   (c, i) => data[i],
@@ -187,7 +187,8 @@ class _QQChatListState extends State<QQChatList> {
                         ),
                       ),
                       ElevatedButton(
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blueAccent),
                         onPressed: () {
                           _scrollController.jumpTo(0.0);
                           data.insert(
@@ -221,7 +222,11 @@ class _MessageItem extends StatelessWidget {
   final bool isMe;
   final String url;
 
-  const _MessageItem({required this.content, required this.author, required this.isMe, required this.url});
+  const _MessageItem(
+      {required this.content,
+      required this.author,
+      required this.isMe,
+      required this.url});
 
   @override
   Widget build(BuildContext context) {
