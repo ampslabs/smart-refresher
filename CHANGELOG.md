@@ -1,3 +1,11 @@
+## Unreleased
+
+- Added `Material3Header`, a Material 3 floating pull-to-refresh indicator with
+  theme-aware colors, modern circular progress styling, and dedicated complete
+  and error states.
+- Exported `Material3Header` from the package root and added an example screen
+  demonstrating seeded light and dark Material 3 themes.
+
 ## 0.1.0
 
 - **Initial Fork Release**: Rebranded package as `smart_refresher` and initialized maintained fork release line.

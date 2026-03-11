@@ -19,6 +19,7 @@ import 'package:example/ui/example/customindicator/spinkit_header.dart';
 import 'package:example/ui/example/useStage/basic.dart';
 import 'package:example/ui/example/otherwidget/refresh_pageView_example.dart';
 import 'package:example/ui/example/customindicator/link_header_example.dart';
+import 'package:example/ui/example/material3_header_example.dart';
 import 'package:example/ui/example/useStage/twolevel_refresh.dart';
 import 'useStage/qq_chat_list.dart';
 import 'otherwidget/refresh_recordable_listview_example.dart';
@@ -53,11 +54,7 @@ class _ExampleItemState extends State<ExampleItem> {
       onTap: () => widget.onClick(),
       child: SizedBox(
         height: 100.0,
-        child: Card(
-          child: Center(
-            child: Text(widget.title),
-          ),
-        ),
+        child: Card(child: Center(child: Text(widget.title))),
       ),
     );
   }
@@ -77,190 +74,302 @@ class _ExamplePageState extends State<ExamplePage>
   Widget build(BuildContext context) {
     final List<ExampleItem> items1 = [
       ExampleItem(
-          title: "Basic Usage",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return const BasicExample();
-            }));
-          }),
+        title: "Basic Usage",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return const BasicExample();
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
-          title: "Hide Footer Manually",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return Scaffold(
-                body: const HideFooterManual(),
-                appBar: AppBar(),
-              );
-            }));
-          }),
+        title: "Hide Footer Manually",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return Scaffold(
+                  body: const HideFooterManual(),
+                  appBar: AppBar(),
+                );
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
-          title: "Horizontal Refresh",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return Scaffold(
-                body: const HorizontalRefresh(),
-                appBar: AppBar(),
-              );
-            }));
-          }),
+        title: "Horizontal Refresh",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return Scaffold(
+                  body: const HorizontalRefresh(),
+                  appBar: AppBar(),
+                );
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
-          title: "Tap Button to Refresh",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return const TapButtonRefreshExample();
-            }));
-          }),
+        title: "Tap Button to Refresh",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return const TapButtonRefreshExample();
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
-          title: "Refresh in NestedScrollView",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return const NestedRefresh();
-            }));
-          }),
+        title: "Refresh in NestedScrollView",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return const NestedRefresh();
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
-          title: "Mock QQ Chat",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return const QQChatList();
-            }));
-          }),
+        title: "Mock QQ Chat",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return const QQChatList();
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
-          title: "Empty View + Refresh",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return Scaffold(
-                body: const RefreshWithEmptyView(),
-                appBar: AppBar(),
-              );
-            }));
-          }),
+        title: "Empty View + Refresh",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return Scaffold(
+                  body: const RefreshWithEmptyView(),
+                  appBar: AppBar(),
+                );
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
-          title: "Taobao Second Floor Example",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return const TwoLevelExample();
-            }));
-          }),
+        title: "Taobao Second Floor Example",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return const TwoLevelExample();
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
-          title: "Force Full Page",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return Scaffold(
-                body: ForceFullExample(),
-                appBar: AppBar(),
-              );
-            }));
-          }),
+        title: "Force Full Page",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return Scaffold(
+                  body: const ForceFullExample(),
+                  appBar: AppBar(),
+                );
+              },
+            ),
+          );
+        },
+      ),
     ];
     final List<ExampleItem> items2 = [
       ExampleItem(
-          title: "AnimatedList + Refresher",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return Scaffold(
-                body: const AnimatedListExample(),
-                appBar: AppBar(),
-              );
-            }));
-          }),
+        title: "AnimatedList + Refresher",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return Scaffold(
+                  body: const AnimatedListExample(),
+                  appBar: AppBar(),
+                );
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
-          title: "ExpansionPanelList Usage",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return Scaffold(
-                appBar: AppBar(),
-                body: const RefreshExpansionPanelList(),
-              );
-            }));
-          }),
+        title: "ExpansionPanelList Usage",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return Scaffold(
+                  appBar: AppBar(),
+                  body: const RefreshExpansionPanelList(),
+                );
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
-          title: "Load More + DraggableSheet",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return Scaffold(
-                appBar: AppBar(),
-                body: const DraggableLoadingBottomSheet(),
-              );
-            }));
-          }),
+        title: "Load More + DraggableSheet",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return Scaffold(
+                  appBar: AppBar(),
+                  body: const DraggableLoadingBottomSheet(),
+                );
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
-          title: "StickyHeader + StaggeredGridView",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return Scaffold(
-                appBar: AppBar(),
-                body: const RefreshStaggeredAndSticky(),
-              );
-            }));
-          }),
+        title: "StickyHeader + StaggeredGridView",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return Scaffold(
+                  appBar: AppBar(),
+                  body: const RefreshStaggeredAndSticky(),
+                );
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
-          title: "PageView + SmartRefresher",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return Scaffold(
-                body: const PageViewExample(),
-                appBar: AppBar(),
-              );
-            }));
-          }),
+        title: "PageView + SmartRefresher",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return Scaffold(
+                  body: const PageViewExample(),
+                  appBar: AppBar(),
+                );
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
-          title: "ReorderableListView",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return Scaffold(
-                body: const ReorderableListDemo(),
-                appBar: AppBar(),
-              );
-            }));
-          }),
+        title: "ReorderableListView",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return Scaffold(
+                  body: const ReorderableListDemo(),
+                  appBar: AppBar(),
+                );
+              },
+            ),
+          );
+        },
+      ),
     ];
 
     final List<ExampleItem> items3 = [
       ExampleItem(
-          title: "Simple Custom Header",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return Scaffold(
-                body: const CustomHeaderExample(),
-                appBar: AppBar(),
-              );
-            }));
-          }),
+        title: "Material 3 Header",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return const Material3HeaderExample();
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
-          title: "LinkHeader Example",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return const LinkHeaderExample();
-            }));
-          }),
+        title: "Simple Custom Header",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return Scaffold(
+                  body: const CustomHeaderExample(),
+                  appBar: AppBar(),
+                );
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
-          title: "Shimmer Indicator Example",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return Scaffold(
-                appBar: AppBar(),
-                body: const ShimmerIndicatorExample(),
-              );
-            }));
-          }),
+        title: "LinkHeader Example",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return const LinkHeaderExample();
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
-          title: "Gif Indicator Example 1",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return Scaffold(
-                backgroundColor: Colors.white,
-                appBar: AppBar(),
-                body: const GifIndicatorExample1(),
-              );
-            }));
-          }),
+        title: "Shimmer Indicator Example",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return Scaffold(
+                  appBar: AppBar(),
+                  body: const ShimmerIndicatorExample(),
+                );
+              },
+            ),
+          );
+        },
+      ),
       ExampleItem(
-          title: "Convert Footer to Header Style",
-          onClick: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return const ConvertFooter();
-            }));
-          }),
+        title: "Gif Indicator Example 1",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return Scaffold(
+                  backgroundColor: Colors.white,
+                  appBar: AppBar(),
+                  body: const GifIndicatorExample1(),
+                );
+              },
+            ),
+          );
+        },
+      ),
+      ExampleItem(
+        title: "Convert Footer to Header Style",
+        onClick: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return const ConvertFooter();
+              },
+            ),
+          );
+        },
+      ),
     ];
 
     return Column(
@@ -271,15 +380,9 @@ class _ExamplePageState extends State<ExamplePage>
           child: TabBar(
             controller: _tabController,
             tabs: const <Widget>[
-              Tab(
-                text: "Usage Scenarios",
-              ),
-              Tab(
-                text: "Special Components",
-              ),
-              Tab(
-                text: "Custom Indicators",
-              ),
+              Tab(text: "Usage Scenarios"),
+              Tab(text: "Special Components"),
+              Tab(text: "Custom Indicators"),
             ],
           ),
         ),
@@ -289,10 +392,10 @@ class _ExamplePageState extends State<ExamplePage>
             children: <Widget>[
               ListView(children: items1),
               ListView(children: items2),
-              ListView(children: items3)
+              ListView(children: items3),
             ],
           ),
-        )
+        ),
       ],
     );
   }
