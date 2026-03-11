@@ -96,7 +96,7 @@ void main() {
 
       // Start a refresh on tab 1
       controller.requestRefresh();
-      await tester.pump(); // Start animation
+      await tester.pump(const Duration(milliseconds: 100)); // Start animation
       expect(controller.headerStatus, RefreshStatus.refreshing);
 
       // Switch to tab 2 to deactivate Tab 1

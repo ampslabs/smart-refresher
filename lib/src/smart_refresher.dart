@@ -524,8 +524,9 @@ class RefreshController {
   }
 
   void _bindState(SmartRefresherState state) {
-    assert(_refresherState == null,
-        "Don't use one refreshController to multiple SmartRefresher");
+    if (_refresherState != null && _refresherState != state) {
+      _detachPosition();
+    }
     _refresherState = state;
   }
 
@@ -574,10 +575,12 @@ class RefreshController {
     assert(position != null,
         'Try not to call requestRefresh() before build, please call after the ui was rendered');
     if (isRefresh) return Future<void>.value();
+    if (_refresherState == null || !_refresherState!.mounted) return null;
+
     final StatefulElement? indicatorElement =
         _findIndicator(position!.context.storageContext, RefreshIndicator);
 
-    if (indicatorElement == null || _refresherState == null) return null;
+    if (indicatorElement == null) return null;
     (indicatorElement.state as RefreshIndicatorState).floating = true;
 
     if (needMove && _refresherState!.mounted) {
@@ -635,10 +638,12 @@ class RefreshController {
     assert(position != null,
         'Try not to call requestLoading() before build, please call after the ui was rendered');
     if (isLoading) return Future<void>.value();
+    if (_refresherState == null || !_refresherState!.mounted) return null;
+
     final StatefulElement? indicatorElement =
         _findIndicator(position!.context.storageContext, LoadIndicator);
 
-    if (indicatorElement == null || _refresherState == null) return null;
+    if (indicatorElement == null) return null;
     (indicatorElement.state as LoadIndicatorState).floating = true;
     if (needMove && _refresherState!.mounted) {
       _refresherState!.setCanDrag(false);
