@@ -20,6 +20,7 @@ jobs:
             channel: stable
           - label: beta
             channel: beta
+          # Update these pinned versions when new Flutter stable releases ship
           - label: stable-3.38.0
             channel: stable
             version: 3.38.0

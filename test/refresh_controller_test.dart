@@ -243,6 +243,7 @@ void main() {
 
       await tester.pumpWidget(const SizedBox.shrink());
 
+      // position survives until explicit dispose
       expect(refreshController.position, isNotNull);
       expect(refreshController.headerStatus, RefreshStatus.idle);
 
