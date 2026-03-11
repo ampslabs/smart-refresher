@@ -1,29 +1,18 @@
 name: example
 description: A new Flutter project.
-version: 1.0.0+1
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.27.0"
+  flutter: ">=3.10.0"
 
 dependencies:
-
   flutter:
     sdk: flutter
 
   smart_refresher:
     path: ../
-
-
-  http: ^1.1.0
-  flutter_staggered_grid_view: ^0.7.0
-  flutter_spinkit: ^5.2.1
-  shimmer: ^3.0.0
-  flutter_sticky_header: ^0.8.0
-
-  flutter_localizations:
-    sdk: flutter
 dev_dependencies:
+  flutter_lints: ^3.0.0
   flutter_test:
     sdk: flutter
   integration_test:
