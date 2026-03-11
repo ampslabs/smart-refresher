@@ -19,3 +19,5 @@ pubspec.lock
 .idea
 *.log
 
+0
+test_results.txt
