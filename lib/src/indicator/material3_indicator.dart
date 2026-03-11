@@ -1,17 +1,28 @@
-// ignore_for_file: public_member_api_docs
-
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
 
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
+import '../theming/indicator_theme.dart';
 
-/// A Material 3 pull-to-refresh header that follows the floating circular style.
+/// A Material 3 pull-to-refresh header that follows the 2024 circular indicator style.
+///
+/// This indicator reads its defaults from [Theme.of] and
+/// [ProgressIndicatorTheme.of] so it adapts automatically to Material 3 color
+/// schemes, including seeded light and dark themes.
+///
+/// The Material 3 color roles used here, such as
+/// [ColorScheme.surfaceContainerLow], require a modern Flutter SDK.
 class Material3Header extends RefreshIndicator {
   /// Overrides the spinner and success icon color.
+  ///
+  /// When null, this falls back to [ProgressIndicatorThemeData.color] and then
+  /// [ColorScheme.primary].
   final Color? color;
 
   /// Overrides the floating container background color.
+  ///
+  /// When null, this falls back to [ColorScheme.surfaceContainerLow].
   final Color? backgroundColor;
 
   /// The elevation applied to the circular Material container.
@@ -40,6 +51,7 @@ class Material3Header extends RefreshIndicator {
   State<StatefulWidget> createState() => Material3HeaderState();
 }
 
+/// The state for [Material3Header].
 class Material3HeaderState extends RefreshIndicatorState<Material3Header>
     with TickerProviderStateMixin {
   static const Cubic _emphasizedDecelerate = Cubic(0.05, 0.7, 0.1, 1.0);
@@ -164,46 +176,49 @@ class Material3HeaderState extends RefreshIndicatorState<Material3Header>
   Widget buildContent(BuildContext context, RefreshStatus? mode) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
-    final ProgressIndicatorThemeData indicatorTheme = ProgressIndicatorTheme.of(
+    final ProgressIndicatorThemeData progressTheme = ProgressIndicatorTheme.of(context);
+
+    final IndicatorThemeData indicatorTheme = IndicatorThemeData.resolve(
       context,
+      widgetPrimaryColor: widget.color ?? progressTheme.color,
+      widgetTrackColor: progressTheme.circularTrackColor ?? colorScheme.surfaceContainerHighest,
+      widgetMaterial3BackgroundColor: widget.backgroundColor ?? colorScheme.surfaceContainerLow,
+      widgetMaterial3Elevation: widget.elevation,
     );
 
-    final Color spinnerColor =
-        widget.color ?? indicatorTheme.color ?? colorScheme.primary;
-    final Color trackColor = indicatorTheme.circularTrackColor ??
-        colorScheme.surfaceContainerHighest;
-    final Color containerColor =
-        widget.backgroundColor ?? colorScheme.surfaceContainerLow;
-    final double trackGap = indicatorTheme.trackGap ?? _trackGap;
-
+    // Custom track gap fallback as it's not part of the standard indicator theme.
+    final double trackGap = progressTheme.trackGap ?? _trackGap;
     final Widget child = switch (_terminalState) {
       _TerminalState.completed => FadeTransition(
-          opacity: _iconFadeController,
-          child: widget.completeIcon ??
-              Icon(Icons.check_circle_outline, size: 20.0, color: spinnerColor),
-        ),
+        opacity: _iconFadeController,
+        child:
+            widget.completeIcon ??
+            Icon(Icons.check_circle_outline, size: 20.0, color: indicatorTheme.iconColor),
+      ),
       _TerminalState.failed => FadeTransition(
-          opacity: _iconFadeController,
-          child: widget.failedIcon ??
-              Icon(Icons.error_outline, size: 20.0, color: colorScheme.error),
-        ),
+        opacity: _iconFadeController,
+        child:
+            widget.failedIcon ??
+            Icon(Icons.error_outline, size: 20.0, color: colorScheme.error),
+      ),
       _TerminalState.none => SizedBox(
-          width: _spinnerSize,
-          height: _spinnerSize,
-          child: CircularProgressIndicator(
-            // ignore: deprecated_member_use
-            year2023: false,
-            value: mode == RefreshStatus.refreshing ? null : _dragProgress,
-            color: spinnerColor,
-            backgroundColor: trackColor,
-            strokeWidth: _strokeWidth,
-            trackGap: trackGap,
-            strokeCap: StrokeCap.round,
-            semanticsLabel: MaterialLocalizations.of(
-              context,
-            ).refreshIndicatorSemanticLabel,
-          ),
+        width: _spinnerSize,
+        height: _spinnerSize,
+        child: CircularProgressIndicator(
+          // TODO: Remove when the package minimum Flutter SDK is raised to 3.27+.
+          // ignore: deprecated_member_use
+          year2023: false,
+          value: mode == RefreshStatus.refreshing ? null : _dragProgress,
+          color: indicatorTheme.primaryColor,
+          backgroundColor: indicatorTheme.trackColor,
+          strokeWidth: _strokeWidth,
+          trackGap: trackGap,
+          strokeCap: StrokeCap.round,
+          semanticsLabel: MaterialLocalizations.of(
+            context,
+          ).refreshIndicatorSemanticLabel,
         ),
+      ),
     };
 
     return SizedBox(
@@ -212,9 +227,9 @@ class Material3HeaderState extends RefreshIndicatorState<Material3Header>
         child: ScaleTransition(
           scale: _scaleAnimation,
           child: Material(
-            elevation: widget.elevation,
+            elevation: indicatorTheme.material3Elevation,
             shape: const CircleBorder(),
-            color: containerColor,
+            color: indicatorTheme.material3BackgroundColor,
             child: SizedBox(
               width: _containerSize,
               height: _containerSize,

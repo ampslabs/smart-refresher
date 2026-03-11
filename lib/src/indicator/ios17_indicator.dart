@@ -1,7 +1,7 @@
-// ignore_for_file: camel_case_types, public_member_api_docs
+// ignore_for_file: camel_case_types
 
-import 'dart:math' as math;
 import 'dart:ui' as ui show lerpDouble;
+import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -9,9 +9,63 @@ import 'package:flutter/services.dart';
 
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
+import '../theming/indicator_theme.dart';
 
 const int _kTickCount = 12;
 const double _kTwoPi = math.pi * 2.0;
+
+/// The alpha values used by the iOS 17 spinner's comet tail.
+@visibleForTesting
+const List<int> kIOS17HeaderAlphaValues = <int>[
+  255,
+  220,
+  184,
+  148,
+  112,
+  76,
+  47,
+  47,
+  47,
+  47,
+  47,
+  47,
+];
+
+/// Returns the alpha for each tick for the current visual state.
+@visibleForTesting
+List<int> debugIOS17HeaderTickAlphas({
+  required double progress,
+  double rotationValue = 0.0,
+  double gradientOpacity = 0.0,
+}) {
+  final double clampedProgress = progress.clamp(0.0, 1.0);
+  final bool isSpinning = clampedProgress >= 1.0;
+
+  if (!isSpinning) {
+    final int visibleTicks = (clampedProgress * _kTickCount).floor();
+    return List<int>.generate(
+      _kTickCount,
+      (int index) => index < visibleTicks ? kIOS17HeaderAlphaValues.first : 0,
+    );
+  }
+
+  final int activeTick = (_kTickCount * rotationValue).floor() % _kTickCount;
+  final double clampedGradientOpacity = gradientOpacity.clamp(0.0, 1.0);
+
+  return List<int>.generate(_kTickCount, (int index) {
+    final int shifted = (index - activeTick) % _kTickCount;
+    final int gradientAlpha =
+        kIOS17HeaderAlphaValues[shifted < 0 ? shifted + _kTickCount : shifted];
+    return ui
+            .lerpDouble(
+              kIOS17HeaderAlphaValues.first.toDouble(),
+              gradientAlpha.toDouble(),
+              clampedGradientOpacity,
+            )
+            ?.round() ??
+        gradientAlpha;
+  });
+}
 
 String _defaultLastUpdatedText(DateTime updatedAt, DateTime now) {
   final Duration difference = now.difference(updatedAt);
@@ -24,7 +78,22 @@ String _defaultLastUpdatedText(DateTime updatedAt, DateTime now) {
   return 'Updated ${difference.inMinutes} min ago';
 }
 
+/// Builds the completion timestamp text used by `iOS17Header`.
+@visibleForTesting
+String debugIOS17HeaderLastUpdatedText({
+  required DateTime updatedAt,
+  DateTime? now,
+  String Function(DateTime updatedAt)? builder,
+}) {
+  if (builder != null) {
+    return builder(updatedAt);
+  }
+  return _defaultLastUpdatedText(updatedAt, now ?? DateTime.now());
+}
+
+/// A reusable iOS 17 style activity indicator.
 class IOS17ActivityIndicator extends StatelessWidget {
+  /// Creates an [IOS17ActivityIndicator].
   const IOS17ActivityIndicator({
     super.key,
     required this.color,
@@ -34,10 +103,19 @@ class IOS17ActivityIndicator extends StatelessWidget {
     this.gradientOpacity = 1.0,
   });
 
+  /// Tint color of the ticks.
   final Color color;
+
+  /// Radius of the activity indicator.
   final double radius;
+
+  /// Drag or refresh progress, clamped to 0.0-1.0.
   final double progress;
+
+  /// Current spinner rotation, where 1.0 is one full turn.
   final double rotationValue;
+
+  /// How much of the spinning gradient is visible.
   final double gradientOpacity;
 
   @override
@@ -61,28 +139,38 @@ class IOS17ActivityIndicator extends StatelessWidget {
 
 /// A Cupertino-inspired pull-to-refresh header matching iOS 17 styling.
 class iOS17Header extends RefreshIndicator {
+  /// Creates an [iOS17Header].
   const iOS17Header({
     super.key,
     this.color,
     this.radius = 10.0,
     this.showLastUpdated = false,
     this.lastUpdatedTextBuilder,
-    this.enableHaptic = true,
     super.height = 60.0,
     super.completeDuration = const Duration(milliseconds: 300),
     super.refreshStyle = RefreshStyle.Follow,
   });
 
+  /// Tint color of the activity indicator ticks.
+  ///
+  /// Defaults to [CupertinoColors.systemFill] resolved against the current
+  /// [CupertinoTheme].
   final Color? color;
+
+  /// Whether to show a timestamp after a successful refresh.
   final bool showLastUpdated;
+
+  /// Optional custom formatter for the completion timestamp.
   final String Function(DateTime updatedAt)? lastUpdatedTextBuilder;
+
+  /// Radius of the activity indicator. Defaults to 10.0.
   final double radius;
-  final bool enableHaptic;
 
   @override
   State<StatefulWidget> createState() => iOS17HeaderState();
 }
 
+/// State for [iOS17Header].
 class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
     with TickerProviderStateMixin {
   late final AnimationController _rotationController;
@@ -95,9 +183,62 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
   bool _didFireHaptic = false;
   DateTime? _lastUpdatedAt;
 
-  Color get _resolvedColor =>
-      widget.color ??
-      CupertinoDynamicColor.resolve(CupertinoColors.systemFill, context);
+  Color get _resolvedColor => IndicatorThemeData.resolve(
+        context,
+        widgetIosTickColor: widget.color,
+      ).iosTickColor;
+
+  @visibleForTesting
+  /// Returns the current drag progress used by the indicator.
+  double get debugProgress => _progress;
+
+  @visibleForTesting
+  /// Returns the current scale controller value.
+  double get debugScaleControllerValue => _scaleController.value;
+
+  @visibleForTesting
+  /// Returns the current opacity controller value.
+  double get debugOpacityControllerValue => _opacityController.value;
+
+  @visibleForTesting
+  /// Returns the current dismiss controller value.
+  double get debugDismissControllerValue => _dismissController.value;
+
+  @visibleForTesting
+  /// Returns the current rotation controller value.
+  double get debugRotationControllerValue => _rotationController.value;
+
+  @visibleForTesting
+  /// Returns the last completion timestamp, if any.
+  DateTime? get debugLastUpdatedAt => _lastUpdatedAt;
+
+  @visibleForTesting
+  /// Updates the visual mode and runs the same side effects used in production.
+  void debugSetVisualMode(RefreshStatus nextMode) {
+    mode = nextMode;
+    onModeChange(nextMode);
+  }
+
+  @visibleForTesting
+  /// Starts the threshold-crossing scale pop.
+  void debugStartScalePop() {
+    _scaleController.forward(from: 0.0);
+  }
+
+  @visibleForTesting
+  /// Starts the refreshing animations without going through scroll physics.
+  void debugStartRefreshingAnimation() {
+    _progress = 1.0;
+    _opacityController.forward(from: 0.0);
+    _rotationController.repeat();
+    setState(() {});
+  }
+
+  @visibleForTesting
+  /// Starts the fixed-duration dismiss animation.
+  Future<void> debugStartDismissAnimation() {
+    return _dismissController.forward(from: 0.0);
+  }
 
   @override
   void initState() {
@@ -112,17 +253,13 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
     );
     _scaleAnimation = TweenSequence<double>(<TweenSequenceItem<double>>[
       TweenSequenceItem<double>(
-        tween: Tween<double>(
-          begin: 1.0,
-          end: 1.15,
-        ).chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween<double>(begin: 1.0, end: 1.15)
+            .chain(CurveTween(curve: Curves.easeOut)),
         weight: 40.0,
       ),
       TweenSequenceItem<double>(
-        tween: Tween<double>(
-          begin: 1.15,
-          end: 1.0,
-        ).chain(CurveTween(curve: Curves.elasticOut)),
+        tween: Tween<double>(begin: 1.15, end: 1.0)
+            .chain(CurveTween(curve: Curves.elasticOut)),
         weight: 60.0,
       ),
     ]).animate(_scaleController);
@@ -146,12 +283,14 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
   }
 
   @override
-  bool needReverseAll() => false;
+  bool needReverseAll() {
+    return false;
+  }
 
   @override
   void onOffsetChange(double offset) {
-    final double triggerDistance = configuration?.headerTriggerDistance ?? 60.0;
-    final double nextProgress = (offset / triggerDistance).clamp(0.0, 1.0);
+    final double nextProgress = (offset / configuration!.headerTriggerDistance)
+        .clamp(0.0, 1.0);
     final bool crossedThreshold = _progress < 1.0 && nextProgress >= 1.0;
     _progress = nextProgress;
 
@@ -177,10 +316,10 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
         _progress = 0.0;
         _didFireHaptic = false;
         break;
+      case RefreshStatus.canRefresh:
+        break;
       case RefreshStatus.refreshing:
-        if (widget.enableHaptic &&
-            defaultTargetPlatform == TargetPlatform.iOS &&
-            !_didFireHaptic) {
+        if (defaultTargetPlatform == TargetPlatform.iOS && !_didFireHaptic) {
           HapticFeedback.mediumImpact();
           _didFireHaptic = true;
         }
@@ -201,12 +340,7 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
       case RefreshStatus.failed:
         _rotationController.stop();
         break;
-      case RefreshStatus.canRefresh:
-      case RefreshStatus.canTwoLevel:
-      case RefreshStatus.twoLevelOpening:
-      case RefreshStatus.twoLeveling:
-      case RefreshStatus.twoLevelClosing:
-      case null:
+      default:
         break;
     }
 
@@ -237,11 +371,11 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
         : const Interval(0.0, 0.2, curve: Curves.easeIn).transform(_progress);
     final bool isCompleting =
         mode == RefreshStatus.completed || mode == RefreshStatus.failed;
-    final double dismissValue = Curves.easeOut.transform(
-      _dismissController.value,
-    );
-    final double dismissScale =
-        isCompleting ? ui.lerpDouble(1.0, 0.5, dismissValue) ?? 0.5 : 1.0;
+    final double dismissValue =
+        Curves.easeOut.transform(_dismissController.value);
+    final double dismissScale = isCompleting
+        ? ui.lerpDouble(1.0, 0.5, dismissValue) ?? 0.5
+        : 1.0;
     final double dismissOpacity = isCompleting ? 1.0 - dismissValue : 1.0;
     final bool showTimestamp = widget.showLastUpdated &&
         mode == RefreshStatus.completed &&
@@ -266,7 +400,9 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
                   ? 1.0
                   : _progress,
               rotationValue: _rotationController.value,
-              gradientOpacity: mode == RefreshStatus.refreshing || isCompleting
+              gradientOpacity: mode == RefreshStatus.refreshing ||
+                      mode == RefreshStatus.completed ||
+                      mode == RefreshStatus.failed
                   ? Curves.easeIn.transform(_opacityController.value)
                   : 0.0,
             ),
@@ -277,9 +413,15 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
 
     Widget content = indicator;
     if (showTimestamp) {
-      final String text =
-          widget.lastUpdatedTextBuilder?.call(_lastUpdatedAt!) ??
-              _defaultLastUpdatedText(_lastUpdatedAt!, DateTime.now());
+      final String text = widget.lastUpdatedTextBuilder != null
+          ? debugIOS17HeaderLastUpdatedText(
+              updatedAt: _lastUpdatedAt!,
+              builder: widget.lastUpdatedTextBuilder,
+            )
+          : debugIOS17HeaderLastUpdatedText(
+              updatedAt: _lastUpdatedAt!,
+              now: DateTime.now(),
+            );
       content = Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -335,43 +477,17 @@ class _ActivityIndicatorPainter extends CustomPainter {
       tickCornerRadius,
       tickCornerRadius,
     );
+    final List<int> alphas = debugIOS17HeaderTickAlphas(
+      progress: progress,
+      rotationValue: rotationValue,
+      gradientOpacity: gradientOpacity,
+    );
 
     canvas.save();
     canvas.translate(size.width / 2.0, size.height / 2.0);
 
-    final int visibleTicks = (progress.clamp(0.0, 1.0) * _kTickCount).floor();
-    final int activeTick = (_kTickCount * rotationValue).floor() % _kTickCount;
-
     for (int i = 0; i < _kTickCount; i++) {
-      int alpha;
-      if (progress < 1.0) {
-        alpha = i < visibleTicks ? 255 : 0;
-      } else {
-        final int shifted = (i - activeTick) % _kTickCount;
-        final int normalized = shifted < 0 ? shifted + _kTickCount : shifted;
-        final List<int> trail = <int>[
-          255,
-          220,
-          184,
-          148,
-          112,
-          76,
-          47,
-          47,
-          47,
-          47,
-          47,
-          47,
-        ];
-        alpha = ui
-                .lerpDouble(
-                  255.0,
-                  trail[normalized].toDouble(),
-                  gradientOpacity.clamp(0.0, 1.0),
-                )
-                ?.round() ??
-            trail[normalized];
-      }
+      final int alpha = alphas[i];
       if (alpha > 0) {
         paint.color = color.withAlpha(alpha);
         canvas.drawRRect(tick, paint);
