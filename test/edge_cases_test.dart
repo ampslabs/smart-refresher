@@ -79,7 +79,7 @@ void main() {
           length: 2,
           child: Scaffold(
             appBar: AppBar(
-              bottom: const TabBar(tabs: [Tab(text: "1"), Tab(text: "2")]),
+              bottom: const TabBar(tabs: [Tab(text: '1'), Tab(text: '2')]),
             ),
             body: TabBarView(
               children: [
