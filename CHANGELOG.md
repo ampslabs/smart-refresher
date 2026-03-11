@@ -1,6 +1,11 @@
 ## Unreleased
 
 - Added `iOS17Header`, a Cupertino-style pull-to-refresh header with iOS 17 tick geometry, threshold scale pop, spin gradient fade-in, fixed-duration dismiss animation, optional last-updated text, and `RefreshStyle.Follow` behavior.
+- Added `Material3Header`, a Material 3 floating pull-to-refresh indicator with
+  theme-aware colors, modern circular progress styling, and dedicated complete
+  and error states.
+- Exported `Material3Header` from the package root and added an example screen
+  demonstrating seeded light and dark Material 3 themes.
 
 ## 0.1.0
 

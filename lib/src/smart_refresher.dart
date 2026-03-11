@@ -99,6 +99,9 @@ class SmartRefresher extends StatefulWidget {
   /// Determines the way that drag start behavior is handled.
   final DragStartBehavior? dragStartBehavior;
 
+  /// A list of slivers to use as the body.
+  final List<Widget>? slivers;
+
   /// Creates a [SmartRefresher].
   const SmartRefresher(
       {super.key,
@@ -120,7 +123,8 @@ class SmartRefresher extends StatefulWidget {
       this.physics,
       this.scrollDirection,
       this.scrollController})
-      : builder = null;
+      : builder = null,
+        slivers = null;
 
   /// Creates a [SmartRefresher] using a custom builder.
   const SmartRefresher.builder({
@@ -143,7 +147,32 @@ class SmartRefresher extends StatefulWidget {
         semanticChildCount = null,
         dragStartBehavior = null,
         cacheExtent = null,
-        primary = null;
+        primary = null,
+        slivers = null;
+
+  /// Creates a [SmartRefresher] with a list of slivers.
+  const SmartRefresher.slivers({
+    super.key,
+    required this.controller,
+    required this.slivers,
+    this.header,
+    this.footer,
+    this.enablePullDown = true,
+    this.enablePullUp = false,
+    this.enableTwoLevel = false,
+    this.onRefresh,
+    this.onLoading,
+    this.onTwoLevel,
+    this.dragStartBehavior,
+    this.primary,
+    this.cacheExtent,
+    this.semanticChildCount,
+    this.reverse,
+    this.physics,
+    this.scrollDirection,
+    this.scrollController,
+  })  : child = null,
+        builder = null;
 
   /// Returns the [SmartRefresher] from the given [context].
   static SmartRefresher? of(BuildContext? context) {
@@ -182,7 +211,9 @@ class SmartRefresherState extends State<SmartRefresher> {
   List<Widget>? _buildSliversByChild(BuildContext context, Widget? child,
       RefreshConfiguration? configuration) {
     List<Widget>? slivers;
-    if (child is ScrollView) {
+    if (widget.slivers != null) {
+      slivers = List<Widget>.from(widget.slivers!);
+    } else if (child is ScrollView) {
       if (child is BoxScrollView) {
         final Widget sliver = child.buildChildLayout(context);
         if (child.padding != null) {
@@ -214,7 +245,7 @@ class SmartRefresherState extends State<SmartRefresher> {
           (configuration?.footerBuilder != null
               ? configuration?.footerBuilder!()
               : null) ??
-              defaultFooter);
+          defaultFooter);
     }
 
     return slivers;
@@ -241,10 +272,12 @@ class SmartRefresherState extends State<SmartRefresher> {
             updateFlag: _updatePhysics ? 0 : 1,
             enableScrollWhenRefreshCompleted:
                 conf?.enableScrollWhenRefreshCompleted ?? false,
+            enablePullDown: widget.enablePullDown || widget.enableTwoLevel,
+            enablePullUp: widget.enablePullUp,
             maxUnderScrollExtent: conf?.maxUnderScrollExtent ??
-                (isBouncingPhysics ? double.infinity : 0.0),
+                (isBouncingPhysics ? double.infinity : 100.0),
             maxOverScrollExtent: conf?.maxOverScrollExtent ??
-                (isBouncingPhysics ? double.infinity : 60.0),
+                (isBouncingPhysics ? double.infinity : 100.0),
             topHitBoundary: conf?.topHitBoundary ??
                 (isBouncingPhysics ? double.infinity : 0.0),
             bottomHitBoundary: conf?.bottomHitBoundary ??
@@ -302,42 +335,42 @@ class SmartRefresherState extends State<SmartRefresher> {
         anchor: anchor ?? 0.0,
         restorationId: restorationId,
         center: center,
-        physics:
-            _getScrollPhysics(conf, physics ?? const AlwaysScrollableScrollPhysics()),
+        physics: _getScrollPhysics(
+            conf, physics ?? const AlwaysScrollableScrollPhysics()),
         slivers: slivers!,
         dragStartBehavior: dragStartBehavior ?? DragStartBehavior.start,
         reverse: reverse ?? false,
       );
     } else {
       body = Scrollable(
-      physics: _getScrollPhysics(
-          conf, childView.physics ?? const AlwaysScrollableScrollPhysics()),
-      controller: childView.controller,
-      axisDirection: childView.axisDirection,
-      semanticChildCount: childView.semanticChildCount,
-      dragStartBehavior: childView.dragStartBehavior,
-      viewportBuilder: (context, offset) {
-        final Viewport viewport =
-            childView.viewportBuilder(context, offset) as Viewport;
-        if (widget.enablePullDown) {
-          viewport.children.insert(
-              0,
-              widget.header ??
-                  (conf?.headerBuilder != null
-                      ? conf?.headerBuilder!()
-                      : null) ??
-                  defaultHeader);
-        }
-        if (widget.enablePullUp) {
-          viewport.children.add(widget.footer ??
-              (conf?.footerBuilder != null ? conf?.footerBuilder!() : null) ??
-              defaultFooter);
-        }
-        return viewport;
-      },
-    );
+        physics: _getScrollPhysics(
+            conf, childView.physics ?? const AlwaysScrollableScrollPhysics()),
+        controller: childView.controller,
+        axisDirection: childView.axisDirection,
+        semanticChildCount: childView.semanticChildCount,
+        dragStartBehavior: childView.dragStartBehavior,
+        viewportBuilder: (context, offset) {
+          final Viewport viewport =
+              childView.viewportBuilder(context, offset) as Viewport;
+          if (widget.enablePullDown) {
+            viewport.children.insert(
+                0,
+                widget.header ??
+                    (conf?.headerBuilder != null
+                        ? conf?.headerBuilder!()
+                        : null) ??
+                    defaultHeader);
+          }
+          if (widget.enablePullUp) {
+            viewport.children.add(widget.footer ??
+                (conf?.footerBuilder != null ? conf?.footerBuilder!() : null) ??
+                defaultFooter);
+          }
+          return viewport;
+        },
+      );
     }
-  
+
     return body;
   }
 
@@ -414,7 +447,8 @@ class SmartRefresherState extends State<SmartRefresher> {
     if (widget.builder != null) {
       body = widget.builder!(
           context,
-          _getScrollPhysics(configuration, const AlwaysScrollableScrollPhysics())
+          _getScrollPhysics(
+                  configuration, const AlwaysScrollableScrollPhysics())
               as RefreshPhysics);
     } else {
       final List<Widget>? slivers =
@@ -424,11 +458,24 @@ class SmartRefresherState extends State<SmartRefresher> {
     if (configuration == null) {
       body = RefreshConfiguration(child: body!);
     }
-    return LayoutBuilder(
+    final Widget footerFollowBody = LayoutBuilder(
       builder: (c2, cons) {
         viewportExtent = cons.biggest.height;
         return body!;
       },
+    );
+
+    return ScrollConfiguration(
+      behavior: ScrollConfiguration.of(context).copyWith(
+        dragDevices: {
+          PointerDeviceKind.touch,
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.stylus,
+          PointerDeviceKind.invertedStylus,
+          PointerDeviceKind.unknown,
+        },
+      ),
+      child: footerFollowBody,
     );
   }
 }
@@ -472,14 +519,14 @@ class RefreshController {
       {this.initialRefresh = false,
       RefreshStatus? initialRefreshStatus,
       LoadStatus? initialLoadStatus}) {
-    headerMode =
-        RefreshNotifier(initialRefreshStatus ?? RefreshStatus.idle);
+    headerMode = RefreshNotifier(initialRefreshStatus ?? RefreshStatus.idle);
     footerMode = RefreshNotifier(initialLoadStatus ?? LoadStatus.idle);
   }
 
   void _bindState(SmartRefresherState state) {
-    assert(_refresherState == null,
-        "Don't use one refreshController to multiple SmartRefresher");
+    if (_refresherState != null && _refresherState != state) {
+      _detachPosition();
+    }
     _refresherState = state;
   }
 
@@ -528,17 +575,20 @@ class RefreshController {
     assert(position != null,
         'Try not to call requestRefresh() before build, please call after the ui was rendered');
     if (isRefresh) return Future<void>.value();
+    if (_refresherState == null || !_refresherState!.mounted) return null;
+
     final StatefulElement? indicatorElement =
         _findIndicator(position!.context.storageContext, RefreshIndicator);
 
-    if (indicatorElement == null || _refresherState == null) return null;
+    if (indicatorElement == null) return null;
     (indicatorElement.state as RefreshIndicatorState).floating = true;
 
     if (needMove && _refresherState!.mounted) {
       _refresherState!.setCanDrag(false);
     }
     if (needMove) {
-      return Future<void>.delayed(const Duration(milliseconds: 50)).then((_) async {
+      return Future<void>.delayed(const Duration(milliseconds: 50))
+          .then((_) async {
         await position
             ?.animateTo(position!.minScrollExtent - 0.0001,
                 duration: duration, curve: curve)
@@ -572,7 +622,8 @@ class RefreshController {
     assert(position != null,
         'Try not to call requestRefresh() before build, please call after the ui was rendered');
     headerMode!.value = RefreshStatus.twoLevelOpening;
-    return Future<void>.delayed(const Duration(milliseconds: 50)).then((_) async {
+    return Future<void>.delayed(const Duration(milliseconds: 50))
+        .then((_) async {
       await position?.animateTo(position!.minScrollExtent,
           duration: duration, curve: curve);
     });
@@ -587,16 +638,19 @@ class RefreshController {
     assert(position != null,
         'Try not to call requestLoading() before build, please call after the ui was rendered');
     if (isLoading) return Future<void>.value();
+    if (_refresherState == null || !_refresherState!.mounted) return null;
+
     final StatefulElement? indicatorElement =
         _findIndicator(position!.context.storageContext, LoadIndicator);
 
-    if (indicatorElement == null || _refresherState == null) return null;
+    if (indicatorElement == null) return null;
     (indicatorElement.state as LoadIndicatorState).floating = true;
     if (needMove && _refresherState!.mounted) {
       _refresherState!.setCanDrag(false);
     }
     if (needMove) {
-      return Future<void>.delayed(const Duration(milliseconds: 50)).then((_) async {
+      return Future<void>.delayed(const Duration(milliseconds: 50))
+          .then((_) async {
         await position
             ?.animateTo(position!.maxScrollExtent,
                 duration: duration, curve: curve)
@@ -693,7 +747,6 @@ class RefreshController {
 
 /// A global configuration widget for [SmartRefresher] widgets in its subtree.
 class RefreshConfiguration extends InheritedWidget {
-
   /// Global default header builder.
   final IndicatorBuilder? headerBuilder;
 

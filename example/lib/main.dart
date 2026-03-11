@@ -1,6 +1,7 @@
 import 'package:example/other/refresh_glowindicator.dart';
 import 'package:example/ui/MainActivity.dart';
 import 'package:example/ui/SecondActivity.dart';
+import 'package:example/ui/example/material3_header_example.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_refresher/smart_refresher.dart';
 import 'ui/indicator/base/IndicatorActivity.dart';
@@ -36,21 +37,22 @@ class MyApp extends StatelessWidget {
           );
         },
         theme: ThemeData(
-            // This is the theme of your application.
-            //s
-            // Try running your application with "flutter run". You'll see the
-            // application has a blue toolbar. Then, without quitting the app, try
-            // changing the primarySwatch below to Colors.green and then invoke
-            // "hot reload" (press "r" in the console where you ran "flutter run",
-            // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-            // counter didn't reset back to zero; the application is not restarted.
-            primarySwatch: Colors.blue,
-            primaryColor: Colors.greenAccent),
+          // This is the theme of your application.
+          //s
+          // Try running your application with "flutter run". You'll see the
+          // application has a blue toolbar. Then, without quitting the app, try
+          // changing the primarySwatch below to Colors.green and then invoke
+          // "hot reload" (press "r" in the console where you ran "flutter run",
+          // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
+          // counter didn't reset back to zero; the application is not restarted.
+          primarySwatch: Colors.blue,
+          primaryColor: Colors.greenAccent,
+        ),
         localizationsDelegates: [
           RefreshLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate
+          GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: [
           const Locale('en'),
@@ -69,19 +71,20 @@ class MyApp extends StatelessWidget {
         locale: const Locale('zh'),
         localeResolutionCallback:
             (Locale? locale, Iterable<Locale> supportedLocales) {
-          //print("change language");
-          return locale;
-        },
+              //print("change language");
+              return locale;
+            },
         home: MainActivity(title: 'Pulltorefresh'),
         routes: {
           "sec": (BuildContext context) {
-            return SecondActivity(
-              title: "SecondAct",
-            );
+            return SecondActivity(title: "SecondAct");
           },
           "indicator": (BuildContext context) {
             return IndicatorActivity(title: 'Indicators');
-          }
+          },
+          'material3_header': (BuildContext context) {
+            return const Material3HeaderExample();
+          },
         },
       ),
     );
