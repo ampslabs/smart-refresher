@@ -187,10 +187,10 @@ class RefreshPhysics extends ScrollPhysics {
     viewportRender ??= findViewport(scrollPosition.context.storageContext);
     final bool notFull = position.minScrollExtent == position.maxScrollExtent;
     final bool enablePullDown = viewportRender == null
-        ? false
+        ? (maxOverScrollExtent! > 0 || maxOverScrollExtent == double.infinity)
         : viewportRender!.firstChild is RenderSliverRefresh;
     final bool enablePullUp = viewportRender == null
-        ? false
+        ? (maxUnderScrollExtent! > 0 || maxUnderScrollExtent == double.infinity)
         : viewportRender!.lastChild is RenderSliverLoading;
     if (controller!.headerMode!.value == RefreshStatus.twoLeveling) {
       if (position.pixels - value > 0.0) {

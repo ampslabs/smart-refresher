@@ -24,7 +24,6 @@ void main() {
       ),
     ));
 
-    // Simulate mouse drag
     final TestGesture gesture = await tester.startGesture(
       tester.getCenter(find.byType(Scrollable)),
       kind: PointerDeviceKind.mouse,
@@ -36,7 +35,8 @@ void main() {
         anyOf(RefreshStatus.canRefresh, RefreshStatus.refreshing));
 
     await gesture.up();
-    await tester.pump(const Duration(milliseconds: 100));
+    for (int i = 0; i < 10; i++)
+      await tester.pump(const Duration(milliseconds: 100));
 
     expect(refreshTriggered, true);
   });

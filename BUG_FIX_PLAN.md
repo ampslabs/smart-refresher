@@ -49,5 +49,5 @@ This document outlines the strategy for resolving inherited issues from the upst
 ## Current Status
 - [x] Bug #659 (Physics) - **Fixed** (Applied PR #654 logic with robust context handling)
 - [x] Bug #645 (Short Lists) - **Fixed** (Increased default overscroll extent for non-bouncing platforms)
-- [ ] Bug #650 (Web) - **In Progress**
-- [ ] Bug #652 (Tabs) - **Pending**
+- [x] Bug #650 (Web) - **Fixed** (Enabled mouse dragging support and robust physics)
+- [x] Bug #652 (Tabs) - **Fixed** (Verified deactivation safety via #659 fix)

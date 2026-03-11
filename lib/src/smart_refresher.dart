@@ -425,11 +425,24 @@ class SmartRefresherState extends State<SmartRefresher> {
     if (configuration == null) {
       body = RefreshConfiguration(child: body!);
     }
-    return LayoutBuilder(
+    Widget footerFollowBody = LayoutBuilder(
       builder: (c2, cons) {
         viewportExtent = cons.biggest.height;
         return body!;
       },
+    );
+
+    return ScrollConfiguration(
+      behavior: ScrollConfiguration.of(context).copyWith(
+        dragDevices: {
+          PointerDeviceKind.touch,
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.stylus,
+          PointerDeviceKind.invertedStylus,
+          PointerDeviceKind.unknown,
+        },
+      ),
+      child: footerFollowBody,
     );
   }
 }

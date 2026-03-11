@@ -82,10 +82,10 @@ These are unresolved issues and unmerged PRs from `https://github.com/peng8350/f
 1. **Non-ScrollView child detection** — Improve child widget introspection for `GroupedListView`, `AnimatedList`, etc.
 2. **NestedScrollView workaround** — Implement `NestedScrollViewRefresher` for `BouncingScrollPhysics`.
 3. **WASM Support** — Audit and fix any JS-interop or platform-specific code to ensure full compatibility with Flutter's WASM target.
-4. **Desktop Support (Mouse/Trackpad)** — Refine gesture handling to ensure a premium feel on macOS, Windows, and Linux.
+4. **[x] Desktop Support (Mouse/Trackpad)** — Enabled mouse dragging support and robust physics.
 5. **Multi-Sliver Support** — Improve handling of complex layouts with multiple slivers and overlapping areas.
 6. **ScrollBar compatibility** — Fix sliver composition order.
-7. **PageView / TabBarView safety** — Resolve `enableScrollWhenRefreshCompleted` conflicts.
+7. **[x] PageView / TabBarView safety** — Resolved context safety and deactivation crashes.
 
 **Deliverable:** v0.3.0 — support for more child widget types, no known critical layout bugs.
 
