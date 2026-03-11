@@ -1,3 +1,7 @@
+## Unreleased
+
+- Added `iOS17Header`, a Cupertino-style pull-to-refresh header with iOS 17 tick geometry, threshold scale pop, spin gradient fade-in, fixed-duration dismiss animation, optional last-updated text, and `RefreshStyle.Follow` behavior.
+
 ## 0.1.0
 
 - **Initial Fork Release**: Rebranded package as `smart_refresher` and initialized maintained fork release line.
