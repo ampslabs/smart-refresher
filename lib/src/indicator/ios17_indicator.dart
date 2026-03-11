@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
 import '../theming/indicator_theme.dart';
+import '../internals/refresh_localizations.dart';
 
 const int _kTickCount = 12;
 const double _kTwoPi = math.pi * 2.0;
@@ -147,6 +148,8 @@ class iOS17Header extends RefreshIndicator {
     this.showLastUpdated = false,
     this.enableHaptic = true,
     this.lastUpdatedTextBuilder,
+    this.semanticsLabel,
+    this.semanticsHint,
     super.height = 60.0,
     super.completeDuration = const Duration(milliseconds: 300),
     super.refreshStyle = RefreshStyle.Follow,
@@ -169,6 +172,12 @@ class iOS17Header extends RefreshIndicator {
 
   /// Radius of the activity indicator. Defaults to 10.0.
   final double radius;
+
+  /// Custom accessibility label for the indicator.
+  final String? semanticsLabel;
+
+  /// Custom accessibility hint for the indicator.
+  final String? semanticsHint;
 
   @override
   State<StatefulWidget> createState() => iOS17HeaderState();
@@ -387,6 +396,21 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
         mode == RefreshStatus.completed &&
         _lastUpdatedAt != null;
 
+    final RefreshString strings =
+        RefreshLocalizations.of(context)?.currentLocalization ??
+        EnRefreshString();
+    final String label =
+        widget.semanticsLabel ??
+        (mode == RefreshStatus.completed
+            ? strings.refreshCompleteText!
+            : mode == RefreshStatus.failed
+            ? strings.refreshFailedText!
+            : mode == RefreshStatus.refreshing
+            ? strings.refreshingText!
+            : mode == RefreshStatus.canRefresh
+            ? strings.canRefreshText!
+            : strings.idleRefreshText!);
+
     final Widget indicator = AnimatedBuilder(
       animation: Listenable.merge(<Listenable>[
         _rotationController,
@@ -449,7 +473,13 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
 
     return SizedBox(
       height: widget.height,
-      child: Center(child: content),
+      child: Center(
+        child: Semantics(
+          label: label,
+          hint: widget.semanticsHint,
+          child: content,
+        ),
+      ),
     );
   }
 }

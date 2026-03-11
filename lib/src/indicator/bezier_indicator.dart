@@ -66,6 +66,12 @@ class BezierHeader extends RefreshIndicator {
   /// The height of the rectangular part of the container (excluding the bezier curve).
   final double rectHeight;
 
+  /// Custom accessibility label for the indicator.
+  final String? semanticsLabel;
+
+  /// Custom accessibility hint for the indicator.
+  final String? semanticsHint;
+
   /// Creates a [BezierHeader].
   const BezierHeader(
       {super.key,
@@ -78,7 +84,9 @@ class BezierHeader extends RefreshIndicator {
       this.onResetValue,
       this.dismissType = BezierDismissType.rectSpread,
       this.rectHeight = 70,
-      this.bezierColor})
+      this.bezierColor,
+      this.semanticsLabel,
+      this.semanticsHint})
       : super(refreshStyle: RefreshStyle.UnFollow, height: rectHeight);
 
   @override
@@ -163,39 +171,66 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
 
   @override
   Widget buildContent(BuildContext context, RefreshStatus? mode) {
-    return AnimatedBuilder(
-      builder: (_, __) {
-        return Stack(
-          children: <Widget>[
-            Positioned(
-              bottom: -50,
-              top: 0,
-              left: 0,
-              right: 0,
-              child: AnimatedBuilder(
-                builder: (_, __) {
-                  return ClipPath(
-                    clipper: _BezierDismissPainter(
-                        value: _bezierDismissCtl.value,
-                        dismissType: widget.dismissType),
-                    child: ClipPath(
-                      clipper: _BezierPainter(
-                          value: _beizerBounceCtl.value,
-                          startOffsetY: widget.rectHeight),
-                      child: Container(
-                        height: widget.rectHeight + 30,
-                        color: widget.bezierColor ??
-                            Theme.of(context).primaryColor,
+    final RefreshString strings =
+        RefreshLocalizations.of(context)?.currentLocalization ??
+        EnRefreshString();
+    final String label =
+        widget.semanticsLabel ??
+        (mode == RefreshStatus.completed
+            ? strings.refreshCompleteText!
+            : mode == RefreshStatus.failed
+            ? strings.refreshFailedText!
+            : mode == RefreshStatus.refreshing
+            ? strings.refreshingText!
+            : mode == RefreshStatus.canRefresh
+            ? strings.canRefreshText!
+            : strings.idleRefreshText!);
+
+    return Semantics(
+      label: label,
+      hint: widget.semanticsHint,
+      child: AnimatedBuilder(
+        builder: (_, __) {
+          return Stack(
+            children: <Widget>[
+              Positioned(
+                bottom: -50,
+                top: 0,
+                left: 0,
+                right: 0,
+                child: AnimatedBuilder(
+                  builder: (_, __) {
+                    return ClipPath(
+                      clipper: _BezierDismissPainter(
+                          value: _bezierDismissCtl.value,
+                          dismissType: widget.dismissType),
+                      child: ClipPath(
+                        clipper: _BezierPainter(
+                            value: _beizerBounceCtl.value,
+                            startOffsetY: widget.rectHeight),
+                        child: Container(
+                          height: widget.rectHeight + 30,
+                          color: widget.bezierColor ??
+                              Theme.of(context).primaryColor,
+                        ),
                       ),
-                    ),
-                  );
-                },
-                animation: _bezierDismissCtl,
+                    );
+                  },
+                  animation: _bezierDismissCtl,
+                ),
               ),
-            ),
-            !widget.enableChildOverflow
-                ? ClipRect(
-                    child: SizedBox(
+              !widget.enableChildOverflow
+                  ? ClipRect(
+                      child: SizedBox(
+                        height: (_beizerBounceCtl.isAnimating ||
+                                    mode == RefreshStatus.refreshing
+                                ? 0
+                                : math.max(0, _beizerBounceCtl.value)) +
+                            widget.rectHeight,
+                        child: widget.child,
+                      ),
+                    )
+                  : SizedBox(
                       height: (_beizerBounceCtl.isAnimating ||
                                   mode == RefreshStatus.refreshing
                               ? 0
@@ -203,19 +238,11 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
                           widget.rectHeight,
                       child: widget.child,
                     ),
-                  )
-                : SizedBox(
-                    height: (_beizerBounceCtl.isAnimating ||
-                                mode == RefreshStatus.refreshing
-                            ? 0
-                            : math.max(0, _beizerBounceCtl.value)) +
-                        widget.rectHeight,
-                    child: widget.child,
-                  ),
-          ],
-        );
-      },
-      animation: _beizerBounceCtl,
+            ],
+          );
+        },
+        animation: _beizerBounceCtl,
+      ),
     );
   }
 }
@@ -329,6 +356,12 @@ class BezierCircleHeader extends StatefulWidget {
   /// The type of dismissal animation for the bezier background.
   final BezierDismissType dismissType;
 
+  /// Custom accessibility label for the indicator.
+  final String? semanticsLabel;
+
+  /// Custom accessibility hint for the indicator.
+  final String? semanticsHint;
+
   /// Creates a [BezierCircleHeader].
   const BezierCircleHeader(
       {super.key,
@@ -338,7 +371,9 @@ class BezierCircleHeader extends StatefulWidget {
       this.enableChildOverflow = false,
       this.dismissType = BezierDismissType.rectSpread,
       this.circleType = BezierCircleType.progress,
-      this.circleRadius = 12});
+      this.circleRadius = 12,
+      this.semanticsLabel,
+      this.semanticsHint});
 
   @override
   State<StatefulWidget> createState() {
@@ -383,6 +418,8 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader>
       rectHeight: widget.rectHeight,
       dismissType: widget.dismissType,
       enableChildOverflow: widget.enableChildOverflow,
+      semanticsLabel: widget.semanticsLabel,
+      semanticsHint: widget.semanticsHint,
       readyRefresh: () async {
         await _childMoveCtl.animateTo(1.0,
             duration: const Duration(milliseconds: 300));

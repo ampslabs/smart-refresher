@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../internals/enums.dart';
 import '../internals/indicator_wrap.dart';
+import '../internals/refresh_localizations.dart';
 import 'shimmer.dart';
 import 'skeleton_bones.dart';
 
@@ -40,13 +41,15 @@ class SkeletonFooter extends LoadIndicator {
     this.shimmerGradient,
     this.fadeInDuration = const Duration(milliseconds: 200),
     this.fadeOutDuration = const Duration(milliseconds: 150),
+    this.semanticsLabel,
+    this.semanticsHint,
     super.loadStyle = LoadStyle.ShowWhenLoading,
     super.height = 160.0,
-  }) : _isStaggered = false,
-       assert(
-         skeletonCount >= 1 && skeletonCount <= 5,
-         'skeletonCount must be between 1 and 5',
-       );
+  })  : _isStaggered = false,
+        assert(
+          skeletonCount >= 1 && skeletonCount <= 5,
+          'skeletonCount must be between 1 and 5',
+        );
 
   /// Creates a [SkeletonFooter] whose rows fade in sequentially.
   const SkeletonFooter.staggered({
@@ -57,13 +60,15 @@ class SkeletonFooter extends LoadIndicator {
     this.shimmerGradient,
     this.fadeInDuration = const Duration(milliseconds: 240),
     this.fadeOutDuration = const Duration(milliseconds: 150),
+    this.semanticsLabel,
+    this.semanticsHint,
     super.loadStyle = LoadStyle.ShowWhenLoading,
     super.height = 160.0,
-  }) : _isStaggered = true,
-       assert(
-         skeletonCount >= 1 && skeletonCount <= 5,
-         'skeletonCount must be between 1 and 5',
-       );
+  })  : _isStaggered = true,
+        assert(
+          skeletonCount >= 1 && skeletonCount <= 5,
+          'skeletonCount must be between 1 and 5',
+        );
 
   /// The number of skeleton rows to render while loading.
   final int skeletonCount;
@@ -82,6 +87,12 @@ class SkeletonFooter extends LoadIndicator {
 
   /// The fade-out duration used before the footer collapses.
   final Duration fadeOutDuration;
+
+  /// Custom accessibility label for the indicator.
+  final String? semanticsLabel;
+
+  /// Custom accessibility hint for the indicator.
+  final String? semanticsHint;
 
   final bool _isStaggered;
 
@@ -165,12 +176,19 @@ class SkeletonFooterState extends LoadIndicatorState<SkeletonFooter>
 
   @override
   Widget buildContent(BuildContext context, LoadStatus? mode) {
-    if (mode == LoadStatus.loading) {
-      _ensureVisible();
-      return _buildSkeletonContent();
-    }
-    if (_fadeController.value > 0.0) {
-      return _buildSkeletonContent();
+    if (mode == LoadStatus.loading || _fadeController.value > 0.0) {
+      if (mode == LoadStatus.loading) {
+        _ensureVisible();
+      }
+      final RefreshString strings =
+          RefreshLocalizations.of(context)?.currentLocalization ??
+          EnRefreshString();
+
+      return Semantics(
+        label: widget.semanticsLabel ?? strings.loadingText!,
+        hint: widget.semanticsHint,
+        child: _buildSkeletonContent(),
+      );
     }
     return const SizedBox.shrink();
   }
