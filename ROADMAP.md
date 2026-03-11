@@ -91,20 +91,20 @@ These are unresolved issues and unmerged PRs from `https://github.com/peng8350/f
 
 ---
 
-### 🟡 Phase 3 — Testing & Code Quality (June 2026)
+### 🟡 Phase 3 — Testing & Code Quality (Completed)
 **Target release: v0.4.0**
 
 **Goal:** Increase confidence in the codebase with automated tests so future changes don't regress.
 
-#### Tasks
-1. **Widget tests for core refresh/load flow** — Cover: pull-to-refresh trigger, completion, error state, load-more trigger, completion.
-2. **Widget tests for controller lifecycle** — Cover: `requestRefresh`, `requestLoading`, `refreshCompleted`, `loadComplete`, `dispose`.
-3. **Widget tests for edge cases** — Fast rebuild crash, tab switching, controller reuse attempt.
-4. **Integration test example** — Add a working example app with integration tests for smoke-testing across platforms.
-5. **CI matrix** — Extend GitHub Actions to run tests against Flutter stable, beta, and the two previous stable versions.
-6. **Lint cleanup** — Enable stricter analysis options, fix all `info`-level warnings, enforce with CI.
+#### Tasks (Completed)
+1. **[x] Widget tests for core refresh/load flow** — Cover: pull-to-refresh trigger, completion, error state, load-more trigger, completion.
+2. **[x] Widget tests for controller lifecycle** — Cover: `requestRefresh`, `requestLoading`, `refreshCompleted`, `loadComplete`, `dispose`.
+3. **[x] Widget tests for edge cases** — Fast rebuild crash, tab switching, controller reuse attempt.
+4. **[x] Integration test example** — Add a working example app with integration tests for smoke-testing across platforms.
+5. **[x] CI matrix** — Extend GitHub Actions to run tests against Flutter stable, beta, and the two previous stable versions.
+6. **[x] Lint cleanup** — Enable stricter analysis options, fix all `info`-level warnings, enforce with CI.
 
-**Deliverable:** v0.4.0 — meaningful test coverage, green CI on Flutter stable + beta.
+**Status:** v0.4.0 — meaningful test coverage, green CI on Flutter stable + beta.
 
 ---
 
