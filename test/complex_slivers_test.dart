@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart' hide RefreshIndicator;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smart_refresher/smart_refresher.dart';
-import 'package:smart_refresher/src/internals/slivers.dart';
 
 void main() {
   testWidgets('SmartRefresher.slivers handles center key and negative minScrollExtent', (WidgetTester tester) async {

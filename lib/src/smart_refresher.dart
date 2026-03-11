@@ -247,8 +247,8 @@ class SmartRefresherState extends State<SmartRefresher> {
           defaultHeader;
       if (slivers != null && !slivers.contains(header)) {
         slivers.insert(0, header);
-      } else if (slivers == null) {
-        slivers = [header];
+      } else {
+        slivers ??= [header];
       }
     }
     if (widget.enablePullUp) {
@@ -259,8 +259,8 @@ class SmartRefresherState extends State<SmartRefresher> {
           defaultFooter;
       if (slivers != null && !slivers.contains(footer)) {
         slivers.add(footer);
-      } else if (slivers == null) {
-        slivers = [footer];
+      } else {
+        slivers ??= [footer];
       }
     }
 
