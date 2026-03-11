@@ -5,6 +5,14 @@
 - Added resolved `IndicatorThemeData` color resolution so classic and material
   indicators can inherit colors from Flutter themes with Cupertino-safe
   fallbacks.
+- Added `SkeletonFooter`, reusable skeleton bone primitives, and a shared shimmer engine for pagination placeholders.
+- Added an example screen demonstrating the four built-in skeleton footer styles.
+- Added `iOS17Header`, a Cupertino-style pull-to-refresh header with iOS 17 tick geometry, threshold scale pop, spin gradient fade-in, fixed-duration dismiss animation, optional last-updated text, and `RefreshStyle.Follow` behavior.
+- Added `Material3Header`, a Material 3 floating pull-to-refresh indicator with
+  theme-aware colors, modern circular progress styling, and dedicated complete
+  and error states.
+- Exported `Material3Header` from the package root and added an example screen
+  demonstrating seeded light and dark Material 3 themes.
 
 ## 0.1.0
 

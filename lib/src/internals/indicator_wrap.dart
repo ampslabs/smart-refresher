@@ -6,6 +6,7 @@
 
 // ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
 // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
+import 'dart:async';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -248,7 +249,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   @override
   Future<void> endRefresh() {
-    return Future.delayed(widget.completeDuration);
+    return endRefreshWithTimer(widget.completeDuration);
   }
 
   /// Whether the indicator needs to be reversed based on scroll direction.
@@ -596,7 +597,21 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   @override
   void dispose() {
     disposeListener();
+    _endRefreshTimer?.cancel();
     super.dispose();
+  }
+
+  Timer? _endRefreshTimer;
+
+  /// Ends the refresh after [duration], using a cancellable [Timer] to avoid
+  /// pending-timer errors in tests.
+  Future<void> endRefreshWithTimer(Duration duration) {
+    _endRefreshTimer?.cancel();
+    final Completer<void> completer = Completer<void>();
+    _endRefreshTimer = Timer(duration, () {
+      if (mounted) completer.complete();
+    });
+    return completer.future;
   }
 
   @override

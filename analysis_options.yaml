@@ -1,6 +1,9 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
   language:
     strict-casts: true
     strict-inference: true
@@ -56,7 +59,6 @@ linter:
     avoid_dynamic_calls: true
     avoid_empty_else: true
     avoid_print: true                 # use debugPrint in Flutter
-    avoid_returning_null_for_future: true
     avoid_slow_async_io: true
     avoid_type_to_string: true
     cancel_subscriptions: true
