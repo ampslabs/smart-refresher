@@ -146,7 +146,7 @@ class _ExamplePageState extends State<ExamplePage>
           onClick: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
-                body: const ForceFullExample(),
+                body: ForceFullExample(),
                 appBar: AppBar(),
               );
             }));
