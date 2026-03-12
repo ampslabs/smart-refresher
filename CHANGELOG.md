@@ -14,8 +14,14 @@
 ### Layout & Compatibility
 - **Multi-Sliver Support**: Added `center` property to `SmartRefresher` and `SmartRefresher.slivers` to support bidirectional scrolling and complex sliver layouts.
 - **Sliver Geometry Fixes**: Improved `SliverRefresh` to correctly respect `constraints.overlap` from pinned slivers, preventing headers from being hidden under app bars.
+- **ScrollBar Compatibility**: Fixed scrollbar thumb jitter by implementing correct scroll offset correction during indicator layout transitions.
 - **WASM Compatible**: Audited and confirmed full compatibility with Flutter's WASM web target.
 - **Smart Insertion**: Updated `SmartRefresher.slivers` to detect if indicators are manually placed in the sliver list, avoiding redundant auto-insertion.
+
+### Bug Fixes & Maintenance
+- **CI Stability**: Resolved a GitHub Actions failure by removing incorrectly checked-in temporary files (`.flutter-plugins-dependencies`).
+- **Web Assets**: Added missing `cupertino_icons` dependency to the example app to ensure correct font rendering on web/WASM targets.
+- **Code Quality**: Resolved several analyzer warnings related to deprecated members (`withOpacity` -> `withValues`) and unused imports.
 
 ### Infrastructure & Testing
 - **New Test Suites**: Added `test/accessibility_test.dart`, `test/complex_slivers_test.dart`, and `test/scrollbar_test.dart` covering edge cases in complex layouts.
