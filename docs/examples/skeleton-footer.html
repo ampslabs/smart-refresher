@@ -1,0 +1,125 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Skeleton Footer Example · smart_refresher</title>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></head>
+<body data-page="examples/skeleton-footer"><header class="top"><div class="brand">smart_refresher docs</div><nav><a href="https://github.com/ampslabs/smart-refresher">GitHub</a><a href="https://pub.dev/packages/smart_refresher">pub.dev</a><button id="menuBtn">☰</button></nav></header>
+<div class="layout"><aside class="sidebar" id="sidebar"><div class="nav-group">Getting Started</div><ul>
+<li><a data-nav="index" href="../index.html">Introduction</a></li>
+<li><a data-nav="quickstart" href="../quickstart.html">Quickstart</a></li>
+<li><a data-nav="configuration" href="../configuration.html">Configuration</a></li>
+<li><a data-nav="theming" href="../theming.html">Theming</a></li>
+<li><a data-nav="localization" href="../localization.html">Localization</a></li>
+</ul>
+<div class="nav-group">Indicators</div><ul>
+<li><a data-nav="indicators/index" href="../indicators/index.html">Gallery</a></li>
+<li><a data-nav="indicators/classic" href="../indicators/classic.html">Classic</a></li>
+<li><a data-nav="indicators/material" href="../indicators/material.html">Material</a></li>
+<li><a data-nav="indicators/waterdrop" href="../indicators/waterdrop.html">WaterDrop</a></li>
+<li><a data-nav="indicators/bezier" href="../indicators/bezier.html">Bezier</a></li>
+<li><a data-nav="indicators/two-level" href="../indicators/two-level.html">Two-Level</a></li>
+<li><a data-nav="indicators/ios17" href="../indicators/ios17.html">iOS 17</a></li>
+<li><a data-nav="indicators/material3" href="../indicators/material3.html">Material 3</a></li>
+<li><a data-nav="indicators/skeleton-footer" href="../indicators/skeleton-footer.html">Skeleton Footer</a></li>
+</ul>
+<div class="nav-group">Advanced</div><ul>
+<li><a data-nav="custom-indicators" href="../custom-indicators.html">Custom Indicators</a></li>
+</ul>
+<div class="nav-group">API Reference</div><ul>
+<li><a data-nav="api/index" href="../api/index.html">Overview</a></li>
+<li><a data-nav="api/smart-refresher" href="../api/smart-refresher.html">SmartRefresher</a></li>
+<li><a data-nav="api/refresh-controller" href="../api/refresh-controller.html">RefreshController</a></li>
+<li><a data-nav="api/refresh-configuration" href="../api/refresh-configuration.html">RefreshConfiguration</a></li>
+<li><a data-nav="api/enums" href="../api/enums.html">Enums</a></li>
+</ul>
+<div class="nav-group">Examples</div><ul>
+<li><a data-nav="examples/index" href="../examples/index.html">Overview</a></li>
+<li><a data-nav="examples/classic-header" href="../examples/classic-header.html">Classic Header</a></li>
+<li><a data-nav="examples/classic-footer" href="../examples/classic-footer.html">Classic Footer</a></li>
+<li><a data-nav="examples/material-headers" href="../examples/material-headers.html">Material Headers</a></li>
+<li><a data-nav="examples/ios17-header" href="../examples/ios17-header.html">iOS 17 Header</a></li>
+<li><a data-nav="examples/material3-header" href="../examples/material3-header.html">Material 3 Header</a></li>
+<li><a data-nav="examples/skeleton-footer" href="../examples/skeleton-footer.html">Skeleton Footer</a></li>
+<li><a data-nav="examples/theming" href="../examples/theming.html">Theming</a></li>
+</ul>
+<div class="nav-group">Project</div><ul>
+<li><a data-nav="changelog" href="../changelog.html">Changelog</a></li>
+<li><a data-nav="roadmap" href="../roadmap.html">Roadmap</a></li>
+<li><a data-nav="contributing" href="../contributing.html">Contributing</a></li>
+</ul></aside><main class="content"><div class="breadcrumb">Examples › Skeleton Footer</div><h1>Skeleton Footer</h1><p>This screen demonstrates skeleton footer behavior in the demo app.</p><h2>Code</h2><pre><code class="language-dart">import 'package:flutter/material.dart';
+import 'package:smart_refresher/smart_refresher.dart';
+
+import '../../widgets/demo_scaffold.dart';
+import '../../widgets/indicator_chip_selector.dart';
+
+class SkeletonFooterScreen extends StatefulWidget {
+  const SkeletonFooterScreen({super.key});
+
+  @override
+  State<SkeletonFooterScreen> createState() => _SkeletonFooterScreenState();
+}
+
+class _SkeletonFooterScreenState extends State<SkeletonFooterScreen> {
+  SkeletonBoneStyle _style = SkeletonBoneStyle.listTile;
+  int _count = 3;
+  bool _staggered = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return DemoScaffold(
+      title: 'SkeletonFooter',
+      headerBuilder: () => const Material3Header(),
+      footerBuilder: () => _staggered
+          ? SkeletonFooter.staggered(
+              boneStyle: _style,
+              skeletonCount: _count,
+            )
+          : SkeletonFooter(
+              boneStyle: _style,
+              skeletonCount: _count,
+            ),
+      topContent: Card(
+        margin: const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 4.0),
+        child: ExpansionTile(
+          title: const Text('Options'),
+          childrenPadding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+          children: <Widget>[
+            IndicatorChipSelector<SkeletonBoneStyle>(
+              options: const <(String, SkeletonBoneStyle)>[
+                ('List', SkeletonBoneStyle.listTile),
+                ('Card', SkeletonBoneStyle.card),
+                ('Text', SkeletonBoneStyle.textBlock),
+                ('Image', SkeletonBoneStyle.imageRow),
+              ],
+              selected: _style,
+              onSelected: (SkeletonBoneStyle value) => setState(() => _style = value),
+            ),
+            Row(
+              children: <Widget>[
+                const Text('Skeleton count'),
+                const Spacer(),
+                IconButton(
+                  onPressed: _count > 1 ? () => setState(() => _count--) : null,
+                  icon: const Icon(Icons.remove_circle_outline),
+                ),
+                Text('$_count'),
+                IconButton(
+                  onPressed: _count < 5 ? () => setState(() => _count++) : null,
+                  icon: const Icon(Icons.add_circle_outline),
+                ),
+              ],
+            ),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Staggered widths'),
+              value: _staggered,
+              onChanged: (bool value) => setState(() => _staggered = value),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+</code></pre><h2>Related docs</h2><p>See indicator and API pages from the left navigation.</p></main><aside class="toc" id="toc"></aside></div>
+<footer>v0.2.0 · MIT · <a href="https://github.com/ampslabs/smart-refresher">GitHub</a> · <a href="https://pub.dev/packages/smart_refresher">pub.dev</a></footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dart.min.js"></script><script src="../assets/script.js"></script></body></html>

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>smart_refresher docs</title>
+  <script>
+    (function () {
+      var path = window.location.pathname;
+      // GitHub Pages project site fallback: redirect unknown routes to docs index.
+      // Keeps deep links recoverable when users open /smart-refresher without trailing slash.
+      if (!path.endsWith('/index.html')) {
+        window.location.replace('./index.html');
+      }
+    })();
+  </script>
+</head>
+<body style="background:#0c0e12;color:#d9dce3;font-family:Inter,Arial,sans-serif;padding:24px;">
+  <p>Redirecting to documentation…</p>
+  <p><a href="./index.html" style="color:#00C853;">Open docs home</a></p>
+</body>
+</html>
