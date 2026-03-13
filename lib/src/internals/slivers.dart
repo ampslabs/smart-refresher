@@ -19,7 +19,7 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
     this.floating = false,
     super.child,
     this.refreshStyle,
-  })  : assert(refreshIndicatorLayoutExtent >= 0.0);
+  }) : assert(refreshIndicatorLayoutExtent >= 0.0);
 
   /// The amount of space the indicator occupies in the sliver while refreshing.
   final double refreshIndicatorLayoutExtent;
@@ -217,7 +217,8 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
         case RefreshStyle.Follow:
           geometry = SliverGeometry(
             scrollExtent: layoutExtent,
-            paintOrigin: -boxExtent - constraints.scrollOffset + layoutExtent - overlap,
+            paintOrigin:
+                -boxExtent - constraints.scrollOffset + layoutExtent - overlap,
             paintExtent: needPaintExtent,
             hitTestExtent: needPaintExtent,
             hasVisualOverflow: overscrolledExtent < boxExtent,
@@ -230,7 +231,8 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
         case RefreshStyle.Behind:
           geometry = SliverGeometry(
             scrollExtent: layoutExtent,
-            paintOrigin: -overscrolledExtent - constraints.scrollOffset - overlap,
+            paintOrigin:
+                -overscrolledExtent - constraints.scrollOffset - overlap,
             paintExtent: needPaintExtent,
             maxPaintExtent: needPaintExtent,
             layoutExtent:
@@ -241,8 +243,9 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
           geometry = SliverGeometry(
             scrollExtent: layoutExtent,
             paintOrigin: math.min(
-                -overscrolledExtent - constraints.scrollOffset,
-                -boxExtent - constraints.scrollOffset + layoutExtent) - overlap,
+                    -overscrolledExtent - constraints.scrollOffset,
+                    -boxExtent - constraints.scrollOffset + layoutExtent) -
+                overlap,
             paintExtent: needPaintExtent,
             hasVisualOverflow: overscrolledExtent < boxExtent,
             maxPaintExtent: needPaintExtent,
@@ -254,9 +257,10 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
         case RefreshStyle.Front:
           geometry = SliverGeometry(
             paintOrigin: (constraints.axisDirection == AxisDirection.up ||
-                    constraints.crossAxisDirection == AxisDirection.left
-                ? boxExtent
-                : 0.0) - overlap,
+                        constraints.crossAxisDirection == AxisDirection.left
+                    ? boxExtent
+                    : 0.0) -
+                overlap,
             visible: true,
             hasVisualOverflow: true,
           );
@@ -272,8 +276,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    context.paintChild(
-        child!, Offset(offset.dx, offset.dy + paintOffsetY!));
+    context.paintChild(child!, Offset(offset.dx, offset.dy + paintOffsetY!));
   }
 
   @override
@@ -452,8 +455,7 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
     if (active) {
       child!.layout(constraints.asBoxConstraints(), parentUsesSize: true);
     } else {
-      child!.layout(
-          constraints.asBoxConstraints(maxExtent: 0.0),
+      child!.layout(constraints.asBoxConstraints(maxExtent: 0.0),
           parentUsesSize: true);
     }
     final double childExtent = constraints.axis == Axis.vertical

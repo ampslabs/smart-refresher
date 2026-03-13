@@ -132,21 +132,22 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
   Widget _buildText(RefreshStatus? mode, IndicatorThemeData theme) {
     final RefreshString strings =
         RefreshLocalizations.of(context)?.currentLocalization ??
-        EnRefreshString();
+            EnRefreshString();
     return Text(
       mode == RefreshStatus.canRefresh
           ? widget.releaseText ?? strings.canRefreshText!
           : mode == RefreshStatus.completed
-          ? widget.completeText ?? strings.refreshCompleteText!
-          : mode == RefreshStatus.failed
-          ? widget.failedText ?? strings.refreshFailedText!
-          : mode == RefreshStatus.refreshing
-          ? widget.refreshingText ?? strings.refreshingText!
-          : mode == RefreshStatus.idle
-          ? widget.idleText ?? strings.idleRefreshText!
-          : mode == RefreshStatus.canTwoLevel
-          ? widget.canTwoLevelText ?? strings.canTwoLevelText!
-          : '',
+              ? widget.completeText ?? strings.refreshCompleteText!
+              : mode == RefreshStatus.failed
+                  ? widget.failedText ?? strings.refreshFailedText!
+                  : mode == RefreshStatus.refreshing
+                      ? widget.refreshingText ?? strings.refreshingText!
+                      : mode == RefreshStatus.idle
+                          ? widget.idleText ?? strings.idleRefreshText!
+                          : mode == RefreshStatus.canTwoLevel
+                              ? widget.canTwoLevelText ??
+                                  strings.canTwoLevelText!
+                              : '',
       style: theme.textStyle,
     );
   }
@@ -155,33 +156,39 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
     final Widget? icon = mode == RefreshStatus.canRefresh
         ? widget.releaseIcon ?? Icon(Icons.refresh, color: theme.arrowColor)
         : mode == RefreshStatus.idle
-        ? widget.idleIcon ?? Icon(Icons.arrow_downward, color: theme.arrowColor)
-        : mode == RefreshStatus.completed
-        ? widget.completeIcon ?? Icon(Icons.done, color: theme.iconColor)
-        : mode == RefreshStatus.failed
-        ? widget.failedIcon ?? Icon(Icons.error, color: theme.iconColor)
-        : mode == RefreshStatus.canTwoLevel
-        ? widget.canTwoLevelIcon
-        : mode == RefreshStatus.canTwoLevel
-        ? widget.canTwoLevelIcon
-        : mode == RefreshStatus.refreshing
-        ? widget.refreshingIcon ??
-              SizedBox(
-                width: 25.0,
-                height: 25.0,
-                child: defaultTargetPlatform == TargetPlatform.iOS
-                    ? CupertinoTheme(
-                        data: CupertinoThemeData(
-                          primaryColor: theme.primaryColor,
-                        ),
-                        child: const CupertinoActivityIndicator(),
-                      )
-                    : CircularProgressIndicator(
-                        color: theme.primaryColor,
-                        strokeWidth: 2.0,
-                      ),
-              )
-        : widget.twoLevelView;
+            ? widget.idleIcon ??
+                Icon(Icons.arrow_downward, color: theme.arrowColor)
+            : mode == RefreshStatus.completed
+                ? widget.completeIcon ??
+                    Icon(Icons.done, color: theme.iconColor)
+                : mode == RefreshStatus.failed
+                    ? widget.failedIcon ??
+                        Icon(Icons.error, color: theme.iconColor)
+                    : mode == RefreshStatus.canTwoLevel
+                        ? widget.canTwoLevelIcon
+                        : mode == RefreshStatus.canTwoLevel
+                            ? widget.canTwoLevelIcon
+                            : mode == RefreshStatus.refreshing
+                                ? widget.refreshingIcon ??
+                                    SizedBox(
+                                      width: 25.0,
+                                      height: 25.0,
+                                      child: defaultTargetPlatform ==
+                                              TargetPlatform.iOS
+                                          ? CupertinoTheme(
+                                              data: CupertinoThemeData(
+                                                primaryColor:
+                                                    theme.primaryColor,
+                                              ),
+                                              child:
+                                                  const CupertinoActivityIndicator(),
+                                            )
+                                          : CircularProgressIndicator(
+                                              color: theme.primaryColor,
+                                              strokeWidth: 2.0,
+                                            ),
+                                    )
+                                : widget.twoLevelView;
     return icon ?? Container();
   }
 
@@ -207,8 +214,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
       textDirection: widget.iconPos == IconPosition.left
           ? TextDirection.ltr
           : TextDirection.rtl,
-      direction:
-          widget.iconPos == IconPosition.bottom ||
+      direction: widget.iconPos == IconPosition.bottom ||
               widget.iconPos == IconPosition.top
           ? Axis.vertical
           : Axis.horizontal,
@@ -222,22 +228,22 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
 
     final RefreshString strings =
         RefreshLocalizations.of(context)?.currentLocalization ??
-        EnRefreshString();
-    final String label =
-        widget.semanticsLabel ??
+            EnRefreshString();
+    final String label = widget.semanticsLabel ??
         (mode == RefreshStatus.canRefresh
             ? widget.releaseText ?? strings.canRefreshText!
             : mode == RefreshStatus.completed
-            ? widget.completeText ?? strings.refreshCompleteText!
-            : mode == RefreshStatus.failed
-            ? widget.failedText ?? strings.refreshFailedText!
-            : mode == RefreshStatus.refreshing
-            ? widget.refreshingText ?? strings.refreshingText!
-            : mode == RefreshStatus.idle
-            ? widget.idleText ?? strings.idleRefreshText!
-            : mode == RefreshStatus.canTwoLevel
-            ? widget.canTwoLevelText ?? strings.canTwoLevelText!
-            : '');
+                ? widget.completeText ?? strings.refreshCompleteText!
+                : mode == RefreshStatus.failed
+                    ? widget.failedText ?? strings.refreshFailedText!
+                    : mode == RefreshStatus.refreshing
+                        ? widget.refreshingText ?? strings.refreshingText!
+                        : mode == RefreshStatus.idle
+                            ? widget.idleText ?? strings.idleRefreshText!
+                            : mode == RefreshStatus.canTwoLevel
+                                ? widget.canTwoLevelText ??
+                                    strings.canTwoLevelText!
+                                : '');
 
     final Widget semanticsContainer = Semantics(
       label: label,
@@ -336,17 +342,17 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
   Widget _buildText(LoadStatus? mode, IndicatorThemeData theme) {
     final RefreshString strings =
         RefreshLocalizations.of(context)?.currentLocalization ??
-        EnRefreshString();
+            EnRefreshString();
     return Text(
       mode == LoadStatus.loading
           ? widget.loadingText ?? strings.loadingText!
           : LoadStatus.noMore == mode
-          ? widget.noDataText ?? strings.noMoreText!
-          : LoadStatus.failed == mode
-          ? widget.failedText ?? strings.loadFailedText!
-          : LoadStatus.canLoading == mode
-          ? widget.canLoadingText ?? strings.canLoadingText!
-          : widget.idleText ?? strings.idleLoadingText!,
+              ? widget.noDataText ?? strings.noMoreText!
+              : LoadStatus.failed == mode
+                  ? widget.failedText ?? strings.loadFailedText!
+                  : LoadStatus.canLoading == mode
+                      ? widget.canLoadingText ?? strings.canLoadingText!
+                      : widget.idleText ?? strings.idleLoadingText!,
       style: theme.textStyle,
     );
   }
@@ -354,30 +360,31 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
   Widget _buildIcon(LoadStatus? mode, IndicatorThemeData theme) {
     final Widget? icon = mode == LoadStatus.loading
         ? widget.loadingIcon ??
-              SizedBox(
-                width: 25.0,
-                height: 25.0,
-                child: defaultTargetPlatform == TargetPlatform.iOS
-                    ? CupertinoTheme(
-                        data: CupertinoThemeData(
-                          primaryColor: theme.primaryColor,
-                        ),
-                        child: const CupertinoActivityIndicator(),
-                      )
-                    : CircularProgressIndicator(
-                        color: theme.primaryColor,
-                        strokeWidth: 2.0,
+            SizedBox(
+              width: 25.0,
+              height: 25.0,
+              child: defaultTargetPlatform == TargetPlatform.iOS
+                  ? CupertinoTheme(
+                      data: CupertinoThemeData(
+                        primaryColor: theme.primaryColor,
                       ),
-              )
+                      child: const CupertinoActivityIndicator(),
+                    )
+                  : CircularProgressIndicator(
+                      color: theme.primaryColor,
+                      strokeWidth: 2.0,
+                    ),
+            )
         : mode == LoadStatus.noMore
-        ? widget.noMoreIcon
-        : mode == LoadStatus.failed
-        ? widget.failedIcon ?? Icon(Icons.error, color: theme.primaryColor)
-        : mode == LoadStatus.canLoading
-        ? widget.canLoadingIcon ??
-              Icon(Icons.autorenew, color: theme.primaryColor)
-        : widget.idleIcon ??
-              Icon(Icons.arrow_upward, color: theme.primaryColor);
+            ? widget.noMoreIcon
+            : mode == LoadStatus.failed
+                ? widget.failedIcon ??
+                    Icon(Icons.error, color: theme.primaryColor)
+                : mode == LoadStatus.canLoading
+                    ? widget.canLoadingIcon ??
+                        Icon(Icons.autorenew, color: theme.primaryColor)
+                    : widget.idleIcon ??
+                        Icon(Icons.arrow_upward, color: theme.primaryColor);
     return icon ?? Container();
   }
 
@@ -401,8 +408,7 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
       textDirection: widget.iconPos == IconPosition.left
           ? TextDirection.ltr
           : TextDirection.rtl,
-      direction:
-          widget.iconPos == IconPosition.bottom ||
+      direction: widget.iconPos == IconPosition.bottom ||
               widget.iconPos == IconPosition.top
           ? Axis.vertical
           : Axis.horizontal,
@@ -416,18 +422,17 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
 
     final RefreshString strings =
         RefreshLocalizations.of(context)?.currentLocalization ??
-        EnRefreshString();
-    final String label =
-        widget.semanticsLabel ??
+            EnRefreshString();
+    final String label = widget.semanticsLabel ??
         (mode == LoadStatus.loading
             ? widget.loadingText ?? strings.loadingText!
             : LoadStatus.noMore == mode
-            ? widget.noDataText ?? strings.noMoreText!
-            : LoadStatus.failed == mode
-            ? widget.failedText ?? strings.loadFailedText!
-            : LoadStatus.canLoading == mode
-            ? widget.canLoadingText ?? strings.canLoadingText!
-            : widget.idleText ?? strings.idleLoadingText!);
+                ? widget.noDataText ?? strings.noMoreText!
+                : LoadStatus.failed == mode
+                    ? widget.failedText ?? strings.loadFailedText!
+                    : LoadStatus.canLoading == mode
+                        ? widget.canLoadingText ?? strings.canLoadingText!
+                        : widget.idleText ?? strings.idleLoadingText!);
 
     final Widget semanticsContainer = Semantics(
       label: label,

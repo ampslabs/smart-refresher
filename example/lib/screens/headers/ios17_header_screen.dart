@@ -67,8 +67,7 @@ class _IOS17HeaderScreenState extends State<IOS17HeaderScreen> {
               contentPadding: EdgeInsets.zero,
               title: const Text('Enable haptic feedback'),
               value: _enableHaptic,
-              onChanged: (bool value) =>
-                  setState(() => _enableHaptic = value),
+              onChanged: (bool value) => setState(() => _enableHaptic = value),
             ),
           ],
         ),

@@ -2,7 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:example/main.dart';
 
 void main() {
-  testWidgets('SmartRefresher demo app smoke test', (WidgetTester tester) async {
+  testWidgets('SmartRefresher demo app smoke test',
+      (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const SmartRefresherDemoApp());
 

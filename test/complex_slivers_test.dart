@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:smart_refresher/smart_refresher.dart';
 
 void main() {
-  testWidgets('SmartRefresher.slivers handles center key and negative minScrollExtent', (WidgetTester tester) async {
+  testWidgets(
+      'SmartRefresher.slivers handles center key and negative minScrollExtent',
+      (WidgetTester tester) async {
     final RefreshController refreshController = RefreshController();
     final Key centerKey = UniqueKey();
 
@@ -35,17 +37,21 @@ void main() {
 
     final CustomScrollView csv = tester.widget(find.byType(CustomScrollView));
     expect(csv.center, centerKey);
-    
-    final ScrollPosition pos = tester.state<ScrollableState>(find.byType(Scrollable)).position;
+
+    final ScrollPosition pos =
+        tester.state<ScrollableState>(find.byType(Scrollable)).position;
     expect(pos.minScrollExtent, lessThan(-200.0));
 
-    await tester.drag(find.byType(Scrollable), Offset(0, -pos.minScrollExtent + 100));
+    await tester.drag(
+        find.byType(Scrollable), Offset(0, -pos.minScrollExtent + 100));
     await tester.pump();
 
-    expect(refreshController.headerStatus, anyOf(RefreshStatus.canRefresh, RefreshStatus.refreshing));
+    expect(refreshController.headerStatus,
+        anyOf(RefreshStatus.canRefresh, RefreshStatus.refreshing));
   });
 
-  testWidgets('SmartRefresher avoids duplicate header insertion', (WidgetTester tester) async {
+  testWidgets('SmartRefresher avoids duplicate header insertion',
+      (WidgetTester tester) async {
     final RefreshController refreshController = RefreshController();
     const ClassicHeader header = ClassicHeader();
 

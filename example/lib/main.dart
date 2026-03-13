@@ -33,9 +33,8 @@ class _SmartRefresherDemoAppState extends State<SmartRefresherDemoApp> {
 
   void _toggleTheme() {
     setState(() {
-      _themeMode = _themeMode == ThemeMode.light
-          ? ThemeMode.dark
-          : ThemeMode.light;
+      _themeMode =
+          _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
     });
   }
 
@@ -96,8 +95,8 @@ class DemoAppStateScope extends InheritedWidget {
   final ValueChanged<Color> setSeedColor;
 
   static DemoAppStateScope of(BuildContext context) {
-    final DemoAppStateScope? scope = context
-        .dependOnInheritedWidgetOfExactType<DemoAppStateScope>();
+    final DemoAppStateScope? scope =
+        context.dependOnInheritedWidgetOfExactType<DemoAppStateScope>();
     assert(scope != null, 'DemoAppStateScope is missing in the widget tree.');
     return scope!;
   }

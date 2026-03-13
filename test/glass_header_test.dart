@@ -34,7 +34,8 @@ void main() {
     controller.dispose();
   });
 
-  testWidgets('GlassHeader panel hidden in idle state', (WidgetTester tester) async {
+  testWidgets('GlassHeader panel hidden in idle state',
+      (WidgetTester tester) async {
     final RefreshController controller = RefreshController();
     await tester.pumpWidget(_buildRefresher(controller: controller));
 
@@ -57,7 +58,8 @@ void main() {
     controller.dispose();
   });
 
-  testWidgets('GlassHeader uses dark tint in dark mode', (WidgetTester tester) async {
+  testWidgets('GlassHeader uses dark tint in dark mode',
+      (WidgetTester tester) async {
     final RefreshController controller = RefreshController();
     await tester.pumpWidget(
       _buildRefresher(
@@ -86,8 +88,10 @@ void main() {
     controller.dispose();
   });
 
-  testWidgets('GlassHeader shows spinner in refreshing state', (WidgetTester tester) async {
-    final RefreshController controller = RefreshController(initialRefresh: true);
+  testWidgets('GlassHeader shows spinner in refreshing state',
+      (WidgetTester tester) async {
+    final RefreshController controller =
+        RefreshController(initialRefresh: true);
     await tester.pumpWidget(
       _buildRefresher(
         controller: controller,
@@ -100,15 +104,16 @@ void main() {
 
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.byType(CupertinoActivityIndicator), findsOneWidget);
-    
+
     // Complete the timer to avoid pending timer error
     await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();
-    
+
     controller.dispose();
   });
 
-  testWidgets('GlassHeader hides text when showText is false', (WidgetTester tester) async {
+  testWidgets('GlassHeader hides text when showText is false',
+      (WidgetTester tester) async {
     final RefreshController controller = RefreshController();
     await tester.pumpWidget(
       _buildRefresher(
@@ -124,8 +129,10 @@ void main() {
     controller.dispose();
   });
 
-  testWidgets('GlassHeader disposes cleanly during animation', (WidgetTester tester) async {
-    final RefreshController controller = RefreshController(initialRefresh: true);
+  testWidgets('GlassHeader disposes cleanly during animation',
+      (WidgetTester tester) async {
+    final RefreshController controller =
+        RefreshController(initialRefresh: true);
     await tester.pumpWidget(
       _buildRefresher(
         controller: controller,

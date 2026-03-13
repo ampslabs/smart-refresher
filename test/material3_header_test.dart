@@ -290,7 +290,8 @@ ScaleTransition _scaleTransitionFor(
 }
 
 Material _materialFor(Material3HeaderState state, RefreshStatus mode) {
-  final Semantics semantics = _scaleTransitionFor(state, mode).child! as Semantics;
+  final Semantics semantics =
+      _scaleTransitionFor(state, mode).child! as Semantics;
   return semantics.child! as Material;
 }
 

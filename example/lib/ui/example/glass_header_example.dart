@@ -49,12 +49,14 @@ class _GradientBackgroundDemo extends StatefulWidget {
   const _GradientBackgroundDemo();
 
   @override
-  State<_GradientBackgroundDemo> createState() => _GradientBackgroundDemoState();
+  State<_GradientBackgroundDemo> createState() =>
+      _GradientBackgroundDemoState();
 }
 
 class _GradientBackgroundDemoState extends State<_GradientBackgroundDemo> {
   final RefreshController _controller = RefreshController();
-  final List<String> _items = List<String>.generate(20, (int i) => 'Item ${i + 1}');
+  final List<String> _items =
+      List<String>.generate(20, (int i) => 'Item ${i + 1}');
 
   Future<void> _onRefresh() async {
     await Future<void>.delayed(const Duration(milliseconds: 1800));
@@ -74,7 +76,11 @@ class _GradientBackgroundDemoState extends State<_GradientBackgroundDemo> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: <Color>[Color(0xFF1a1a2e), Color(0xFF16213e), Color(0xFF0f3460)],
+          colors: <Color>[
+            Color(0xFF1a1a2e),
+            Color(0xFF16213e),
+            Color(0xFF0f3460)
+          ],
         ),
       ),
       child: SmartRefresher(
@@ -85,7 +91,8 @@ class _GradientBackgroundDemoState extends State<_GradientBackgroundDemo> {
           itemCount: _items.length,
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
-              title: Text(_items[index], style: const TextStyle(color: Colors.white)),
+              title: Text(_items[index],
+                  style: const TextStyle(color: Colors.white)),
               subtitle: Text(
                 'Pull down to see glass effect',
                 style: TextStyle(color: Colors.white.withValues(alpha: 0.6)),
@@ -124,7 +131,8 @@ class _PhotoBackgroundDemoState extends State<_PhotoBackgroundDemo> {
     return DecoratedBox(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: NetworkImage('https://images.unsplash.com/photo-1507525428034-b723cf961d3e'),
+          image: NetworkImage(
+              'https://images.unsplash.com/photo-1507525428034-b723cf961d3e'),
           fit: BoxFit.cover,
         ),
       ),
@@ -139,7 +147,8 @@ class _PhotoBackgroundDemoState extends State<_PhotoBackgroundDemo> {
             itemBuilder: (BuildContext context, int index) {
               return Card(
                 color: Colors.black.withValues(alpha: 0.25),
-                margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
                 child: ListTile(
                   title: Text(
                     'Scenic item ${index + 1}',
@@ -147,7 +156,8 @@ class _PhotoBackgroundDemoState extends State<_PhotoBackgroundDemo> {
                   ),
                   subtitle: Text(
                     'Backdrop blur reads from photo details',
-                    style: TextStyle(color: Colors.white.withValues(alpha: 0.72)),
+                    style:
+                        TextStyle(color: Colors.white.withValues(alpha: 0.72)),
                   ),
                 ),
               );

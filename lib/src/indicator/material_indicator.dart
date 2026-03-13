@@ -122,8 +122,7 @@ class _MaterialClassicHeaderState
         child: Align(
           alignment: Alignment.topCenter,
           child: RefreshProgressIndicator(
-            semanticsLabel:
-                widget.semanticsLabel ??
+            semanticsLabel: widget.semanticsLabel ??
                 MaterialLocalizations.of(context).refreshIndicatorSemanticLabel,
             semanticsValue: widget.semanticsValue,
             value: floating ? null : _valueAni.value,
@@ -274,13 +273,13 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
     );
     return _positionController
         .animateTo(
-          widget.distance / widget.height,
-          curve: Curves.bounceOut,
-          duration: const Duration(milliseconds: 550),
-        )
+      widget.distance / widget.height,
+      curve: Curves.bounceOut,
+      duration: const Duration(milliseconds: 550),
+    )
         .then((_) {
-          _showWater = false;
-        });
+      _showWater = false;
+    });
   }
 
   @override
@@ -309,9 +308,8 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
       _bezierController!.value = offset / configuration!.headerTriggerDistance;
       _valueAni.value = _bezierController!.value;
       _positionController.value = _bezierController!.value * 0.3;
-      _scaleFactor.value = offset < 40.0
-          ? 0.0
-          : (_bezierController!.value - 0.5) * 2 + 0.5;
+      _scaleFactor.value =
+          offset < 40.0 ? 0.0 : (_bezierController!.value - 0.5) * 2 + 0.5;
     }
   }
 
@@ -358,7 +356,7 @@ class _WaterPainter extends CustomPainter {
   final double? ratio;
 
   _WaterPainter({this.color, this.listener, this.ratio})
-    : super(repaint: listener);
+      : super(repaint: listener);
 
   @override
   void paint(Canvas canvas, Size size) {

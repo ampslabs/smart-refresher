@@ -15,8 +15,6 @@ class ResolvedIndicatorTheme {
   final TextStyle textStyle;
 }
 
-
-
 abstract final class AppTheme {
   static ThemeData light(Color seedColor) =>
       _buildTheme(seedColor, Brightness.light);
@@ -33,9 +31,8 @@ abstract final class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: isDark
-          ? colorScheme.surface
-          : colorScheme.surfaceContainerLowest,
+      scaffoldBackgroundColor:
+          isDark ? colorScheme.surface : colorScheme.surfaceContainerLowest,
       cardTheme: CardThemeData(
         elevation: 1.5,
         color: colorScheme.surface,

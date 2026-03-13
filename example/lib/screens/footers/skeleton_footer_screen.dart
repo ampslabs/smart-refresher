@@ -44,7 +44,8 @@ class _SkeletonFooterScreenState extends State<SkeletonFooterScreen> {
                 ('Image', SkeletonBoneStyle.imageRow),
               ],
               selected: _style,
-              onSelected: (SkeletonBoneStyle value) => setState(() => _style = value),
+              onSelected: (SkeletonBoneStyle value) =>
+                  setState(() => _style = value),
             ),
             Row(
               children: <Widget>[

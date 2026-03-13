@@ -49,9 +49,7 @@ class WaterDropHeader extends RefreshIndicator {
     ),
     this.semanticsLabel,
     this.semanticsHint,
-  }) : super(
-            height: 60.0,
-            refreshStyle: RefreshStyle.UnFollow);
+  }) : super(height: 60.0, refreshStyle: RefreshStyle.UnFollow);
 
   @override
   State<StatefulWidget> createState() {
@@ -99,18 +97,17 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
   Widget buildContent(BuildContext context, RefreshStatus? mode) {
     final RefreshString strings =
         RefreshLocalizations.of(context)?.currentLocalization ??
-        EnRefreshString();
-    final String label =
-        widget.semanticsLabel ??
+            EnRefreshString();
+    final String label = widget.semanticsLabel ??
         (mode == RefreshStatus.completed
             ? strings.refreshCompleteText!
             : mode == RefreshStatus.failed
-            ? strings.refreshFailedText!
-            : mode == RefreshStatus.refreshing
-            ? strings.refreshingText!
-            : mode == RefreshStatus.canRefresh
-            ? strings.canRefreshText!
-            : strings.idleRefreshText!);
+                ? strings.refreshFailedText!
+                : mode == RefreshStatus.refreshing
+                    ? strings.refreshingText!
+                    : mode == RefreshStatus.canRefresh
+                        ? strings.canRefreshText!
+                        : strings.idleRefreshText!);
 
     Widget? child;
     if (mode == RefreshStatus.refreshing) {

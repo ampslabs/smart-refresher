@@ -8,7 +8,8 @@ import 'dart:async';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smart_refresher/smart_refresher.dart';
-import 'package:flutter/material.dart' hide RefreshIndicator, RefreshIndicatorState;
+import 'package:flutter/material.dart'
+    hide RefreshIndicator, RefreshIndicatorState;
 import 'data_source.dart';
 import 'test_indicator.dart';
 
@@ -360,7 +361,9 @@ void main() {
     expect(RefreshConfiguration.of(context2)!.enableBallisticRefresh, false);
   });
 
-  testWidgets('SmartRefresher automatic error catching and onRefreshFailed test', (tester) async {
+  testWidgets(
+      'SmartRefresher automatic error catching and onRefreshFailed test',
+      (tester) async {
     final RefreshController controller = RefreshController();
     Object? caughtError;
     StackTrace? caughtStack;
@@ -391,7 +394,8 @@ void main() {
 
     controller.requestRefresh();
     await tester.pump(); // Trigger refresh start
-    await tester.pump(const Duration(milliseconds: 100)); // Process dynamic call
+    await tester
+        .pump(const Duration(milliseconds: 100)); // Process dynamic call
     await tester.pump(const Duration(milliseconds: 100)); // Process catchError
 
     expect(controller.headerStatus, RefreshStatus.failed);
@@ -400,7 +404,9 @@ void main() {
     expect(caughtStack, isNotNull);
   });
 
-  testWidgets('SmartRefresher automatic error catching and onLoadingFailed test', (tester) async {
+  testWidgets(
+      'SmartRefresher automatic error catching and onLoadingFailed test',
+      (tester) async {
     final RefreshController controller = RefreshController();
     Object? caughtError;
 
@@ -439,7 +445,7 @@ void main() {
 
     expect(controller.footerStatus, LoadStatus.failed);
     expect(caughtError, 'Async Loading Error');
-    
+
     await gesture.up();
     await tester.pumpAndSettle();
   });

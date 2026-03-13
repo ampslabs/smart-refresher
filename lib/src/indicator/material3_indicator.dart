@@ -185,13 +185,16 @@ class Material3HeaderState extends RefreshIndicatorState<Material3Header>
   Widget buildContent(BuildContext context, RefreshStatus? mode) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
-    final ProgressIndicatorThemeData progressTheme = ProgressIndicatorTheme.of(context);
+    final ProgressIndicatorThemeData progressTheme =
+        ProgressIndicatorTheme.of(context);
 
     final IndicatorThemeData indicatorTheme = IndicatorThemeData.resolve(
       context,
       widgetPrimaryColor: widget.color ?? progressTheme.color,
-      widgetTrackColor: progressTheme.circularTrackColor ?? colorScheme.surfaceContainerHighest,
-      widgetMaterial3BackgroundColor: widget.backgroundColor ?? colorScheme.surfaceContainerLow,
+      widgetTrackColor: progressTheme.circularTrackColor ??
+          colorScheme.surfaceContainerHighest,
+      widgetMaterial3BackgroundColor:
+          widget.backgroundColor ?? colorScheme.surfaceContainerLow,
       widgetMaterial3Elevation: widget.elevation,
     );
 
@@ -199,53 +202,50 @@ class Material3HeaderState extends RefreshIndicatorState<Material3Header>
     final double trackGap = progressTheme.trackGap ?? _trackGap;
     final RefreshString strings =
         RefreshLocalizations.of(context)?.currentLocalization ??
-        EnRefreshString();
+            EnRefreshString();
 
-    final String label =
-        widget.semanticsLabel ??
+    final String label = widget.semanticsLabel ??
         (_terminalState == _TerminalState.completed
             ? strings.refreshCompleteText!
             : _terminalState == _TerminalState.failed
-            ? strings.refreshFailedText!
-            : mode == RefreshStatus.refreshing
-            ? strings.refreshingText!
-            : mode == RefreshStatus.canRefresh
-            ? strings.canRefreshText!
-            : strings.idleRefreshText!);
+                ? strings.refreshFailedText!
+                : mode == RefreshStatus.refreshing
+                    ? strings.refreshingText!
+                    : mode == RefreshStatus.canRefresh
+                        ? strings.canRefreshText!
+                        : strings.idleRefreshText!);
 
     final Widget child = switch (_terminalState) {
       _TerminalState.completed => FadeTransition(
-        opacity: _iconFadeController,
-        child:
-            widget.completeIcon ??
-            Icon(
-              Icons.check_circle_outline,
-              size: 20.0,
-              color: indicatorTheme.iconColor,
-            ),
-      ),
-      _TerminalState.failed => FadeTransition(
-        opacity: _iconFadeController,
-        child:
-            widget.failedIcon ??
-            Icon(Icons.error_outline, size: 20.0, color: colorScheme.error),
-      ),
-      _TerminalState.none => SizedBox(
-        width: _spinnerSize,
-        height: _spinnerSize,
-        child: CircularProgressIndicator(
-          // TODO: Remove when the package minimum Flutter SDK is raised to 3.27+.
-          // ignore: deprecated_member_use
-          year2023: false,
-          value: mode == RefreshStatus.refreshing ? null : _dragProgress,
-          color: indicatorTheme.primaryColor,
-          backgroundColor: indicatorTheme.trackColor,
-          strokeWidth: _strokeWidth,
-          trackGap: trackGap,
-          strokeCap: StrokeCap.round,
-          semanticsLabel: label,
+          opacity: _iconFadeController,
+          child: widget.completeIcon ??
+              Icon(
+                Icons.check_circle_outline,
+                size: 20.0,
+                color: indicatorTheme.iconColor,
+              ),
         ),
-      ),
+      _TerminalState.failed => FadeTransition(
+          opacity: _iconFadeController,
+          child: widget.failedIcon ??
+              Icon(Icons.error_outline, size: 20.0, color: colorScheme.error),
+        ),
+      _TerminalState.none => SizedBox(
+          width: _spinnerSize,
+          height: _spinnerSize,
+          child: CircularProgressIndicator(
+            // TODO: Remove when the package minimum Flutter SDK is raised to 3.27+.
+            // ignore: deprecated_member_use
+            year2023: false,
+            value: mode == RefreshStatus.refreshing ? null : _dragProgress,
+            color: indicatorTheme.primaryColor,
+            backgroundColor: indicatorTheme.trackColor,
+            strokeWidth: _strokeWidth,
+            trackGap: trackGap,
+            strokeCap: StrokeCap.round,
+            semanticsLabel: label,
+          ),
+        ),
     };
 
     return SizedBox(

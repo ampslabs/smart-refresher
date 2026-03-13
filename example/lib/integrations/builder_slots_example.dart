@@ -36,10 +36,14 @@ class _BuilderSlotsExampleState extends State<BuilderSlotsExample> {
               _refreshController.contentStatus.value = status;
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(value: ContentStatus.idle, child: Text('Idle (Show List)')),
-              const PopupMenuItem(value: ContentStatus.loading, child: Text('Loading Slot')),
-              const PopupMenuItem(value: ContentStatus.empty, child: Text('Empty Slot')),
-              const PopupMenuItem(value: ContentStatus.error, child: Text('Error Slot')),
+              const PopupMenuItem(
+                  value: ContentStatus.idle, child: Text('Idle (Show List)')),
+              const PopupMenuItem(
+                  value: ContentStatus.loading, child: Text('Loading Slot')),
+              const PopupMenuItem(
+                  value: ContentStatus.empty, child: Text('Empty Slot')),
+              const PopupMenuItem(
+                  value: ContentStatus.error, child: Text('Error Slot')),
             ],
           ),
         ],
@@ -75,7 +79,8 @@ class _BuilderSlotsExampleState extends State<BuilderSlotsExample> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.error_outline_rounded, size: 64, color: Colors.red),
+              const Icon(Icons.error_outline_rounded,
+                  size: 64, color: Colors.red),
               const SizedBox(height: 16),
               const Text('Error Slot: Something went wrong'),
               ElevatedButton(onPressed: _loadData, child: const Text('Retry')),

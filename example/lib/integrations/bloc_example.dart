@@ -4,17 +4,23 @@ import 'package:smart_refresher/smart_refresher.dart';
 
 // Events
 abstract class DataEvent {}
+
 class FetchData extends DataEvent {}
+
 class RefreshData extends DataEvent {}
 
 // States
 abstract class DataState {}
+
 class DataInitial extends DataState {}
+
 class DataLoading extends DataState {}
+
 class DataLoaded extends DataState {
   final List<String> items;
   DataLoaded(this.items);
 }
+
 class DataError extends DataState {
   final String error;
   DataError(this.error);

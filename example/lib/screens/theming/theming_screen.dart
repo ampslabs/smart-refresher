@@ -218,7 +218,8 @@ class _ResolutionTracePanel extends StatelessWidget {
       color: resolution.trackColor.withValues(alpha: 0.1),
       child: Row(
         children: <Widget>[
-          Icon(Icons.info_outline_rounded, size: 16.0, color: resolution.primaryColor),
+          Icon(Icons.info_outline_rounded,
+              size: 16.0, color: resolution.primaryColor),
           const SizedBox(width: 8.0),
           Text(
             'Resolution: ${resolution.primaryColor.toString().toUpperCase()}',
@@ -232,4 +233,3 @@ class _ResolutionTracePanel extends StatelessWidget {
     );
   }
 }
-

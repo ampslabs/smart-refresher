@@ -41,7 +41,8 @@ void main() {
         gradientOpacity: 1.0,
       );
 
-      expect(alphas, <int>[47, 47, 47, 255, 220, 184, 148, 112, 76, 47, 47, 47]);
+      expect(
+          alphas, <int>[47, 47, 47, 255, 220, 184, 148, 112, 76, 47, 47, 47]);
     });
   });
 
@@ -67,7 +68,8 @@ void main() {
   });
 
   group('iOS17Header widget', () {
-    testWidgets('renders without error in Cupertino theme', (WidgetTester tester) async {
+    testWidgets('renders without error in Cupertino theme',
+        (WidgetTester tester) async {
       final RefreshController controller = RefreshController();
       await tester.pumpWidget(_refresherHarness(
         controller: controller,
@@ -78,7 +80,8 @@ void main() {
       expect(find.byType(CustomPaint), findsOneWidget);
     });
 
-    testWidgets('uses RefreshStyle.Follow by default', (WidgetTester tester) async {
+    testWidgets('uses RefreshStyle.Follow by default',
+        (WidgetTester tester) async {
       const iOS17Header header = iOS17Header();
       expect(header.refreshStyle, RefreshStyle.Follow);
     });
@@ -186,7 +189,8 @@ void main() {
       expect(find.byType(IOS17ActivityIndicator), findsOneWidget);
     });
 
-    testWidgets('records completion timestamp on completion', (WidgetTester tester) async {
+    testWidgets('records completion timestamp on completion',
+        (WidgetTester tester) async {
       final GlobalKey<iOS17HeaderState> key = GlobalKey<iOS17HeaderState>();
       final RefreshController controller = RefreshController();
 
@@ -203,12 +207,14 @@ void main() {
       expect(key.currentState!.debugLastUpdatedAt, isNotNull);
     });
 
-    testWidgets('default configuration hides timestamp text option', (WidgetTester tester) async {
+    testWidgets('default configuration hides timestamp text option',
+        (WidgetTester tester) async {
       const iOS17Header header = iOS17Header();
       expect(header.showLastUpdated, isFalse);
     });
 
-    testWidgets('scale pop starts when threshold is crossed', (WidgetTester tester) async {
+    testWidgets('scale pop starts when threshold is crossed',
+        (WidgetTester tester) async {
       final GlobalKey<iOS17HeaderState> key = GlobalKey<iOS17HeaderState>();
       final RefreshController controller = RefreshController();
 
@@ -226,7 +232,8 @@ void main() {
       expect(key.currentState!.debugScaleControllerValue, greaterThan(0.0));
     });
 
-    testWidgets('opacity controller runs on refreshing', (WidgetTester tester) async {
+    testWidgets('opacity controller runs on refreshing',
+        (WidgetTester tester) async {
       final GlobalKey<iOS17HeaderState> key = GlobalKey<iOS17HeaderState>();
       final RefreshController controller = RefreshController();
 
@@ -242,7 +249,8 @@ void main() {
       expect(key.currentState!.debugOpacityControllerValue, greaterThan(0.0));
     });
 
-    testWidgets('dismiss controller runs for fixed 300ms', (WidgetTester tester) async {
+    testWidgets('dismiss controller runs for fixed 300ms',
+        (WidgetTester tester) async {
       final GlobalKey<iOS17HeaderState> key = GlobalKey<iOS17HeaderState>();
       final RefreshController controller = RefreshController();
 
@@ -265,15 +273,15 @@ void main() {
       expect(key.currentState!.debugDismissControllerValue, 1.0);
     });
 
-    testWidgets(
-        'fires medium haptic once on iOS refresh',
+    testWidgets('fires medium haptic once on iOS refresh',
         (WidgetTester tester) async {
       final GlobalKey<iOS17HeaderState> key = GlobalKey<iOS17HeaderState>();
       final RefreshController controller = RefreshController();
       final List<MethodCall> calls = <MethodCall>[];
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(SystemChannels.platform, (MethodCall call) async {
+          .setMockMethodCallHandler(SystemChannels.platform,
+              (MethodCall call) async {
         calls.add(call);
         return null;
       });
@@ -288,7 +296,9 @@ void main() {
       await tester.pump();
 
       expect(
-        calls.where((MethodCall call) => call.method == 'HapticFeedback.vibrate').length,
+        calls
+            .where((MethodCall call) => call.method == 'HapticFeedback.vibrate')
+            .length,
         1,
       );
       addTearDown(() {
@@ -297,15 +307,15 @@ void main() {
       });
     }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
 
-    testWidgets(
-        'does not fire haptic if enableHaptic is false',
+    testWidgets('does not fire haptic if enableHaptic is false',
         (WidgetTester tester) async {
       final GlobalKey<iOS17HeaderState> key = GlobalKey<iOS17HeaderState>();
       final RefreshController controller = RefreshController();
       final List<MethodCall> calls = <MethodCall>[];
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(SystemChannels.platform, (MethodCall call) async {
+          .setMockMethodCallHandler(SystemChannels.platform,
+              (MethodCall call) async {
         calls.add(call);
         return null;
       });
@@ -319,7 +329,8 @@ void main() {
       await tester.pump();
 
       expect(
-        calls.where((MethodCall call) => call.method == 'HapticFeedback.vibrate'),
+        calls.where(
+            (MethodCall call) => call.method == 'HapticFeedback.vibrate'),
         isEmpty,
       );
       addTearDown(() {
@@ -328,7 +339,8 @@ void main() {
       });
     }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
 
-    testWidgets('dispose during animation does not throw', (WidgetTester tester) async {
+    testWidgets('dispose during animation does not throw',
+        (WidgetTester tester) async {
       final GlobalKey<iOS17HeaderState> key = GlobalKey<iOS17HeaderState>();
       final RefreshController controller = RefreshController();
 

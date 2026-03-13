@@ -168,9 +168,9 @@ class _IntroCard extends StatelessWidget {
         'Modern pull-to-refresh headers, polished load-more footers, '
         'and live theming previews in one catalog app.',
         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-          color: scheme.onPrimaryContainer,
-          fontWeight: FontWeight.w700,
-        ),
+              color: scheme.onPrimaryContainer,
+              fontWeight: FontWeight.w700,
+            ),
       ),
     );
   }
@@ -200,9 +200,9 @@ class _SectionCard extends StatelessWidget {
             Text(
               title,
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.2,
-              ),
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.2,
+                  ),
             ),
             const SizedBox(height: 12.0),
             Wrap(
@@ -265,8 +265,8 @@ class _IndicatorCard extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: scheme.onSurfaceVariant,
-                  ),
+                        color: scheme.onSurfaceVariant,
+                      ),
                 ),
               ],
             ),

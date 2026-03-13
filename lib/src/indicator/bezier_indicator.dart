@@ -173,18 +173,17 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
   Widget buildContent(BuildContext context, RefreshStatus? mode) {
     final RefreshString strings =
         RefreshLocalizations.of(context)?.currentLocalization ??
-        EnRefreshString();
-    final String label =
-        widget.semanticsLabel ??
+            EnRefreshString();
+    final String label = widget.semanticsLabel ??
         (mode == RefreshStatus.completed
             ? strings.refreshCompleteText!
             : mode == RefreshStatus.failed
-            ? strings.refreshFailedText!
-            : mode == RefreshStatus.refreshing
-            ? strings.refreshingText!
-            : mode == RefreshStatus.canRefresh
-            ? strings.canRefreshText!
-            : strings.idleRefreshText!);
+                ? strings.refreshFailedText!
+                : mode == RefreshStatus.refreshing
+                    ? strings.refreshingText!
+                    : mode == RefreshStatus.canRefresh
+                        ? strings.canRefreshText!
+                        : strings.idleRefreshText!);
 
     return Semantics(
       label: label,

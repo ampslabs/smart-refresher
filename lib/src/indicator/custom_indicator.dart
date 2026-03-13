@@ -9,7 +9,8 @@ import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
 
 /// Custom header builder. The second parameter provides the current header state.
-typedef HeaderBuilder = Widget Function(BuildContext context, RefreshStatus? mode);
+typedef HeaderBuilder = Widget Function(
+    BuildContext context, RefreshStatus? mode);
 
 /// Custom footer builder. The second parameter provides the current footer state.
 typedef FooterBuilder = Widget Function(BuildContext context, LoadStatus? mode);

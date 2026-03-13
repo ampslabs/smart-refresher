@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart' hide RefreshIndicator, RefreshIndicatorState;
+import 'package:flutter/material.dart'
+    hide RefreshIndicator, RefreshIndicatorState;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smart_refresher/smart_refresher.dart';
 
@@ -17,13 +18,15 @@ void main() {
       await tester.pump();
 
       expect(
-        find.byWidgetPredicate((w) => w is Semantics && w.properties.label == 'Pull down Refresh'),
+        find.byWidgetPredicate(
+            (w) => w is Semantics && w.properties.label == 'Pull down Refresh'),
         findsOneWidget,
       );
       handle.dispose();
     });
 
-    testWidgets('reports custom semantics label and hint', (WidgetTester tester) async {
+    testWidgets('reports custom semantics label and hint',
+        (WidgetTester tester) async {
       final SemanticsHandle handle = tester.ensureSemantics();
       final RefreshController controller = RefreshController();
       await tester.pumpWidget(_buildTestApp(
@@ -38,7 +41,10 @@ void main() {
       await tester.pump();
 
       expect(
-        find.byWidgetPredicate((w) => w is Semantics && w.properties.label == 'Custom Label' && w.properties.hint == 'Custom Hint'),
+        find.byWidgetPredicate((w) =>
+            w is Semantics &&
+            w.properties.label == 'Custom Label' &&
+            w.properties.hint == 'Custom Hint'),
         findsOneWidget,
       );
       handle.dispose();
@@ -58,7 +64,8 @@ void main() {
       await tester.pump();
 
       expect(
-        find.byWidgetPredicate((w) => w is Semantics && w.properties.label == 'Pull down Refresh'),
+        find.byWidgetPredicate(
+            (w) => w is Semantics && w.properties.label == 'Pull down Refresh'),
         findsAtLeastNWidgets(1),
       );
       handle.dispose();
@@ -78,7 +85,8 @@ void main() {
       await tester.pump();
 
       expect(
-        find.byWidgetPredicate((w) => w is Semantics && w.properties.label == 'Pull down Refresh'),
+        find.byWidgetPredicate(
+            (w) => w is Semantics && w.properties.label == 'Pull down Refresh'),
         findsOneWidget,
       );
       handle.dispose();
@@ -86,7 +94,8 @@ void main() {
   });
 
   group('SkeletonFooter Semantics', () {
-    testWidgets('reports default semantics label when loading', (WidgetTester tester) async {
+    testWidgets('reports default semantics label when loading',
+        (WidgetTester tester) async {
       final SemanticsHandle handle = tester.ensureSemantics();
       final RefreshController controller = RefreshController();
       await tester.pumpWidget(_buildTestApp(
@@ -99,7 +108,8 @@ void main() {
       await tester.pump(const Duration(milliseconds: 200));
 
       expect(
-        find.byWidgetPredicate((w) => w is Semantics && w.properties.label == 'Loading…'),
+        find.byWidgetPredicate(
+            (w) => w is Semantics && w.properties.label == 'Loading…'),
         findsOneWidget,
       );
       handle.dispose();
@@ -119,7 +129,8 @@ void main() {
       await tester.pump();
 
       expect(
-        find.byWidgetPredicate((w) => w is Semantics && w.properties.label == 'Pull down Refresh'),
+        find.byWidgetPredicate(
+            (w) => w is Semantics && w.properties.label == 'Pull down Refresh'),
         findsOneWidget,
       );
       handle.dispose();
@@ -139,7 +150,8 @@ void main() {
       await tester.pump();
 
       expect(
-        find.byWidgetPredicate((w) => w is Semantics && w.properties.label == 'Pull down Refresh'),
+        find.byWidgetPredicate(
+            (w) => w is Semantics && w.properties.label == 'Pull down Refresh'),
         findsOneWidget,
       );
       handle.dispose();

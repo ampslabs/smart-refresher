@@ -182,7 +182,7 @@ class SkeletonFooterState extends LoadIndicatorState<SkeletonFooter>
       }
       final RefreshString strings =
           RefreshLocalizations.of(context)?.currentLocalization ??
-          EnRefreshString();
+              EnRefreshString();
 
       return Semantics(
         label: widget.semanticsLabel ?? strings.loadingText!,

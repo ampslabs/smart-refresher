@@ -265,8 +265,9 @@ class GlassHeaderState extends RefreshIndicatorState<GlassHeader>
     final SmartRefresherThemeData refresherTheme = SmartRefresherTheme.of(
       context,
     );
-    final Color accentColor =
-        widget.color ?? refresherTheme.primaryColor ?? theme.colorScheme.primary;
+    final Color accentColor = widget.color ??
+        refresherTheme.primaryColor ??
+        theme.colorScheme.primary;
 
     final Color fillColor = widget.glassColor ??
         (isDark
@@ -279,8 +280,7 @@ class GlassHeaderState extends RefreshIndicatorState<GlassHeader>
 
     final bool isRefreshing = mode == RefreshStatus.refreshing;
     final bool isIdle = mode == null || mode == RefreshStatus.idle;
-    final bool showPanel =
-        _dragProgress > 0.0 ||
+    final bool showPanel = _dragProgress > 0.0 ||
         mode == RefreshStatus.canRefresh ||
         isRefreshing ||
         _isCompleted ||
@@ -343,7 +343,8 @@ class GlassHeaderState extends RefreshIndicatorState<GlassHeader>
           fit: StackFit.expand,
           children: <Widget>[
             BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: _currentBlur, sigmaY: _currentBlur),
+              filter:
+                  ImageFilter.blur(sigmaX: _currentBlur, sigmaY: _currentBlur),
               child: const SizedBox.expand(),
             ),
             Container(
@@ -377,7 +378,8 @@ class GlassHeaderState extends RefreshIndicatorState<GlassHeader>
       height: widget.height,
       child: Center(
         child: Opacity(
-          opacity: showPanel && !isIdle ? 1.0 : (_dragProgress > 0.0 ? 1.0 : 0.0),
+          opacity:
+              showPanel && !isIdle ? 1.0 : (_dragProgress > 0.0 ? 1.0 : 0.0),
           child: RepaintBoundary(child: pill),
         ),
       ),
@@ -400,7 +402,8 @@ class _ArcPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final Offset center = Offset(size.width / 2.0, size.height / 2.0);
-    final double radius = (math.min(size.width, size.height) - strokeWidth) / 2.0;
+    final double radius =
+        (math.min(size.width, size.height) - strokeWidth) / 2.0;
     final Rect rect = Rect.fromCircle(center: center, radius: radius);
     const double startAngle = -math.pi / 2.0;
 
@@ -419,7 +422,8 @@ class _ArcPainter extends CustomPainter {
     canvas.drawArc(rect, 0.0, math.pi * 2.0, false, trackPaint);
 
     if (progress > 0.0) {
-      canvas.drawArc(rect, startAngle, math.pi * 2.0 * progress, false, arcPaint);
+      canvas.drawArc(
+          rect, startAngle, math.pi * 2.0 * progress, false, arcPaint);
     }
   }
 

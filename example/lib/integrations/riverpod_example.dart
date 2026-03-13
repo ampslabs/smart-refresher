@@ -5,7 +5,7 @@ import 'package:smart_refresher/smart_refresher.dart';
 final dataProvider = FutureProvider.autoDispose<List<String>>((ref) async {
   // Simulate network fetch
   await Future.delayed(const Duration(seconds: 2));
-  
+
   // Randomly throw error or return empty for demo
   // throw Exception('Failed to load data');
   return List.generate(20, (i) => 'Riverpod Item $i');

@@ -202,30 +202,37 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
       ).iosTickColor;
 
   @visibleForTesting
+
   /// Returns the current drag progress used by the indicator.
   double get debugProgress => _progress;
 
   @visibleForTesting
+
   /// Returns the current scale controller value.
   double get debugScaleControllerValue => _scaleController.value;
 
   @visibleForTesting
+
   /// Returns the current opacity controller value.
   double get debugOpacityControllerValue => _opacityController.value;
 
   @visibleForTesting
+
   /// Returns the current dismiss controller value.
   double get debugDismissControllerValue => _dismissController.value;
 
   @visibleForTesting
+
   /// Returns the current rotation controller value.
   double get debugRotationControllerValue => _rotationController.value;
 
   @visibleForTesting
+
   /// Returns the last completion timestamp, if any.
   DateTime? get debugLastUpdatedAt => _lastUpdatedAt;
 
   @visibleForTesting
+
   /// Updates the visual mode and runs the same side effects used in production.
   void debugSetVisualMode(RefreshStatus nextMode) {
     mode = nextMode;
@@ -233,12 +240,14 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
   }
 
   @visibleForTesting
+
   /// Starts the threshold-crossing scale pop.
   void debugStartScalePop() {
     _scaleController.forward(from: 0.0);
   }
 
   @visibleForTesting
+
   /// Starts the refreshing animations without going through scroll physics.
   void debugStartRefreshingAnimation() {
     _progress = 1.0;
@@ -248,6 +257,7 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
   }
 
   @visibleForTesting
+
   /// Starts the fixed-duration dismiss animation.
   Future<void> debugStartDismissAnimation() {
     return _dismissController.forward(from: 0.0);
@@ -302,8 +312,8 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
 
   @override
   void onOffsetChange(double offset) {
-    final double nextProgress = (offset / configuration!.headerTriggerDistance)
-        .clamp(0.0, 1.0);
+    final double nextProgress =
+        (offset / configuration!.headerTriggerDistance).clamp(0.0, 1.0);
     final bool crossedThreshold = _progress < 1.0 && nextProgress >= 1.0;
     _progress = nextProgress;
 
@@ -388,9 +398,8 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
         mode == RefreshStatus.completed || mode == RefreshStatus.failed;
     final double dismissValue =
         Curves.easeOut.transform(_dismissController.value);
-    final double dismissScale = isCompleting
-        ? ui.lerpDouble(1.0, 0.5, dismissValue) ?? 0.5
-        : 1.0;
+    final double dismissScale =
+        isCompleting ? ui.lerpDouble(1.0, 0.5, dismissValue) ?? 0.5 : 1.0;
     final double dismissOpacity = isCompleting ? 1.0 - dismissValue : 1.0;
     final bool showTimestamp = widget.showLastUpdated &&
         mode == RefreshStatus.completed &&
@@ -398,18 +407,17 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
 
     final RefreshString strings =
         RefreshLocalizations.of(context)?.currentLocalization ??
-        EnRefreshString();
-    final String label =
-        widget.semanticsLabel ??
+            EnRefreshString();
+    final String label = widget.semanticsLabel ??
         (mode == RefreshStatus.completed
             ? strings.refreshCompleteText!
             : mode == RefreshStatus.failed
-            ? strings.refreshFailedText!
-            : mode == RefreshStatus.refreshing
-            ? strings.refreshingText!
-            : mode == RefreshStatus.canRefresh
-            ? strings.canRefreshText!
-            : strings.idleRefreshText!);
+                ? strings.refreshFailedText!
+                : mode == RefreshStatus.refreshing
+                    ? strings.refreshingText!
+                    : mode == RefreshStatus.canRefresh
+                        ? strings.canRefreshText!
+                        : strings.idleRefreshText!);
 
     final Widget indicator = AnimatedBuilder(
       animation: Listenable.merge(<Listenable>[
