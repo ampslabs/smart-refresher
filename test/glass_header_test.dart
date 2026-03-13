@@ -50,7 +50,7 @@ void main() {
     final RefreshController controller = RefreshController();
     await tester.pumpWidget(_buildRefresher(controller: controller));
 
-    await tester.drag(find.byType(ListView), const Offset(0, 100));
+    await tester.drag(find.byType(Scrollable), const Offset(0, 100));
     await tester.pump();
 
     expect(find.byType(BackdropFilter), findsOneWidget);
@@ -66,7 +66,7 @@ void main() {
       ),
     );
 
-    await tester.drag(find.byType(ListView), const Offset(0, 100));
+    await tester.drag(find.byType(Scrollable), const Offset(0, 100));
     await tester.pump();
 
     expect(tester.takeException(), isNull);
@@ -100,6 +100,11 @@ void main() {
 
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.byType(CupertinoActivityIndicator), findsOneWidget);
+    
+    // Complete the timer to avoid pending timer error
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+    
     controller.dispose();
   });
 
@@ -112,7 +117,7 @@ void main() {
       ),
     );
 
-    await tester.drag(find.byType(ListView), const Offset(0, 100));
+    await tester.drag(find.byType(Scrollable), const Offset(0, 100));
     await tester.pump();
 
     expect(find.text('Pull to refresh'), findsNothing);

@@ -53,16 +53,22 @@ class GlassHeader extends RefreshIndicator {
   /// Whether to show status text.
   final bool showText;
 
-  /// Custom text for each state.
+  /// Text shown when in idle state (initially hidden).
   final String idleText;
+
+  /// Text shown when the user pulls far enough to trigger refresh.
   final String canRefreshText;
+
+  /// Text shown while the refresh operation is in progress.
   final String refreshingText;
+
+  /// Text shown when the refresh completes successfully.
   final String completeText;
+
+  /// Text shown when the refresh operation fails.
   final String failedText;
 
-  /// Duration shown for completed/failed states before dismissing.
-  final Duration completeDuration;
-
+  /// Creates a frosted-glass pull-to-refresh header.
   const GlassHeader({
     super.key,
     this.color,
@@ -75,15 +81,16 @@ class GlassHeader extends RefreshIndicator {
     this.refreshingText = 'Refreshing…',
     this.completeText = 'Done',
     this.failedText = 'Failed',
-    this.completeDuration = const Duration(milliseconds: 700),
+    super.completeDuration = const Duration(milliseconds: 700),
     super.height = 80.0,
     super.refreshStyle = RefreshStyle.Front,
-  }) : super(completeDuration: completeDuration);
+  });
 
   @override
   State<StatefulWidget> createState() => GlassHeaderState();
 }
 
+/// The state for a [GlassHeader].
 class GlassHeaderState extends RefreshIndicatorState<GlassHeader>
     with TickerProviderStateMixin {
   static const Cubic _panelInCurve = Cubic(0.05, 0.7, 0.1, 1.0);
@@ -333,7 +340,7 @@ class GlassHeaderState extends RefreshIndicatorState<GlassHeader>
               decoration: BoxDecoration(
                 color: fillColor,
                 borderRadius: BorderRadius.circular(26.0),
-                border: Border.all(color: glassBorder, width: 1.0),
+                border: Border.all(color: glassBorder),
                 boxShadow: <BoxShadow>[
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.10),
@@ -379,13 +386,12 @@ class _ArcPainter extends CustomPainter {
   final double progress;
   final Color trackColor;
   final Color arcColor;
-  final double strokeWidth;
+  final double strokeWidth = 2.5;
 
   const _ArcPainter({
     required this.progress,
     required this.trackColor,
     required this.arcColor,
-    this.strokeWidth = 2.5,
   });
 
   @override
@@ -418,7 +424,6 @@ class _ArcPainter extends CustomPainter {
   bool shouldRepaint(_ArcPainter oldDelegate) {
     return oldDelegate.progress != progress ||
         oldDelegate.trackColor != trackColor ||
-        oldDelegate.arcColor != arcColor ||
-        oldDelegate.strokeWidth != strokeWidth;
+        oldDelegate.arcColor != arcColor;
   }
 }

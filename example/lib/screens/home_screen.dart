@@ -36,6 +36,12 @@ const List<IndicatorEntry> _headers = <IndicatorEntry>[
     icon: Icons.blur_circular_rounded,
     route: AppRoutes.ios17Header,
   ),
+  IndicatorEntry(
+    name: 'GlassHeader',
+    tagline: 'Frosted glass floating panel',
+    icon: Icons.auto_awesome_rounded,
+    route: AppRoutes.glassHeader,
+  ),
 ];
 
 const List<IndicatorEntry> _footers = <IndicatorEntry>[
