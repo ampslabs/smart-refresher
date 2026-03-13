@@ -324,9 +324,19 @@ class GlassHeaderState extends RefreshIndicatorState<GlassHeader>
       );
     }
 
-    Widget pill = SizedBox(
+    Widget pill = Container(
       width: pillWidth,
       height: 52.0,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(26.0),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.12 * _currentFillOpacity),
+            blurRadius: 12.0,
+            offset: const Offset(0.0, 4.0),
+          ),
+        ],
+      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(26.0),
         child: Stack(
@@ -334,20 +344,13 @@ class GlassHeaderState extends RefreshIndicatorState<GlassHeader>
           children: <Widget>[
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: _currentBlur, sigmaY: _currentBlur),
-              child: Container(color: Colors.transparent),
+              child: const SizedBox.expand(),
             ),
             Container(
               decoration: BoxDecoration(
                 color: fillColor,
                 borderRadius: BorderRadius.circular(26.0),
                 border: Border.all(color: glassBorder),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.10),
-                    blurRadius: 16.0,
-                    offset: const Offset(0.0, 4.0),
-                  ),
-                ],
               ),
             ),
             Center(
