@@ -1,3 +1,9 @@
+## [Unreleased]
+
+### Added
+- Added `GlassHeader`, a frosted glass pull-to-refresh indicator with drag-driven blur, custom arc painter, Cupertino spinner state, and light/dark adaptive tinting.
+- Added `GlassHeader` widget tests and a new example screen showcasing gradient and photo backgrounds.
+
 ## 0.2.0
 
 ### New Indicators & Theming

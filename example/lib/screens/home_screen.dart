@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconify_sdk/iconify_sdk.dart';
 
 import '../app_router.dart';
 import '../main.dart';
@@ -13,7 +14,7 @@ class IndicatorEntry {
 
   final String name;
   final String tagline;
-  final IconData icon;
+  final String icon;
   final String route;
 }
 
@@ -21,20 +22,26 @@ const List<IndicatorEntry> _headers = <IndicatorEntry>[
   IndicatorEntry(
     name: 'ClassicHeader',
     tagline: 'Arrow + text, works everywhere',
-    icon: Icons.arrow_downward_rounded,
+    icon: 'mdi:arrow-down',
     route: AppRoutes.classicHeader,
   ),
   IndicatorEntry(
     name: 'Material3Header',
     tagline: 'Floating M3 circular spinner',
-    icon: Icons.radio_button_checked_rounded,
+    icon: 'mdi:refresh',
     route: AppRoutes.material3Header,
   ),
   IndicatorEntry(
     name: 'iOS17Header',
     tagline: 'Native spoke wheel, haptic aware',
-    icon: Icons.blur_circular_rounded,
+    icon: 'mdi:loading',
     route: AppRoutes.ios17Header,
+  ),
+  IndicatorEntry(
+    name: 'GlassHeader',
+    tagline: 'Frosted glass floating panel',
+    icon: 'mdi:star-outline',
+    route: AppRoutes.glassHeader,
   ),
 ];
 
@@ -42,13 +49,13 @@ const List<IndicatorEntry> _footers = <IndicatorEntry>[
   IndicatorEntry(
     name: 'ClassicFooter',
     tagline: 'Text + spinner load more',
-    icon: Icons.expand_more_rounded,
+    icon: 'mdi:chevron-double-down',
     route: AppRoutes.classicFooter,
   ),
   IndicatorEntry(
     name: 'SkeletonFooter',
     tagline: 'Preview next rows as they load',
-    icon: Icons.view_agenda_rounded,
+    icon: 'mdi:view-list',
     route: AppRoutes.skeletonFooter,
   ),
 ];
@@ -98,7 +105,7 @@ class HomeScreen extends StatelessWidget {
                 IndicatorEntry(
                   name: 'Live Theme Switcher',
                   tagline: 'Trace color resolution in real time',
-                  icon: Icons.palette_outlined,
+                  icon: 'mdi:palette-outline',
                   route: AppRoutes.theming,
                 ),
               ],
@@ -212,7 +219,7 @@ class _IndicatorCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Icon(entry.icon, color: scheme.primary),
+                IconifyIcon(entry.icon, color: scheme.primary),
                 const SizedBox(height: 12.0),
                 Text(
                   entry.name,

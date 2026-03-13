@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconify_sdk/iconify_sdk.dart';
 
 import 'app_router.dart';
 import 'screens/footers/classic_footer_screen.dart';
@@ -7,12 +8,13 @@ import 'screens/footers/skeleton_footer_screen.dart';
 import 'screens/headers/classic_header_screen.dart';
 import 'screens/headers/header_comparison_screen.dart';
 import 'screens/headers/ios17_header_screen.dart';
+import 'ui/example/glass_header_example.dart';
 import 'screens/headers/material3_header_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/theming/theming_screen.dart';
 import 'theme/app_theme.dart';
 
-void main() => runApp(const SmartRefresherDemoApp());
+void main() => runApp(const IconifyApp(child: SmartRefresherDemoApp()));
 
 class SmartRefresherDemoApp extends StatefulWidget {
   const SmartRefresherDemoApp({super.key});
@@ -58,6 +60,7 @@ class _SmartRefresherDemoAppState extends State<SmartRefresherDemoApp> {
           AppRoutes.classicHeader: (_) => const ClassicHeaderScreen(),
           AppRoutes.material3Header: (_) => const Material3HeaderScreen(),
           AppRoutes.ios17Header: (_) => const IOS17HeaderScreen(),
+          AppRoutes.glassHeader: (_) => const GlassHeaderExample(),
           AppRoutes.headerCompare: (_) => const HeaderComparisonScreen(),
           AppRoutes.classicFooter: (_) => const ClassicFooterScreen(),
           AppRoutes.skeletonFooter: (_) => const SkeletonFooterScreen(),
