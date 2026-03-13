@@ -276,6 +276,38 @@ void main() {
     expect(refreshController.footerMode!.value, LoadStatus.idle);
   });
 
+  test('RefreshController ValueListenable and Stream tests', () async {
+    final controller = RefreshController();
+    final List<RefreshStatus> headerStates = [];
+    final List<LoadStatus> footerStates = [];
+
+    controller.headerStream.listen((s) => headerStates.add(s));
+    controller.footerStream.listen((s) => footerStates.add(s));
+
+    int headerNotifierCount = 0;
+    controller.headerMode!.addListener(() {
+      headerNotifierCount++;
+    });
+
+    controller.headerMode!.value = RefreshStatus.refreshing;
+    expect(controller.headerStatus, RefreshStatus.refreshing);
+    expect(headerNotifierCount, 1);
+
+    controller.footerMode!.value = LoadStatus.loading;
+    expect(controller.footerStatus, LoadStatus.loading);
+
+    // Give streams a microtask to fire
+    await Future.delayed(Duration.zero);
+    expect(headerStates, [RefreshStatus.refreshing]);
+    expect(footerStates, [LoadStatus.loading]);
+
+    controller.refreshFailed(error: 'Test Error');
+    expect(controller.headerStatus, RefreshStatus.failed);
+    expect(controller.headerMode!.error, 'Test Error');
+
+    controller.dispose();
+  });
+
   testRequestFun(true);
 
   testRequestFun(false);

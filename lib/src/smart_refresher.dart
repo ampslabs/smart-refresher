@@ -7,6 +7,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:async';
 import 'package:smart_refresher/src/internals/slivers.dart';
 import 'internals/indicator_wrap.dart';
 import 'internals/refresh_physics.dart';
@@ -66,6 +67,12 @@ class SmartRefresher extends StatefulWidget {
   /// Callback triggered when a pull-up loading is initiated.
   final VoidCallback? onLoading;
 
+  /// Callback triggered when a pull-down refresh fails.
+  final void Function(Object error, StackTrace? stackTrace)? onRefreshFailed;
+
+  /// Callback triggered when a pull-up loading fails.
+  final void Function(Object error, StackTrace? stackTrace)? onLoadingFailed;
+
   /// Callback triggered when the two-level mode is ready.
   final OnTwoLevel? onTwoLevel;
 
@@ -119,6 +126,8 @@ class SmartRefresher extends StatefulWidget {
       this.enableTwoLevel = false,
       this.onRefresh,
       this.onLoading,
+      this.onRefreshFailed,
+      this.onLoadingFailed,
       this.onTwoLevel,
       this.dragStartBehavior,
       this.primary,
@@ -142,6 +151,8 @@ class SmartRefresher extends StatefulWidget {
     this.enableTwoLevel = false,
     this.onRefresh,
     this.onLoading,
+    this.onRefreshFailed,
+    this.onLoadingFailed,
     this.onTwoLevel,
   })  : header = null,
         footer = null,
@@ -169,6 +180,8 @@ class SmartRefresher extends StatefulWidget {
     this.enableTwoLevel = false,
     this.onRefresh,
     this.onLoading,
+    this.onRefreshFailed,
+    this.onLoadingFailed,
     this.onTwoLevel,
     this.dragStartBehavior,
     this.primary,
@@ -506,6 +519,9 @@ class RefreshController {
   /// Manages the footer's loading status.
   RefreshNotifier<LoadStatus>? footerMode;
 
+  StreamController<RefreshStatus>? _headerStreamController;
+  StreamController<LoadStatus>? _footerStreamController;
+
   /// The scroll position of the refresher's inner scrollable.
   ScrollPosition? position;
 
@@ -530,6 +546,18 @@ class RefreshController {
   /// Whether to initiate a refresh when the widget is first initialized.
   final bool initialRefresh;
 
+  /// A stream of the header's refresh status.
+  Stream<RefreshStatus> get headerStream {
+    _headerStreamController ??= StreamController<RefreshStatus>.broadcast();
+    return _headerStreamController!.stream;
+  }
+
+  /// A stream of the footer's loading status.
+  Stream<LoadStatus> get footerStream {
+    _footerStreamController ??= StreamController<LoadStatus>.broadcast();
+    return _footerStreamController!.stream;
+  }
+
   /// Creates a [RefreshController].
   RefreshController(
       {this.initialRefresh = false,
@@ -537,6 +565,28 @@ class RefreshController {
       LoadStatus? initialLoadStatus}) {
     headerMode = RefreshNotifier(initialRefreshStatus ?? RefreshStatus.idle);
     footerMode = RefreshNotifier(initialLoadStatus ?? LoadStatus.idle);
+    headerMode!.addListener(_headerListener);
+    footerMode!.addListener(_footerListener);
+  }
+
+  void _headerListener() {
+    _headerStreamController?.add(headerMode!.value);
+  }
+
+  void _footerListener() {
+    _footerStreamController?.add(footerMode!.value);
+  }
+
+  /// Disposes of the controller and its associated resources.
+  void dispose() {
+    headerMode!.removeListener(_headerListener);
+    footerMode!.removeListener(_footerListener);
+    _headerStreamController?.close();
+    _footerStreamController?.close();
+    headerMode!.dispose();
+    footerMode!.dispose();
+    headerMode = null;
+    footerMode = null;
   }
 
   void _bindState(SmartRefresherState state) {
@@ -715,7 +765,8 @@ class RefreshController {
   }
 
   /// Notifies the controller that the refresh process failed.
-  void refreshFailed() {
+  void refreshFailed({Object? error, StackTrace? stackTrace}) {
+    headerMode?.setError(error, stackTrace);
     headerMode?.value = RefreshStatus.failed;
   }
 
@@ -732,8 +783,9 @@ class RefreshController {
   }
 
   /// Notifies the controller that the loading process failed.
-  void loadFailed() {
+  void loadFailed({Object? error, StackTrace? stackTrace}) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      footerMode?.setError(error, stackTrace);
       footerMode?.value = LoadStatus.failed;
     });
   }
@@ -750,14 +802,6 @@ class RefreshController {
     if (footerMode?.value == LoadStatus.noMore) {
       footerMode!.value = LoadStatus.idle;
     }
-  }
-
-  /// Disposes of the controller and its associated resources.
-  void dispose() {
-    headerMode!.dispose();
-    footerMode!.dispose();
-    headerMode = null;
-    footerMode = null;
   }
 }
 
@@ -980,12 +1024,22 @@ class RefreshNotifier<T> extends ChangeNotifier implements ValueListenable<T> {
   RefreshNotifier(this._value);
   T _value;
 
+  /// The error that occurred during the refresh/load process.
+  Object? error;
+
+  /// The stack trace associated with the error.
+  StackTrace? stackTrace;
+
   @override
   T get value => _value;
 
   set value(T newValue) {
     if (_value == newValue) return;
     _value = newValue;
+    if (newValue != RefreshStatus.failed && newValue != LoadStatus.failed) {
+      error = null;
+      stackTrace = null;
+    }
     notifyListeners();
   }
 
@@ -993,6 +1047,17 @@ class RefreshNotifier<T> extends ChangeNotifier implements ValueListenable<T> {
   void setValueWithNoNotify(T newValue) {
     if (_value == newValue) return;
     _value = newValue;
+    if (newValue != RefreshStatus.failed && newValue != LoadStatus.failed) {
+      error = null;
+      stackTrace = null;
+    }
+  }
+
+  /// Sets the error and stack trace and notifies listeners.
+  void setError(Object? err, StackTrace? st) {
+    error = err;
+    stackTrace = st;
+    notifyListeners();
   }
 
   @override

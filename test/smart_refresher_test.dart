@@ -4,10 +4,11 @@
     createTime: 2019-07-20 22:15
  */
 
+import 'dart:async';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smart_refresher/smart_refresher.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide RefreshIndicator, RefreshIndicatorState;
 import 'data_source.dart';
 import 'test_indicator.dart';
 
@@ -357,5 +358,89 @@ void main() {
     expect(RefreshConfiguration.of(context2)!.footerTriggerDistance, 150);
     expect(RefreshConfiguration.of(context2)!.enableScrollWhenTwoLevel, true);
     expect(RefreshConfiguration.of(context2)!.enableBallisticRefresh, false);
+  });
+
+  testWidgets('SmartRefresher automatic error catching and onRefreshFailed test', (tester) async {
+    final RefreshController controller = RefreshController();
+    Object? caughtError;
+    StackTrace? caughtStack;
+
+    await tester.pumpWidget(MaterialApp(
+      home: Scaffold(
+        body: SmartRefresher(
+          controller: controller,
+          header: CustomHeader(
+            // Use readyToRefresh to return a never-completing future to avoid auto-reset to idle
+            readyToRefresh: () => Completer<void>().future,
+            refreshStyle: RefreshStyle.Front,
+            builder: (context, mode) => Text('mode: $mode'),
+          ),
+          onRefresh: () async {
+            throw 'Async Refresh Error';
+          },
+          onRefreshFailed: (error, stack) {
+            caughtError = error;
+            caughtStack = stack;
+          },
+          child: ListView(
+            children: const [Text('Item 1')],
+          ),
+        ),
+      ),
+    ));
+
+    controller.requestRefresh();
+    await tester.pump(); // Trigger refresh start
+    await tester.pump(const Duration(milliseconds: 100)); // Process dynamic call
+    await tester.pump(const Duration(milliseconds: 100)); // Process catchError
+
+    expect(controller.headerStatus, RefreshStatus.failed);
+    expect(controller.headerMode!.error, 'Async Refresh Error');
+    expect(caughtError, 'Async Refresh Error');
+    expect(caughtStack, isNotNull);
+  });
+
+  testWidgets('SmartRefresher automatic error catching and onLoadingFailed test', (tester) async {
+    final RefreshController controller = RefreshController();
+    Object? caughtError;
+
+    await tester.pumpWidget(MaterialApp(
+      home: Scaffold(
+        body: SmartRefresher(
+          controller: controller,
+          enablePullUp: true,
+          footer: CustomFooter(
+            // Use readyLoading to return a never-completing future to avoid auto-reset to idle
+            readyLoading: () => Completer<void>().future,
+            builder: (context, mode) => Text('mode: $mode'),
+          ),
+          onLoading: () async {
+            throw 'Async Loading Error';
+          },
+          onLoadingFailed: (error, stack) {
+            caughtError = error;
+          },
+          child: ListView(
+            children: const [
+              SizedBox(height: 1000, child: Text('Large Item')),
+              Text('Footer Trigger'),
+            ],
+          ),
+        ),
+      ),
+    ));
+
+    // Scroll to bottom and HOLD to avoid mode reset to idle in _handleModeChange
+    final gesture = await tester.startGesture(const Offset(200, 500));
+    await gesture.moveBy(const Offset(0, -1000));
+    await tester.pump(); // Start drag
+    await tester.pump(const Duration(milliseconds: 100)); // Process trigger
+    await tester.pump(const Duration(milliseconds: 100)); // Process catchError
+
+    expect(controller.footerStatus, LoadStatus.failed);
+    expect(caughtError, 'Async Loading Error');
+    
+    await gesture.up();
+    await tester.pumpAndSettle();
   });
 }

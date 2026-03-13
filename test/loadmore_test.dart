@@ -335,6 +335,9 @@ void main() {
             header: const TestHeader(),
             footer: const TestFooter(),
             enablePullUp: true,
+            onRefresh: () {
+              refreshController.refreshCompleted();
+            },
             onLoading: () {
               refreshController.loadFailed();
               time++;

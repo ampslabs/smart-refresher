@@ -177,6 +177,11 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       if (mode == RefreshStatus.idle) refresherState!.setCanDrag(true);
     }
     if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
+      if (mode == RefreshStatus.failed && refresher!.onRefreshFailed != null) {
+        refresher!.onRefreshFailed!(
+            refresher!.controller.headerMode!.error ?? 'Unknown error',
+            refresher!.controller.headerMode!.stackTrace);
+      }
       endRefresh().then((_) {
         if (!mounted) return;
         floating = false;
@@ -211,7 +216,19 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       if (configuration!.enableRefreshVibrate) {
         HapticFeedback.vibrate();
       }
-      if (refresher!.onRefresh != null) refresher!.onRefresh!();
+      if (refresher!.onRefresh != null) {
+        final Function callback = refresher!.onRefresh!;
+        try {
+          final dynamic result = (callback as dynamic)();
+          if (result is Future) {
+            result.catchError((Object e, StackTrace s) {
+              refresher!.controller.refreshFailed(error: e, stackTrace: s);
+            });
+          }
+        } catch (e, s) {
+          refresher!.controller.refreshFailed(error: e, stackTrace: s);
+        }
+      }
     } else if (mode == RefreshStatus.twoLevelOpening) {
       floating = true;
       refresherState!.setCanDrag(false);
@@ -370,6 +387,11 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     if (mode == LoadStatus.idle ||
         mode == LoadStatus.failed ||
         mode == LoadStatus.noMore) {
+      if (mode == LoadStatus.failed && refresher!.onLoadingFailed != null) {
+        refresher!.onLoadingFailed!(
+            refresher!.controller.footerMode!.error ?? 'Unknown error',
+            refresher!.controller.footerMode!.stackTrace);
+      }
       if (_position!.activity!.velocity < 0 &&
           _lastMode == LoadStatus.loading &&
           !_position!.outOfRange &&
@@ -388,7 +410,17 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         HapticFeedback.vibrate();
       }
       if (refresher!.onLoading != null) {
-        refresher!.onLoading!();
+        final Function callback = refresher!.onLoading!;
+        try {
+          final dynamic result = (callback as dynamic)();
+          if (result is Future) {
+            result.catchError((Object e, StackTrace s) {
+              refresher!.controller.loadFailed(error: e, stackTrace: s);
+            });
+          }
+        } catch (e, s) {
+          refresher!.controller.loadFailed(error: e, stackTrace: s);
+        }
       }
       if (widget.loadStyle == LoadStyle.ShowWhenLoading) {
         floating = true;
