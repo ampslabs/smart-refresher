@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconify_sdk/iconify_sdk.dart';
 
 import 'app_router.dart';
 import 'screens/footers/classic_footer_screen.dart';
@@ -13,7 +14,7 @@ import 'screens/home_screen.dart';
 import 'screens/theming/theming_screen.dart';
 import 'theme/app_theme.dart';
 
-void main() => runApp(const SmartRefresherDemoApp());
+void main() => runApp(const IconifyApp(child: SmartRefresherDemoApp()));
 
 class SmartRefresherDemoApp extends StatefulWidget {
   const SmartRefresherDemoApp({super.key});
