@@ -12,6 +12,10 @@ import 'ui/example/glass_header_example.dart';
 import 'screens/headers/material3_header_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/theming/theming_screen.dart';
+import 'integrations/riverpod_example.dart';
+import 'integrations/bloc_example.dart';
+import 'integrations/provider_example.dart';
+import 'integrations/builder_slots_example.dart';
 import 'theme/app_theme.dart';
 
 void main() => runApp(const IconifyApp(child: SmartRefresherDemoApp()));
@@ -66,6 +70,10 @@ class _SmartRefresherDemoAppState extends State<SmartRefresherDemoApp> {
           AppRoutes.skeletonFooter: (_) => const SkeletonFooterScreen(),
           AppRoutes.footerCompare: (_) => const FooterComparisonScreen(),
           AppRoutes.theming: (_) => const ThemingScreen(),
+          AppRoutes.riverpod: (_) => const RiverpodExample(),
+          AppRoutes.bloc: (_) => const BlocExample(),
+          AppRoutes.provider: (_) => const ProviderExample(),
+          AppRoutes.builderSlots: (_) => const BuilderSlotsExample(),
         },
       ),
     );

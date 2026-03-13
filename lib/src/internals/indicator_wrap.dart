@@ -126,6 +126,10 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       if (refresher!.enablePullDown &&
           offset >= configuration!.headerTriggerDistance) {
         if (!configuration!.skipCanRefresh) {
+          if (mode == RefreshStatus.idle &&
+              configuration!.enableThresholdHaptic) {
+            HapticFeedback.mediumImpact();
+          }
           mode = RefreshStatus.canRefresh;
         } else {
           floating = true;

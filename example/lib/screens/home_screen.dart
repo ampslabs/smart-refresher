@@ -60,6 +60,33 @@ const List<IndicatorEntry> _footers = <IndicatorEntry>[
   ),
 ];
 
+const List<IndicatorEntry> _integrations = <IndicatorEntry>[
+  IndicatorEntry(
+    name: 'Riverpod',
+    tagline: 'FutureProvider integration',
+    icon: 'mdi:waves',
+    route: AppRoutes.riverpod,
+  ),
+  IndicatorEntry(
+    name: 'BLoC',
+    tagline: 'Event-driven refresh states',
+    icon: 'mdi:vibrate',
+    route: AppRoutes.bloc,
+  ),
+  IndicatorEntry(
+    name: 'Provider',
+    tagline: 'ChangeNotifier pattern',
+    icon: 'mdi:source-commit-start',
+    route: AppRoutes.provider,
+  ),
+  IndicatorEntry(
+    name: 'Builder Slots',
+    tagline: 'Empty/Error/Loading states',
+    icon: 'mdi:view-grid-plus',
+    route: AppRoutes.builderSlots,
+  ),
+];
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -109,6 +136,11 @@ class HomeScreen extends StatelessWidget {
                   route: AppRoutes.theming,
                 ),
               ],
+            ),
+            const SizedBox(height: 16.0),
+            const _SectionCard(
+              title: 'INTEGRATIONS',
+              entries: _integrations,
             ),
           ],
         ),

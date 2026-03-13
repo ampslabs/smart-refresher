@@ -114,6 +114,15 @@ class SmartRefresher extends StatefulWidget {
   /// See [CustomScrollView.center].
   final Key? center;
 
+  /// The widget to show when the content is empty.
+  final Widget? empty;
+
+  /// The widget to show when there is an error.
+  final Widget? error;
+
+  /// The widget to show while the initial content is loading.
+  final Widget? loading;
+
   /// Creates a [SmartRefresher].
   const SmartRefresher(
       {super.key,
@@ -137,7 +146,10 @@ class SmartRefresher extends StatefulWidget {
       this.physics,
       this.scrollDirection,
       this.scrollController,
-      this.center})
+      this.center,
+      this.empty,
+      this.error,
+      this.loading})
       : builder = null,
         slivers = null;
 
@@ -154,6 +166,9 @@ class SmartRefresher extends StatefulWidget {
     this.onRefreshFailed,
     this.onLoadingFailed,
     this.onTwoLevel,
+    this.empty,
+    this.error,
+    this.loading,
   })  : header = null,
         footer = null,
         child = null,
@@ -192,6 +207,9 @@ class SmartRefresher extends StatefulWidget {
     this.scrollDirection,
     this.scrollController,
     this.center,
+    this.empty,
+    this.error,
+    this.loading,
   })  : child = null,
         builder = null;
 
@@ -474,11 +492,25 @@ class SmartRefresherState extends State<SmartRefresher> {
         RefreshConfiguration.of(context);
     Widget? body;
     if (widget.builder != null) {
-      body = widget.builder!(
-          context,
-          _getScrollPhysics(
-                  configuration, const AlwaysScrollableScrollPhysics())
-              as RefreshPhysics);
+      body = ValueListenableBuilder<ContentStatus>(
+        valueListenable: widget.controller.contentStatus,
+        builder: (context, status, child) {
+          if (status == ContentStatus.empty && widget.empty != null) {
+            return widget.empty!;
+          }
+          if (status == ContentStatus.error && widget.error != null) {
+            return widget.error!;
+          }
+          if (status == ContentStatus.loading && widget.loading != null) {
+            return widget.loading!;
+          }
+          return widget.builder!(
+              context,
+              _getScrollPhysics(
+                      configuration, const AlwaysScrollableScrollPhysics())
+                  as RefreshPhysics);
+        },
+      );
     } else {
       final List<Widget>? slivers =
           _buildSliversByChild(context, widget.child, configuration);
@@ -509,6 +541,21 @@ class SmartRefresherState extends State<SmartRefresher> {
   }
 }
 
+/// Status of the content (used by SmartRefresher.builder slots).
+enum ContentStatus {
+  /// Content is in its normal state.
+  idle,
+
+  /// Content is empty.
+  empty,
+
+  /// An error occurred while loading content.
+  error,
+
+  /// Content is initially loading.
+  loading
+}
+
 /// A controller that manages the state of the header and footer indicators.
 class RefreshController {
   SmartRefresherState? _refresherState;
@@ -518,6 +565,9 @@ class RefreshController {
 
   /// Manages the footer's loading status.
   RefreshNotifier<LoadStatus>? footerMode;
+
+  /// Manages the overall content state (empty, error, loading).
+  late final ValueNotifier<ContentStatus> contentStatus;
 
   StreamController<RefreshStatus>? _headerStreamController;
   StreamController<LoadStatus>? _footerStreamController;
@@ -562,9 +612,11 @@ class RefreshController {
   RefreshController(
       {this.initialRefresh = false,
       RefreshStatus? initialRefreshStatus,
-      LoadStatus? initialLoadStatus}) {
+      LoadStatus? initialLoadStatus,
+      ContentStatus initialContentStatus = ContentStatus.idle}) {
     headerMode = RefreshNotifier(initialRefreshStatus ?? RefreshStatus.idle);
     footerMode = RefreshNotifier(initialLoadStatus ?? LoadStatus.idle);
+    contentStatus = ValueNotifier<ContentStatus>(initialContentStatus);
     headerMode!.addListener(_headerListener);
     footerMode!.addListener(_footerListener);
   }
@@ -876,6 +928,9 @@ class RefreshConfiguration extends InheritedWidget {
   /// Whether to enable vibration feedback during loading.
   final bool enableLoadMoreVibrate;
 
+  /// Whether to enable haptic feedback when the refresh threshold is reached.
+  final bool enableThresholdHaptic;
+
   /// Creates a [RefreshConfiguration].
   const RefreshConfiguration(
       {super.key,
@@ -905,6 +960,7 @@ class RefreshConfiguration extends InheritedWidget {
       this.hideFooterWhenNotFull = false,
       this.enableRefreshVibrate = false,
       this.enableLoadMoreVibrate = false,
+      this.enableThresholdHaptic = false,
       this.topHitBoundary,
       this.bottomHitBoundary})
       : assert(headerTriggerDistance > 0),
@@ -940,6 +996,7 @@ class RefreshConfiguration extends InheritedWidget {
     bool? enableRefreshVibrate,
     bool? enableLoadMoreVibrate,
     bool? hideFooterWhenNotFull,
+    bool? enableThresholdHaptic,
   })  : assert(RefreshConfiguration.of(context) != null,
             'RefreshConfiguration ancestor not found'),
         headerBuilder =
@@ -986,6 +1043,8 @@ class RefreshConfiguration extends InheritedWidget {
             RefreshConfiguration.of(context)!.enableRefreshVibrate,
         enableLoadMoreVibrate = enableLoadMoreVibrate ??
             RefreshConfiguration.of(context)!.enableLoadMoreVibrate,
+        enableThresholdHaptic = enableThresholdHaptic ??
+            RefreshConfiguration.of(context)!.enableThresholdHaptic,
         shouldFooterFollowWhenNotFull = shouldFooterFollowWhenNotFull ??
             RefreshConfiguration.of(context)!.shouldFooterFollowWhenNotFull;
 
@@ -1014,6 +1073,7 @@ class RefreshConfiguration extends InheritedWidget {
         topHitBoundary != oldWidget.topHitBoundary ||
         enableRefreshVibrate != oldWidget.enableRefreshVibrate ||
         enableLoadMoreVibrate != oldWidget.enableLoadMoreVibrate ||
+        enableThresholdHaptic != oldWidget.enableThresholdHaptic ||
         bottomHitBoundary != oldWidget.bottomHitBoundary;
   }
 }

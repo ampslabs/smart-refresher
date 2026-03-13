@@ -128,9 +128,9 @@ These are unresolved issues and unmerged PRs from `https://github.com/peng8350/f
 **Goal:** Deliver a stable, polished v1.0.0 with a modern Dart API, world-class documentation, and a clean path for consumers migrating from the upstream package.
 
 #### Tasks
-- [ ] `RefreshController` → add `ValueNotifier`-based state exposure
-- [ ] `RefreshController.stream` — Expose state as a `Stream<RefreshStatus>` for reactive consumers
-- [ ] `onRefreshFailed` callback — Distinct error-state callback; lets the indicator show failure without the consumer managing it manually
+- [x] `RefreshController` → add `ValueNotifier`-based state exposure
+- [x] `RefreshController.stream` — Expose state as a `Stream<RefreshStatus>` for reactive consumers
+- [x] `onRefreshFailed` callback — Distinct error-state callback; lets the indicator show failure without the consumer managing it manually
 - [ ] Haptic feedback opt-in — `HapticFeedback.mediumImpact()` at pull threshold, disabled by default
 - [ ] Riverpod / Provider / BLoC integration examples
 - [ ] Hosted Documentation Site — Docusaurus or Mintlify with rich live code previews

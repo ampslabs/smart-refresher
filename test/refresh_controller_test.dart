@@ -297,7 +297,7 @@ void main() {
     expect(controller.footerStatus, LoadStatus.loading);
 
     // Give streams a microtask to fire
-    await Future.delayed(Duration.zero);
+    await Future<void>.delayed(Duration.zero);
     expect(headerStates, [RefreshStatus.refreshing]);
     expect(footerStates, [LoadStatus.loading]);
 
