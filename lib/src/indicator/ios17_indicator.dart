@@ -17,7 +17,7 @@ const double _kTwoPi = math.pi * 2.0;
 
 /// The alpha values used by the iOS 17 spinner's comet tail.
 @visibleForTesting
-const List<int> kIOS17HeaderAlphaValues = <int>[
+const List<int> kIos17HeaderAlphaValues = <int>[
   255,
   220,
   184,
@@ -34,7 +34,7 @@ const List<int> kIOS17HeaderAlphaValues = <int>[
 
 /// Returns the alpha for each tick for the current visual state.
 @visibleForTesting
-List<int> debugIOS17HeaderTickAlphas({
+List<int> debugIos17HeaderTickAlphas({
   required double progress,
   double rotationValue = 0.0,
   double gradientOpacity = 0.0,
@@ -46,7 +46,7 @@ List<int> debugIOS17HeaderTickAlphas({
     final int visibleTicks = (clampedProgress * _kTickCount).floor();
     return List<int>.generate(
       _kTickCount,
-      (int index) => index < visibleTicks ? kIOS17HeaderAlphaValues.first : 0,
+      (int index) => index < visibleTicks ? kIos17HeaderAlphaValues.first : 0,
     );
   }
 
@@ -56,10 +56,10 @@ List<int> debugIOS17HeaderTickAlphas({
   return List<int>.generate(_kTickCount, (int index) {
     final int shifted = (index - activeTick) % _kTickCount;
     final int gradientAlpha =
-        kIOS17HeaderAlphaValues[shifted < 0 ? shifted + _kTickCount : shifted];
+        kIos17HeaderAlphaValues[shifted < 0 ? shifted + _kTickCount : shifted];
     return ui
             .lerpDouble(
-              kIOS17HeaderAlphaValues.first.toDouble(),
+              kIos17HeaderAlphaValues.first.toDouble(),
               gradientAlpha.toDouble(),
               clampedGradientOpacity,
             )
@@ -79,9 +79,9 @@ String _defaultLastUpdatedText(DateTime updatedAt, DateTime now) {
   return 'Updated ${difference.inMinutes} min ago';
 }
 
-/// Builds the completion timestamp text used by `iOS17Header`.
+/// Builds the completion timestamp text used by `Ios17Header`.
 @visibleForTesting
-String debugIOS17HeaderLastUpdatedText({
+String debugIos17HeaderLastUpdatedText({
   required DateTime updatedAt,
   DateTime? now,
   String Function(DateTime updatedAt)? builder,
@@ -93,9 +93,9 @@ String debugIOS17HeaderLastUpdatedText({
 }
 
 /// A reusable iOS 17 style activity indicator.
-class IOS17ActivityIndicator extends StatelessWidget {
-  /// Creates an [IOS17ActivityIndicator].
-  const IOS17ActivityIndicator({
+class Ios17ActivityIndicator extends StatelessWidget {
+  /// Creates an [Ios17ActivityIndicator].
+  const Ios17ActivityIndicator({
     super.key,
     required this.color,
     required this.radius,
@@ -139,9 +139,9 @@ class IOS17ActivityIndicator extends StatelessWidget {
 }
 
 /// A Cupertino-inspired pull-to-refresh header matching iOS 17 styling.
-class iOS17Header extends RefreshIndicator {
-  /// Creates an [iOS17Header].
-  const iOS17Header({
+class Ios17Header extends RefreshIndicator {
+  /// Creates an [Ios17Header].
+  const Ios17Header({
     super.key,
     this.color,
     this.radius = 10.0,
@@ -152,7 +152,7 @@ class iOS17Header extends RefreshIndicator {
     this.semanticsHint,
     super.height = 60.0,
     super.completeDuration = const Duration(milliseconds: 300),
-    super.refreshStyle = RefreshStyle.Follow,
+    super.refreshStyle = RefreshStyle.follow,
   });
 
   /// Tint color of the activity indicator ticks.
@@ -180,11 +180,11 @@ class iOS17Header extends RefreshIndicator {
   final String? semanticsHint;
 
   @override
-  State<StatefulWidget> createState() => iOS17HeaderState();
+  State<StatefulWidget> createState() => Ios17HeaderState();
 }
 
-/// State for [iOS17Header].
-class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
+/// State for [Ios17Header].
+class Ios17HeaderState extends RefreshIndicatorState<Ios17Header>
     with TickerProviderStateMixin {
   late final AnimationController _rotationController;
   late final AnimationController _scaleController;
@@ -431,7 +431,7 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
           opacity: (indicatorOpacity * dismissOpacity).clamp(0.0, 1.0),
           child: Transform.scale(
             scale: _scaleAnimation.value * dismissScale,
-            child: IOS17ActivityIndicator(
+            child: Ios17ActivityIndicator(
               color: _resolvedColor,
               radius: widget.radius,
               progress: mode == RefreshStatus.refreshing || isCompleting
@@ -452,11 +452,11 @@ class iOS17HeaderState extends RefreshIndicatorState<iOS17Header>
     Widget content = indicator;
     if (showTimestamp) {
       final String text = widget.lastUpdatedTextBuilder != null
-          ? debugIOS17HeaderLastUpdatedText(
+          ? debugIos17HeaderLastUpdatedText(
               updatedAt: _lastUpdatedAt!,
               builder: widget.lastUpdatedTextBuilder,
             )
-          : debugIOS17HeaderLastUpdatedText(
+          : debugIos17HeaderLastUpdatedText(
               updatedAt: _lastUpdatedAt!,
               now: DateTime.now(),
             );
@@ -521,7 +521,7 @@ class _ActivityIndicatorPainter extends CustomPainter {
       tickCornerRadius,
       tickCornerRadius,
     );
-    final List<int> alphas = debugIOS17HeaderTickAlphas(
+    final List<int> alphas = debugIos17HeaderTickAlphas(
       progress: progress,
       rotationValue: rotationValue,
       gradientOpacity: gradientOpacity,

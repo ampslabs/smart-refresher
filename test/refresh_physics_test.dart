@@ -321,7 +321,7 @@ void main() {
         child: SmartRefresher(
           header: const TestHeader(),
           footer: CustomFooter(
-            loadStyle: LoadStyle.HideAlways,
+            loadStyle: LoadStyle.hideAlways,
             builder: (c, m) => Container(),
           ),
           enablePullUp: true,

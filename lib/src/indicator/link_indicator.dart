@@ -76,7 +76,7 @@ class LinkFooter extends LoadIndicator {
       {super.key,
       required this.linkKey,
       super.height = 0.0,
-      super.loadStyle = LoadStyle.ShowAlways});
+      super.loadStyle = LoadStyle.showAlways});
 
   @override
   State<StatefulWidget> createState() {

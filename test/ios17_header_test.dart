@@ -6,9 +6,9 @@ import 'package:smart_refresher/smart_refresher.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('debugIOS17HeaderTickAlphas', () {
+  group('debugIos17HeaderTickAlphas', () {
     test('returns zero visible ticks at progress 0.0', () {
-      final List<int> alphas = debugIOS17HeaderTickAlphas(
+      final List<int> alphas = debugIos17HeaderTickAlphas(
         progress: 0.0,
       );
 
@@ -16,26 +16,26 @@ void main() {
     });
 
     test('returns six visible ticks at progress 0.5', () {
-      final List<int> alphas = debugIOS17HeaderTickAlphas(
+      final List<int> alphas = debugIos17HeaderTickAlphas(
         progress: 0.5,
       );
 
       expect(alphas.where((int alpha) => alpha > 0).length, 6);
-      expect(alphas.take(6), everyElement(kIOS17HeaderAlphaValues.first));
+      expect(alphas.take(6), everyElement(kIos17HeaderAlphaValues.first));
       expect(alphas.skip(6), everyElement(0));
     });
 
     test('returns twelve visible ticks at progress 1.0', () {
-      final List<int> alphas = debugIOS17HeaderTickAlphas(
+      final List<int> alphas = debugIos17HeaderTickAlphas(
         progress: 1.0,
       );
 
       expect(alphas.where((int alpha) => alpha > 0).length, 12);
-      expect(alphas, everyElement(kIOS17HeaderAlphaValues.first));
+      expect(alphas, everyElement(kIos17HeaderAlphaValues.first));
     });
 
     test('applies alpha gradient when spinning', () {
-      final List<int> alphas = debugIOS17HeaderTickAlphas(
+      final List<int> alphas = debugIos17HeaderTickAlphas(
         progress: 1.0,
         rotationValue: 0.25,
         gradientOpacity: 1.0,
@@ -46,11 +46,11 @@ void main() {
     });
   });
 
-  group('debugIOS17HeaderLastUpdatedText', () {
+  group('debugIos17HeaderLastUpdatedText', () {
     test('returns default just-now copy', () {
       final DateTime now = DateTime(2026, 3, 11, 12);
       expect(
-        debugIOS17HeaderLastUpdatedText(updatedAt: now, now: now),
+        debugIos17HeaderLastUpdatedText(updatedAt: now, now: now),
         'Updated just now',
       );
     });
@@ -58,7 +58,7 @@ void main() {
     test('returns custom builder copy', () {
       final DateTime updatedAt = DateTime(2026, 3, 11, 12);
       expect(
-        debugIOS17HeaderLastUpdatedText(
+        debugIos17HeaderLastUpdatedText(
           updatedAt: updatedAt,
           builder: (_) => 'Synced moments ago',
         ),
@@ -67,23 +67,23 @@ void main() {
     });
   });
 
-  group('iOS17Header widget', () {
+  group('Ios17Header widget', () {
     testWidgets('renders without error in Cupertino theme',
         (WidgetTester tester) async {
       final RefreshController controller = RefreshController();
       await tester.pumpWidget(_refresherHarness(
         controller: controller,
-        header: const iOS17Header(),
+        header: const Ios17Header(),
       ));
 
       expect(tester.takeException(), isNull);
       expect(find.byType(CustomPaint), findsOneWidget);
     });
 
-    testWidgets('uses RefreshStyle.Follow by default',
+    testWidgets('uses RefreshStyle.follow by default',
         (WidgetTester tester) async {
-      const iOS17Header header = iOS17Header();
-      expect(header.refreshStyle, RefreshStyle.Follow);
+      const Ios17Header header = Ios17Header();
+      expect(header.refreshStyle, RefreshStyle.follow);
     });
 
     testWidgets('color prop overrides theme', (WidgetTester tester) async {
@@ -91,7 +91,7 @@ void main() {
       await tester.pumpWidget(
         const Directionality(
           textDirection: TextDirection.ltr,
-          child: IOS17ActivityIndicator(
+          child: Ios17ActivityIndicator(
             color: customColor,
             radius: 10.0,
             progress: 1.0,
@@ -114,7 +114,7 @@ void main() {
       await tester.pumpWidget(
         const Directionality(
           textDirection: TextDirection.ltr,
-          child: IOS17ActivityIndicator(
+          child: Ios17ActivityIndicator(
             color: CupertinoColors.activeBlue,
             radius: 10.0,
             progress: 0.0,
@@ -133,7 +133,7 @@ void main() {
       await tester.pumpWidget(
         const Directionality(
           textDirection: TextDirection.ltr,
-          child: IOS17ActivityIndicator(
+          child: Ios17ActivityIndicator(
             color: CupertinoColors.activeBlue,
             radius: 10.0,
             progress: 0.5,
@@ -152,7 +152,7 @@ void main() {
       await tester.pumpWidget(
         const Directionality(
           textDirection: TextDirection.ltr,
-          child: IOS17ActivityIndicator(
+          child: Ios17ActivityIndicator(
             color: CupertinoColors.activeBlue,
             radius: 10.0,
             progress: 1.0,
@@ -175,7 +175,7 @@ void main() {
             textDirection: TextDirection.ltr,
             child: Builder(
               builder: (BuildContext context) {
-                return const IOS17ActivityIndicator(
+                return const Ios17ActivityIndicator(
                   color: CupertinoColors.systemFill,
                   radius: 10.0,
                   progress: 1.0,
@@ -186,17 +186,17 @@ void main() {
         ),
       );
 
-      expect(find.byType(IOS17ActivityIndicator), findsOneWidget);
+      expect(find.byType(Ios17ActivityIndicator), findsOneWidget);
     });
 
     testWidgets('records completion timestamp on completion',
         (WidgetTester tester) async {
-      final GlobalKey<iOS17HeaderState> key = GlobalKey<iOS17HeaderState>();
+      final GlobalKey<Ios17HeaderState> key = GlobalKey<Ios17HeaderState>();
       final RefreshController controller = RefreshController();
 
       await tester.pumpWidget(_refresherHarness(
         controller: controller,
-        header: iOS17Header(key: key, showLastUpdated: true),
+        header: Ios17Header(key: key, showLastUpdated: true),
       ));
 
       controller.requestRefresh(needMove: false);
@@ -209,18 +209,18 @@ void main() {
 
     testWidgets('default configuration hides timestamp text option',
         (WidgetTester tester) async {
-      const iOS17Header header = iOS17Header();
+      const Ios17Header header = Ios17Header();
       expect(header.showLastUpdated, isFalse);
     });
 
     testWidgets('scale pop starts when threshold is crossed',
         (WidgetTester tester) async {
-      final GlobalKey<iOS17HeaderState> key = GlobalKey<iOS17HeaderState>();
+      final GlobalKey<Ios17HeaderState> key = GlobalKey<Ios17HeaderState>();
       final RefreshController controller = RefreshController();
 
       await tester.pumpWidget(_refresherHarness(
         controller: controller,
-        header: iOS17Header(key: key),
+        header: Ios17Header(key: key),
       ));
 
       controller.requestRefresh(needMove: false);
@@ -234,12 +234,12 @@ void main() {
 
     testWidgets('opacity controller runs on refreshing',
         (WidgetTester tester) async {
-      final GlobalKey<iOS17HeaderState> key = GlobalKey<iOS17HeaderState>();
+      final GlobalKey<Ios17HeaderState> key = GlobalKey<Ios17HeaderState>();
       final RefreshController controller = RefreshController();
 
       await tester.pumpWidget(_refresherHarness(
         controller: controller,
-        header: iOS17Header(key: key),
+        header: Ios17Header(key: key),
       ));
 
       controller.requestRefresh(needMove: false);
@@ -251,12 +251,12 @@ void main() {
 
     testWidgets('dismiss controller runs for fixed 300ms',
         (WidgetTester tester) async {
-      final GlobalKey<iOS17HeaderState> key = GlobalKey<iOS17HeaderState>();
+      final GlobalKey<Ios17HeaderState> key = GlobalKey<Ios17HeaderState>();
       final RefreshController controller = RefreshController();
 
       await tester.pumpWidget(_refresherHarness(
         controller: controller,
-        header: iOS17Header(key: key),
+        header: Ios17Header(key: key),
       ));
 
       controller.requestRefresh(needMove: false);
@@ -275,7 +275,7 @@ void main() {
 
     testWidgets('fires medium haptic once on iOS refresh',
         (WidgetTester tester) async {
-      final GlobalKey<iOS17HeaderState> key = GlobalKey<iOS17HeaderState>();
+      final GlobalKey<Ios17HeaderState> key = GlobalKey<Ios17HeaderState>();
       final RefreshController controller = RefreshController();
       final List<MethodCall> calls = <MethodCall>[];
 
@@ -288,7 +288,7 @@ void main() {
 
       await tester.pumpWidget(_refresherHarness(
         controller: controller,
-        header: iOS17Header(key: key),
+        header: Ios17Header(key: key),
       ));
 
       key.currentState!.debugSetVisualMode(RefreshStatus.refreshing);
@@ -309,7 +309,7 @@ void main() {
 
     testWidgets('does not fire haptic if enableHaptic is false',
         (WidgetTester tester) async {
-      final GlobalKey<iOS17HeaderState> key = GlobalKey<iOS17HeaderState>();
+      final GlobalKey<Ios17HeaderState> key = GlobalKey<Ios17HeaderState>();
       final RefreshController controller = RefreshController();
       final List<MethodCall> calls = <MethodCall>[];
 
@@ -322,7 +322,7 @@ void main() {
 
       await tester.pumpWidget(_refresherHarness(
         controller: controller,
-        header: iOS17Header(key: key, enableHaptic: false),
+        header: Ios17Header(key: key, enableHaptic: false),
       ));
 
       key.currentState!.debugSetVisualMode(RefreshStatus.refreshing);
@@ -341,12 +341,12 @@ void main() {
 
     testWidgets('dispose during animation does not throw',
         (WidgetTester tester) async {
-      final GlobalKey<iOS17HeaderState> key = GlobalKey<iOS17HeaderState>();
+      final GlobalKey<Ios17HeaderState> key = GlobalKey<Ios17HeaderState>();
       final RefreshController controller = RefreshController();
 
       await tester.pumpWidget(_refresherHarness(
         controller: controller,
-        header: iOS17Header(key: key),
+        header: Ios17Header(key: key),
       ));
 
       controller.requestRefresh(needMove: false);

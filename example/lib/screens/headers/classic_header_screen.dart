@@ -11,7 +11,7 @@ class ClassicHeaderScreen extends StatefulWidget {
 }
 
 class _ClassicHeaderScreenState extends State<ClassicHeaderScreen> {
-  RefreshStyle _style = RefreshStyle.Follow;
+  RefreshStyle _style = RefreshStyle.follow;
   bool _showIcons = true;
   String _idle = 'Pull to refresh';
   String _canRefresh = 'Release to refresh';

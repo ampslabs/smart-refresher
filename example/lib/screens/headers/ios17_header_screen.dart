@@ -3,14 +3,14 @@ import 'package:smart_refresher/smart_refresher.dart';
 
 import '../../widgets/demo_scaffold.dart';
 
-class IOS17HeaderScreen extends StatefulWidget {
-  const IOS17HeaderScreen({super.key});
+class Ios17HeaderScreen extends StatefulWidget {
+  const Ios17HeaderScreen({super.key});
 
   @override
-  State<IOS17HeaderScreen> createState() => _IOS17HeaderScreenState();
+  State<Ios17HeaderScreen> createState() => _Ios17HeaderScreenState();
 }
 
-class _IOS17HeaderScreenState extends State<IOS17HeaderScreen> {
+class _Ios17HeaderScreenState extends State<Ios17HeaderScreen> {
   double _radius = 10.0;
   bool _showLastUpdated = true;
   bool _enableHaptic = true;
@@ -19,8 +19,8 @@ class _IOS17HeaderScreenState extends State<IOS17HeaderScreen> {
   @override
   Widget build(BuildContext context) {
     return DemoScaffold(
-      title: 'iOS17Header',
-      headerBuilder: () => iOS17Header(
+      title: 'Ios17Header',
+      headerBuilder: () => Ios17Header(
         radius: _radius,
         showLastUpdated: _showLastUpdated,
         enableHaptic: _enableHaptic,

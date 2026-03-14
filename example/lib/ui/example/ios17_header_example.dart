@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:smart_refresher/smart_refresher.dart';
 
-/// Demonstrates the `iOS17Header` inside a Cupertino-styled list.
-class IOS17HeaderExample extends StatefulWidget {
+/// Demonstrates the `Ios17Header` inside a Cupertino-styled list.
+class Ios17HeaderExample extends StatefulWidget {
   /// Creates the iOS 17 header demo page.
-  const IOS17HeaderExample({super.key});
+  const Ios17HeaderExample({super.key});
 
   @override
-  State<IOS17HeaderExample> createState() => _IOS17HeaderExampleState();
+  State<Ios17HeaderExample> createState() => _Ios17HeaderExampleState();
 }
 
-class _IOS17HeaderExampleState extends State<IOS17HeaderExample> {
+class _Ios17HeaderExampleState extends State<Ios17HeaderExample> {
   final RefreshController _refreshController = RefreshController();
   final List<int> _items = List<int>.generate(20, (int index) => index);
 
@@ -42,7 +42,7 @@ class _IOS17HeaderExampleState extends State<IOS17HeaderExample> {
         child: SafeArea(
           child: SmartRefresher(
             controller: _refreshController,
-            header: const iOS17Header(showLastUpdated: true),
+            header: const Ios17Header(showLastUpdated: true),
             onRefresh: _onRefresh,
             child: ListView.builder(
               itemCount: _items.length,

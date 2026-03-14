@@ -19,7 +19,7 @@ void main() {
           child: Builder(
             builder: (BuildContext context) {
               return Center(
-                child: IOS17ActivityIndicator(
+                child: Ios17ActivityIndicator(
                   color: CupertinoColors.systemFill.resolveFrom(context),
                   radius: 10.0,
                   progress: progress,
@@ -41,7 +41,7 @@ void main() {
       brightness: Brightness.light,
     );
     await expectLater(
-      find.byType(IOS17ActivityIndicator),
+      find.byType(Ios17ActivityIndicator),
       matchesGoldenFile('goldens/ios17_header_progress_0.png'),
     );
   });
@@ -53,7 +53,7 @@ void main() {
       brightness: Brightness.light,
     );
     await expectLater(
-      find.byType(IOS17ActivityIndicator),
+      find.byType(Ios17ActivityIndicator),
       matchesGoldenFile('goldens/ios17_header_progress_05.png'),
     );
   });
@@ -65,7 +65,7 @@ void main() {
       brightness: Brightness.light,
     );
     await expectLater(
-      find.byType(IOS17ActivityIndicator),
+      find.byType(Ios17ActivityIndicator),
       matchesGoldenFile('goldens/ios17_header_progress_1.png'),
     );
   });
@@ -79,7 +79,7 @@ void main() {
       gradientOpacity: 1.0,
     );
     await expectLater(
-      find.byType(IOS17ActivityIndicator),
+      find.byType(Ios17ActivityIndicator),
       matchesGoldenFile('goldens/ios17_header_spin_quarter.png'),
     );
   });
@@ -91,7 +91,7 @@ void main() {
       brightness: Brightness.dark,
     );
     await expectLater(
-      find.byType(IOS17ActivityIndicator),
+      find.byType(Ios17ActivityIndicator),
       matchesGoldenFile('goldens/ios17_header_dark_progress_0.png'),
     );
   });
@@ -103,7 +103,7 @@ void main() {
       brightness: Brightness.dark,
     );
     await expectLater(
-      find.byType(IOS17ActivityIndicator),
+      find.byType(Ios17ActivityIndicator),
       matchesGoldenFile('goldens/ios17_header_dark_progress_05.png'),
     );
   });
@@ -115,7 +115,7 @@ void main() {
       brightness: Brightness.dark,
     );
     await expectLater(
-      find.byType(IOS17ActivityIndicator),
+      find.byType(Ios17ActivityIndicator),
       matchesGoldenFile('goldens/ios17_header_dark_progress_1.png'),
     );
   });
@@ -129,7 +129,7 @@ void main() {
       gradientOpacity: 1.0,
     );
     await expectLater(
-      find.byType(IOS17ActivityIndicator),
+      find.byType(Ios17ActivityIndicator),
       matchesGoldenFile('goldens/ios17_header_dark_spin_quarter.png'),
     );
   });

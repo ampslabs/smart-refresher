@@ -43,7 +43,7 @@ class SkeletonFooter extends LoadIndicator {
     this.fadeOutDuration = const Duration(milliseconds: 150),
     this.semanticsLabel,
     this.semanticsHint,
-    super.loadStyle = LoadStyle.ShowWhenLoading,
+    super.loadStyle = LoadStyle.showWhenLoading,
     super.height = 160.0,
   })  : _isStaggered = false,
         assert(
@@ -62,7 +62,7 @@ class SkeletonFooter extends LoadIndicator {
     this.fadeOutDuration = const Duration(milliseconds: 150),
     this.semanticsLabel,
     this.semanticsHint,
-    super.loadStyle = LoadStyle.ShowWhenLoading,
+    super.loadStyle = LoadStyle.showWhenLoading,
     super.height = 160.0,
   })  : _isStaggered = true,
         assert(

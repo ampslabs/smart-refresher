@@ -87,7 +87,7 @@ class BezierHeader extends RefreshIndicator {
       this.bezierColor,
       this.semanticsLabel,
       this.semanticsHint})
-      : super(refreshStyle: RefreshStyle.UnFollow, height: rectHeight);
+      : super(refreshStyle: RefreshStyle.unFollow, height: rectHeight);
 
   @override
   State<StatefulWidget> createState() {

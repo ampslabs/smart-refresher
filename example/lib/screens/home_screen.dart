@@ -32,7 +32,7 @@ const List<IndicatorEntry> _headers = <IndicatorEntry>[
     route: AppRoutes.material3Header,
   ),
   IndicatorEntry(
-    name: 'iOS17Header',
+    name: 'Ios17Header',
     tagline: 'Native spoke wheel, haptic aware',
     icon: 'mdi:loading',
     route: AppRoutes.ios17Header,

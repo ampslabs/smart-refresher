@@ -26,8 +26,8 @@ import '../theming/smart_refresher_theme.dart';
 ///   inside other expensive compositing contexts (for example, nested
 ///   [BackdropFilter]s).
 ///
-/// - **[RefreshStyle.Front] only:** [GlassHeader] requires
-///   [RefreshStyle.Front]. Setting a different [refreshStyle] can produce
+/// - **[RefreshStyle.front] only:** [GlassHeader] requires
+///   [RefreshStyle.front]. Setting a different [refreshStyle] can produce
 ///   incorrect blur behavior because the blurred content would not stay behind
 ///   the panel.
 class GlassHeader extends RefreshIndicator {
@@ -83,7 +83,7 @@ class GlassHeader extends RefreshIndicator {
     this.failedText = 'Failed',
     super.completeDuration = const Duration(milliseconds: 700),
     super.height = 80.0,
-    super.refreshStyle = RefreshStyle.Front,
+    super.refreshStyle = RefreshStyle.front,
   });
 
   @override

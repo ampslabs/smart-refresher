@@ -53,7 +53,7 @@ class Material3Header extends RefreshIndicator {
     this.semanticsHint,
     super.completeDuration = const Duration(milliseconds: 600),
     super.height = 80.0,
-    super.refreshStyle = RefreshStyle.Front,
+    super.refreshStyle = RefreshStyle.front,
   });
 
   @override

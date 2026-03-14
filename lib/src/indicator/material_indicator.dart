@@ -49,7 +49,7 @@ class MaterialClassicHeader extends RefreshIndicator {
     super.offset,
     this.distance = 50.0,
     this.backgroundColor,
-  }) : super(refreshStyle: RefreshStyle.Front);
+  }) : super(refreshStyle: RefreshStyle.front);
 
   @override
   State<StatefulWidget> createState() {
@@ -81,12 +81,12 @@ class _MaterialClassicHeaderState
     });
     _positionController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: SmartRefresherConstants.defaultAnimationDuration,
     );
     _scaleFactor = AnimationController(
       vsync: this,
       value: 1.0,
-      duration: const Duration(milliseconds: 300),
+      duration: SmartRefresherConstants.defaultAnimationDuration,
     );
     _positionFactor = _positionController.drive(
       Tween<Offset>(
@@ -232,7 +232,7 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
     );
     _positionController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: SmartRefresherConstants.defaultAnimationDuration,
       value: 0.0,
     );
     _positionFactor = _positionController.drive(

@@ -49,7 +49,7 @@ class WaterDropHeader extends RefreshIndicator {
     ),
     this.semanticsLabel,
     this.semanticsHint,
-  }) : super(height: 60.0, refreshStyle: RefreshStyle.UnFollow);
+  }) : super(height: 60.0, refreshStyle: RefreshStyle.unFollow);
 
   @override
   State<StatefulWidget> createState() {

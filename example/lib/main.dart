@@ -62,7 +62,7 @@ class _SmartRefresherDemoAppState extends State<SmartRefresherDemoApp> {
           AppRoutes.home: (_) => const HomeScreen(),
           AppRoutes.classicHeader: (_) => const ClassicHeaderScreen(),
           AppRoutes.material3Header: (_) => const Material3HeaderScreen(),
-          AppRoutes.ios17Header: (_) => const IOS17HeaderScreen(),
+          AppRoutes.ios17Header: (_) => const Ios17HeaderScreen(),
           AppRoutes.glassHeader: (_) => const GlassHeaderExample(),
           AppRoutes.headerCompare: (_) => const HeaderComparisonScreen(),
           AppRoutes.classicFooter: (_) => const ClassicFooterScreen(),

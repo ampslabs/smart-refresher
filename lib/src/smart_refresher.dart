@@ -11,6 +11,7 @@ import 'dart:async';
 import 'package:smart_refresher/src/internals/slivers.dart';
 import 'internals/indicator_wrap.dart';
 import 'internals/refresh_physics.dart';
+import 'internals/mixins.dart';
 import 'indicator/classic_indicator.dart';
 import 'indicator/material_indicator.dart';
 
@@ -230,225 +231,10 @@ class SmartRefresher extends StatefulWidget {
 }
 
 /// The state for a [SmartRefresher].
-class SmartRefresherState extends State<SmartRefresher> {
-  RefreshPhysics? _physics;
-  bool _updatePhysics = false;
-
+class SmartRefresherState extends State<SmartRefresher>
+    with RefresherSliverComposer, RefresherPhysicsMixin, RefresherDragHandler {
   /// The current viewport extent.
   double viewportExtent = 0;
-  bool _canDrag = true;
-
-  /// The default header indicator.
-  final RefreshIndicator defaultHeader =
-      defaultTargetPlatform == TargetPlatform.iOS
-          ? const ClassicHeader()
-          : const MaterialClassicHeader();
-
-  /// The default footer indicator.
-  final LoadIndicator defaultFooter = const ClassicFooter();
-
-  List<Widget>? _buildSliversByChild(BuildContext context, Widget? child,
-      RefreshConfiguration? configuration) {
-    List<Widget>? slivers;
-    if (widget.slivers != null) {
-      slivers = List<Widget>.from(widget.slivers!);
-    } else if (child is ScrollView) {
-      if (child is BoxScrollView) {
-        final Widget sliver = child.buildChildLayout(context);
-        if (child.padding != null) {
-          slivers = [SliverPadding(sliver: sliver, padding: child.padding!)];
-        } else {
-          slivers = [sliver];
-        }
-      } else {
-        slivers = List.from(child.buildSlivers(context));
-      }
-    } else if (child is! Scrollable) {
-      slivers = [
-        SliverRefreshBody(
-          child: child ?? Container(),
-        )
-      ];
-    }
-    if (widget.enablePullDown || widget.enableTwoLevel) {
-      final Widget header = widget.header ??
-          (configuration?.headerBuilder != null
-              ? configuration?.headerBuilder!()
-              : null) ??
-          defaultHeader;
-      if (slivers != null && !slivers.contains(header)) {
-        slivers.insert(0, header);
-      } else {
-        slivers ??= [header];
-      }
-    }
-    if (widget.enablePullUp) {
-      final Widget footer = widget.footer ??
-          (configuration?.footerBuilder != null
-              ? configuration?.footerBuilder!()
-              : null) ??
-          defaultFooter;
-      if (slivers != null && !slivers.contains(footer)) {
-        slivers.add(footer);
-      } else {
-        slivers ??= [footer];
-      }
-    }
-
-    return slivers;
-  }
-
-  ScrollPhysics _getScrollPhysics(
-      RefreshConfiguration? conf, ScrollPhysics physics) {
-    final bool isBouncingPhysics = physics is BouncingScrollPhysics ||
-        (physics is AlwaysScrollableScrollPhysics &&
-            ScrollConfiguration.of(context)
-                    .getScrollPhysics(context)
-                    .runtimeType ==
-                BouncingScrollPhysics);
-    return _physics = RefreshPhysics(
-            dragSpeedRatio: conf?.dragSpeedRatio ?? 1,
-            springDescription: conf?.springDescription ??
-                const SpringDescription(
-                  mass: 2.2,
-                  stiffness: 150,
-                  damping: 16,
-                ),
-            controller: widget.controller,
-            enableScrollWhenTwoLevel: conf?.enableScrollWhenTwoLevel ?? true,
-            updateFlag: _updatePhysics ? 0 : 1,
-            enableScrollWhenRefreshCompleted:
-                conf?.enableScrollWhenRefreshCompleted ?? false,
-            enablePullDown: widget.enablePullDown || widget.enableTwoLevel,
-            enablePullUp: widget.enablePullUp,
-            maxUnderScrollExtent: conf?.maxUnderScrollExtent ??
-                (isBouncingPhysics ? double.infinity : 100.0),
-            maxOverScrollExtent: conf?.maxOverScrollExtent ??
-                (isBouncingPhysics ? double.infinity : 100.0),
-            topHitBoundary: conf?.topHitBoundary ??
-                (isBouncingPhysics ? double.infinity : 0.0),
-            bottomHitBoundary: conf?.bottomHitBoundary ??
-                (isBouncingPhysics ? double.infinity : 0.0))
-        .applyTo(!_canDrag ? const NeverScrollableScrollPhysics() : physics);
-  }
-
-  Widget? _buildBodyBySlivers(
-      Widget? childView, List<Widget>? slivers, RefreshConfiguration? conf) {
-    Widget? body;
-    if (childView is! Scrollable) {
-      bool? primary = widget.primary;
-      Key? key;
-      double? cacheExtent = widget.cacheExtent;
-
-      Axis? scrollDirection = widget.scrollDirection;
-      int? semanticChildCount = widget.semanticChildCount;
-      bool? reverse = widget.reverse;
-      ScrollController? scrollController = widget.scrollController;
-      DragStartBehavior? dragStartBehavior = widget.dragStartBehavior;
-      ScrollPhysics? physics = widget.physics;
-      Key? center;
-      double? anchor;
-      ScrollViewKeyboardDismissBehavior? keyboardDismissBehavior;
-      String? restorationId;
-      Clip? clipBehavior;
-
-      if (childView is ScrollView) {
-        primary = primary ?? childView.primary;
-        cacheExtent = cacheExtent ?? childView.cacheExtent;
-        key = key ?? childView.key;
-        semanticChildCount = semanticChildCount ?? childView.semanticChildCount;
-        reverse = reverse ?? childView.reverse;
-        dragStartBehavior = dragStartBehavior ?? childView.dragStartBehavior;
-        scrollDirection = scrollDirection ?? childView.scrollDirection;
-        physics = physics ?? childView.physics;
-        center = center ?? childView.center;
-        anchor = anchor ?? childView.anchor;
-        keyboardDismissBehavior =
-            keyboardDismissBehavior ?? childView.keyboardDismissBehavior;
-        restorationId = restorationId ?? childView.restorationId;
-        clipBehavior = clipBehavior ?? childView.clipBehavior;
-        scrollController = scrollController ?? childView.controller;
-      }
-      body = CustomScrollView(
-        controller: scrollController,
-        cacheExtent: cacheExtent,
-        key: key,
-        scrollDirection: scrollDirection ?? Axis.vertical,
-        semanticChildCount: semanticChildCount,
-        primary: primary,
-        clipBehavior: clipBehavior ?? Clip.hardEdge,
-        keyboardDismissBehavior:
-            keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.manual,
-        anchor: anchor ?? 0.0,
-        restorationId: restorationId,
-        center: widget.center ?? center,
-        physics: _getScrollPhysics(
-            conf, physics ?? const AlwaysScrollableScrollPhysics()),
-        slivers: slivers!,
-        dragStartBehavior: dragStartBehavior ?? DragStartBehavior.start,
-        reverse: reverse ?? false,
-      );
-    } else {
-      body = Scrollable(
-        physics: _getScrollPhysics(
-            conf, childView.physics ?? const AlwaysScrollableScrollPhysics()),
-        controller: childView.controller,
-        axisDirection: childView.axisDirection,
-        semanticChildCount: childView.semanticChildCount,
-        dragStartBehavior: childView.dragStartBehavior,
-        viewportBuilder: (context, offset) {
-          final Viewport viewport =
-              childView.viewportBuilder(context, offset) as Viewport;
-          if (widget.enablePullDown) {
-            viewport.children.insert(
-                0,
-                widget.header ??
-                    (conf?.headerBuilder != null
-                        ? conf?.headerBuilder!()
-                        : null) ??
-                    defaultHeader);
-          }
-          if (widget.enablePullUp) {
-            viewport.children.add(widget.footer ??
-                (conf?.footerBuilder != null ? conf?.footerBuilder!() : null) ??
-                defaultFooter);
-          }
-          return viewport;
-        },
-      );
-    }
-
-    return body;
-  }
-
-  bool _ifNeedUpdatePhysics() {
-    final RefreshConfiguration? conf = RefreshConfiguration.of(context);
-    if (conf == null || _physics == null) {
-      return false;
-    }
-
-    if (conf.topHitBoundary != _physics!.topHitBoundary ||
-        _physics!.bottomHitBoundary != conf.bottomHitBoundary ||
-        conf.maxOverScrollExtent != _physics!.maxOverScrollExtent ||
-        _physics!.maxUnderScrollExtent != conf.maxUnderScrollExtent ||
-        _physics!.dragSpeedRatio != conf.dragSpeedRatio ||
-        _physics!.enableScrollWhenTwoLevel != conf.enableScrollWhenTwoLevel ||
-        _physics!.enableScrollWhenRefreshCompleted !=
-            conf.enableScrollWhenRefreshCompleted) {
-      return true;
-    }
-    return false;
-  }
-
-  /// Enables or disables dragging.
-  void setCanDrag(bool canDrag) {
-    if (_canDrag == canDrag) {
-      return;
-    }
-    setState(() {
-      _canDrag = canDrag;
-    });
-  }
 
   @override
   void didUpdateWidget(SmartRefresher oldWidget) {
@@ -464,8 +250,8 @@ class SmartRefresherState extends State<SmartRefresher> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_ifNeedUpdatePhysics()) {
-      _updatePhysics = !_updatePhysics;
+    if (checkIfNeedUpdatePhysics(context)) {
+      toggleUpdatePhysics();
     }
   }
 
@@ -506,15 +292,16 @@ class SmartRefresherState extends State<SmartRefresher> {
           }
           return widget.builder!(
               context,
-              _getScrollPhysics(
-                      configuration, const AlwaysScrollableScrollPhysics())
+              getRefresherPhysics(
+                      configuration, const AlwaysScrollableScrollPhysics(), canDrag)
                   as RefreshPhysics);
         },
       );
     } else {
       final List<Widget>? slivers =
-          _buildSliversByChild(context, widget.child, configuration);
-      body = _buildBodyBySlivers(widget.child, slivers, configuration);
+          buildSliversByChild(context, widget.child, configuration);
+      body = buildBodyBySlivers(widget.child, slivers, configuration,
+          (conf, physics) => getRefresherPhysics(conf, physics, canDrag));
     }
     if (configuration == null) {
       body = RefreshConfiguration(child: body!);
@@ -735,7 +522,7 @@ class RefreshController {
 
   /// Triggers the two-level mode programmatically.
   Future<void> requestTwoLevel(
-      {Duration duration = const Duration(milliseconds: 300),
+      {Duration duration = SmartRefresherConstants.defaultAnimationDuration,
       Curve curve = Curves.linear}) {
     assert(position != null,
         'Try not to call requestRefresh() before build, please call after the ui was rendered');
@@ -751,7 +538,7 @@ class RefreshController {
   Future<void>? requestLoading(
       {bool needMove = true,
       bool needCallback = true,
-      Duration duration = const Duration(milliseconds: 300),
+      Duration duration = SmartRefresherConstants.defaultAnimationDuration,
       Curve curve = Curves.linear}) {
     assert(position != null,
         'Try not to call requestLoading() before build, please call after the ui was rendered');
@@ -949,14 +736,14 @@ class RefreshConfiguration extends InheritedWidget {
       ),
       this.enableScrollWhenRefreshCompleted = false,
       this.enableLoadingWhenFailed = true,
-      this.twiceTriggerDistance = 150.0,
-      this.closeTwoLevelDistance = 80.0,
+      this.twiceTriggerDistance = SmartRefresherConstants.defaultTwiceTriggerDistance,
+      this.closeTwoLevelDistance = SmartRefresherConstants.defaultCloseTwoLevelDistance,
       this.skipCanRefresh = false,
       this.maxOverScrollExtent,
       this.enableBallisticLoad = true,
       this.maxUnderScrollExtent,
-      this.headerTriggerDistance = 80.0,
-      this.footerTriggerDistance = 15.0,
+      this.headerTriggerDistance = SmartRefresherConstants.defaultHeaderTriggerDistance,
+      this.footerTriggerDistance = SmartRefresherConstants.defaultFooterTriggerDistance,
       this.hideFooterWhenNotFull = false,
       this.enableRefreshVibrate = false,
       this.enableLoadMoreVibrate = false,

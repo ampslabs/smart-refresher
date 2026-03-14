@@ -97,7 +97,7 @@ class ClassicHeader extends RefreshIndicator {
     super.key,
     RefreshStyle super.refreshStyle,
     super.height,
-    super.completeDuration = const Duration(milliseconds: 600),
+    super.completeDuration = SmartRefresherConstants.defaultCompleteDuration,
     this.outerBuilder,
     this.textStyle,
     this.color,
@@ -303,7 +303,7 @@ class ClassicFooter extends LoadIndicator {
   /// Custom accessibility hint for the indicator.
   final String? semanticsHint;
 
-  /// The duration the "complete" state is displayed. Only works for [LoadStyle.ShowWhenLoading].
+  /// The duration the "complete" state is displayed. Only works for [LoadStyle.showWhenLoading].
   final Duration completeDuration;
 
   /// Creates a [ClassicFooter].
@@ -324,7 +324,7 @@ class ClassicFooter extends LoadIndicator {
     this.failedIcon,
     this.iconPos = IconPosition.left,
     this.spacing = 15.0,
-    this.completeDuration = const Duration(milliseconds: 300),
+    this.completeDuration = SmartRefresherConstants.defaultAnimationDuration,
     this.loadingIcon,
     this.canLoadingIcon,
     this.idleIcon,

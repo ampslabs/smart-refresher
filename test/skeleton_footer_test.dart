@@ -6,7 +6,7 @@ import 'package:smart_refresher/src/internals/slivers.dart';
 void main() {
   group('SkeletonFooter', () {
     test('defaults to ShowWhenLoading', () {
-      expect(const SkeletonFooter().loadStyle, LoadStyle.ShowWhenLoading);
+      expect(const SkeletonFooter().loadStyle, LoadStyle.showWhenLoading);
     });
 
     test('asserts for skeletonCount below range', () {

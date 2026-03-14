@@ -42,7 +42,7 @@ class _HeaderComparisonScreenState extends State<HeaderComparisonScreen> {
   RefreshIndicator _buildHeader() => switch (_active) {
         _HeaderOption.classic => const ClassicHeader(),
         _HeaderOption.material3 => const Material3Header(),
-        _HeaderOption.ios17 => const iOS17Header(showLastUpdated: true),
+        _HeaderOption.ios17 => const Ios17Header(showLastUpdated: true),
       };
 
   Future<void> _onRefresh() async {

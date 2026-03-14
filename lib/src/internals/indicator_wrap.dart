@@ -42,10 +42,10 @@ abstract class RefreshIndicator extends StatefulWidget {
   /// Creates a [RefreshIndicator].
   const RefreshIndicator(
       {super.key,
-      this.height = 60.0,
+      this.height = SmartRefresherConstants.defaultHeaderHeight,
       this.offset = 0.0,
       this.completeDuration = const Duration(milliseconds: 500),
-      this.refreshStyle = RefreshStyle.Follow});
+      this.refreshStyle = RefreshStyle.follow});
 }
 
 /// An abstract widget that implements the pull-up loading effect.
@@ -65,8 +65,8 @@ abstract class LoadIndicator extends StatefulWidget {
   const LoadIndicator(
       {super.key,
       this.onClick,
-      this.loadStyle = LoadStyle.ShowAlways,
-      this.height = 60.0});
+      this.loadStyle = LoadStyle.showAlways,
+      this.height = SmartRefresherConstants.defaultFooterHeight});
 }
 
 /// The state for a [RefreshIndicator].
@@ -117,7 +117,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     }
 
     if (_position!.extentBefore == 0.0 &&
-        widget.refreshStyle == RefreshStyle.Front) {
+        widget.refreshStyle == RefreshStyle.front) {
       _position!.context.setIgnorePointer(false);
     }
     if ((configuration!.enableBallisticRefresh && activity!.velocity < 0.0) ||
@@ -198,7 +198,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
           if (!mounted) {
             return;
           }
-          if (widget.refreshStyle == RefreshStyle.Front) {
+          if (widget.refreshStyle == RefreshStyle.front) {
             if (_inVisual()) {
               _position!.jumpTo(0.0);
             }
@@ -426,7 +426,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
           refresher!.controller.loadFailed(error: e, stackTrace: s);
         }
       }
-      if (widget.loadStyle == LoadStyle.ShowWhenLoading) {
+      if (widget.loadStyle == LoadStyle.showWhenLoading) {
         floating = true;
       }
     } else {
@@ -512,9 +512,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   Widget build(BuildContext context) {
     return SliverLoading(
         hideWhenNotFull: configuration!.hideFooterWhenNotFull,
-        floating: widget.loadStyle == LoadStyle.ShowAlways
+        floating: widget.loadStyle == LoadStyle.showAlways
             ? true
-            : widget.loadStyle == LoadStyle.HideAlways
+            : widget.loadStyle == LoadStyle.hideAlways
                 ? false
                 : floating,
         shouldFollowContent:

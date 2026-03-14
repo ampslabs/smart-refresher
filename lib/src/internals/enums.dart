@@ -3,7 +3,6 @@
     Email: appatil595@gmail.com
     createTime:2026-03-09
 */
-// ignore_for_file: constant_identifier_names
 
 /// The current status of the refresh header.
 enum RefreshStatus {
@@ -58,26 +57,53 @@ enum LoadStatus {
 /// The display style of the refresh header indicator.
 enum RefreshStyle {
   /// The indicator box always follows the content.
-  Follow,
+  follow,
 
   /// The indicator box follows content until it reaches the top and is fully visible, then it remains stationary.
-  UnFollow,
+  unFollow,
 
   /// The indicator size zooms with the boundary distance, appearing to be behind the content.
-  Behind,
+  behind,
 
   /// The indicator is shown above the content, similar to Flutter's native RefreshIndicator.
-  Front
+  front
 }
 
 /// The display style of the loading footer indicator.
 enum LoadStyle {
   /// The indicator always occupies its layout extent, regardless of its state.
-  ShowAlways,
+  showAlways,
 
   /// The indicator always has a layout extent of 0.0, regardless of its state.
-  HideAlways,
+  hideAlways,
 
   /// The indicator follows the content and only occupies its layout extent while loading.
-  ShowWhenLoading,
+  showWhenLoading,
+}
+
+/// Centralized magic constants used across the package.
+abstract final class SmartRefresherConstants {
+  /// Default distance needed to trigger a pull-down refresh.
+  static const double defaultHeaderTriggerDistance = 80.0;
+
+  /// Default distance needed to trigger pull-up loading.
+  static const double defaultFooterTriggerDistance = 15.0;
+
+  /// Default distance needed to trigger two-level mode.
+  static const double defaultTwiceTriggerDistance = 150.0;
+
+  /// Default distance needed to close two-level mode from the bottom.
+  static const double defaultCloseTwoLevelDistance = 80.0;
+
+  /// Default height for the refresh header.
+  static const double defaultHeaderHeight = 60.0;
+
+  /// Default height for the loading footer.
+  static const double defaultFooterHeight = 60.0;
+
+  /// Default animation duration for state transitions.
+  static const Duration defaultAnimationDuration = Duration(milliseconds: 300);
+
+  /// Default duration the indicator stays in "completed" or "failed" state.
+  static const Duration defaultCompleteDuration = Duration(milliseconds: 600);
 }

@@ -69,7 +69,7 @@ class _ThemingScreenState extends State<ThemingScreen> {
           ),
         ),
       _ThemingIndicator.material3 => const Material3Header(),
-      _ThemingIndicator.ios17 => const iOS17Header(
+      _ThemingIndicator.ios17 => const Ios17Header(
           showLastUpdated: true,
         ),
     };

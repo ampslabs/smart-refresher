@@ -72,13 +72,13 @@ void main() {
     });
   });
 
-  group('iOS17Header Semantics', () {
+  group('Ios17Header Semantics', () {
     testWidgets('reports default semantics label', (WidgetTester tester) async {
       final SemanticsHandle handle = tester.ensureSemantics();
       final RefreshController controller = RefreshController();
       await tester.pumpWidget(_buildTestApp(
         controller: controller,
-        header: const iOS17Header(),
+        header: const Ios17Header(),
       ));
 
       await tester.drag(find.byType(Scrollable), const Offset(0, 100));

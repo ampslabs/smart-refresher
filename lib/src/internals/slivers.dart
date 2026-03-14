@@ -30,7 +30,7 @@ class SliverRefresh extends SingleChildRenderObjectWidget {
   /// The display style of the refresh indicator.
   final RefreshStyle? refreshStyle;
 
-  /// The vertical layout deviation for the head indicator, primarily for [RefreshStyle.Front].
+  /// The vertical layout deviation for the head indicator, primarily for [RefreshStyle.front].
   final double? paintOffsetY;
 
   @override
@@ -115,7 +115,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
 
   @override
   double get centerOffsetAdjustment {
-    if (refreshStyle == RefreshStyle.Front) {
+    if (refreshStyle == RefreshStyle.front) {
       final RenderViewportBase renderViewport =
           parent! as RenderViewportBase<ContainerParentDataMixin<RenderSliver>>;
       return math.max(0.0, -renderViewport.offset.pixels);
@@ -125,7 +125,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
 
   @override
   void layout(Constraints constraints, {bool parentUsesSize = false}) {
-    if (refreshStyle == RefreshStyle.Front) {
+    if (refreshStyle == RefreshStyle.front) {
       final RenderViewportBase renderViewport =
           parent! as RenderViewportBase<ContainerParentDataMixin<RenderSliver>>;
       super.layout(
@@ -175,7 +175,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
     }
     final double layoutExtent =
         (_hasLayoutExtent ? 1.0 : 0.0) * _refreshIndicatorExtent;
-    if (refreshStyle != RefreshStyle.Front) {
+    if (refreshStyle != RefreshStyle.front) {
       if (layoutExtent != layoutExtentOffsetCompensation) {
         geometry = SliverGeometry(
           scrollOffsetCorrection: layoutExtent - layoutExtentOffsetCompensation,
@@ -188,7 +188,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
     final bool active = (constraints.overlap < 0.0) || layoutExtent > 0.0;
     final double overscrolledExtent =
         -(parent! as RenderViewportBase).offset.pixels;
-    if (refreshStyle == RefreshStyle.Behind) {
+    if (refreshStyle == RefreshStyle.behind) {
       child!.layout(
         constraints.asBoxConstraints(
             maxExtent: math.max(0, overscrolledExtent + layoutExtent)),
@@ -214,7 +214,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
           constraints.remainingPaintExtent);
       final double overlap = constraints.overlap;
       switch (refreshStyle) {
-        case RefreshStyle.Follow:
+        case RefreshStyle.follow:
           geometry = SliverGeometry(
             scrollExtent: layoutExtent,
             paintOrigin:
@@ -228,7 +228,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
           );
 
           break;
-        case RefreshStyle.Behind:
+        case RefreshStyle.behind:
           geometry = SliverGeometry(
             scrollExtent: layoutExtent,
             paintOrigin:
@@ -239,7 +239,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
                 math.max(layoutExtent - constraints.scrollOffset, 0.0),
           );
           break;
-        case RefreshStyle.UnFollow:
+        case RefreshStyle.unFollow:
           geometry = SliverGeometry(
             scrollExtent: layoutExtent,
             paintOrigin: math.min(
@@ -254,7 +254,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
           );
 
           break;
-        case RefreshStyle.Front:
+        case RefreshStyle.front:
           geometry = SliverGeometry(
             paintOrigin: (constraints.axisDirection == AxisDirection.up ||
                         constraints.crossAxisDirection == AxisDirection.left

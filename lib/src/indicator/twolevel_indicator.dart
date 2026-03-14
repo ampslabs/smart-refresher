@@ -69,8 +69,8 @@ class TwoLevelHeader extends StatelessWidget {
 
   /// The alignment of the header content.
   ///
-  /// Use [TwoLevelDisplayAlignment.fromTop] with [RefreshStyle.Behind] and
-  /// [TwoLevelDisplayAlignment.fromBottom] with [RefreshStyle.Follow].
+  /// Use [TwoLevelDisplayAlignment.fromTop] with [RefreshStyle.behind] and
+  /// [TwoLevelDisplayAlignment.fromBottom] with [RefreshStyle.follow].
   final TwoLevelDisplayAlignment displayAlignment;
 
   /// Custom text for different refresh states.
@@ -110,7 +110,7 @@ class TwoLevelHeader extends StatelessWidget {
       this.height = 80.0,
       this.decoration,
       this.displayAlignment = TwoLevelDisplayAlignment.fromBottom,
-      this.completeDuration = const Duration(milliseconds: 600),
+      this.completeDuration = SmartRefresherConstants.defaultCompleteDuration,
       this.textStyle = const TextStyle(color: Color(0xff555555)),
       this.releaseText,
       this.refreshingText,
@@ -132,8 +132,8 @@ class TwoLevelHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClassicHeader(
       refreshStyle: displayAlignment == TwoLevelDisplayAlignment.fromBottom
-          ? RefreshStyle.Follow
-          : RefreshStyle.Behind,
+          ? RefreshStyle.follow
+          : RefreshStyle.behind,
       height: height,
       refreshingIcon: refreshingIcon,
       refreshingText: refreshingText,

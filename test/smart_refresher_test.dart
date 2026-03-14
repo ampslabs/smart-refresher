@@ -375,7 +375,7 @@ void main() {
           header: CustomHeader(
             // Use readyToRefresh to return a never-completing future to avoid auto-reset to idle
             readyToRefresh: () => Completer<void>().future,
-            refreshStyle: RefreshStyle.Front,
+            refreshStyle: RefreshStyle.front,
             builder: (context, mode) => Text('mode: $mode'),
           ),
           onRefresh: () async {
