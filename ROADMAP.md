@@ -174,12 +174,12 @@ These are unresolved issues and unmerged PRs from `https://github.com/peng8350/f
 **Period:** November 2026  
 **Goal:** Establish security hygiene appropriate for a widely-used Flutter package, covering supply-chain, dependency management, and safe API design.
 
-### Dependency & Supply-Chain
-- [ ] **Dependency audit** — Run `dart pub outdated` and `dart pub deps` to identify transitive dependencies with known CVEs; pin or replace as needed
-- [ ] **Remove unused transitive deps** — Eliminate any packages pulled in by the upstream fork that are no longer referenced
-- [ ] **Enable Dependabot** — Configure `dependabot.yml` for automated weekly dependency PRs on both `pubspec.yaml` and GitHub Actions workflows
-- [ ] **Pin GitHub Actions to commit SHA** — Replace `uses: actions/checkout@v4` version tags with full SHA references to prevent supply-chain attacks via tag mutation
-- [ ] **SBOM generation** — Add a step in CI that generates a Software Bill of Materials (`sbom.json`) on every release using `cyclonedx-dart`
+### Security & Compliance
+- [x] **Dependency audit** — Run `dart pub outdated` and `dart pub deps` to identify transitive dependencies with known CVEs; pin or replace as needed
+- [x] **Remove unused transitive deps** — Eliminate any packages pulled in by the upstream fork that are no longer referenced
+- [x] **Enable Dependabot** — Configure `dependabot.yml` for automated weekly dependency PRs on both `pubspec.yaml` and GitHub Actions workflows
+- [x] **Pin GitHub Actions to commit SHA** — Replace `uses: actions/checkout@v4` version tags with full SHA references to prevent supply-chain attacks via tag mutation
+- [x] **SBOM generation** — Add a step in CI that generates a Software Bill of Materials (`sbom.json`) on every release using `cyclonedx-dart`
 
 ### Safe API Design
 - [ ] **Input validation on `RefreshController`** — Guard `requestRefresh`, `requestLoading`, and `scrollTo` against null, negative, or out-of-range arguments with clear `AssertionError` messages in debug mode

@@ -362,10 +362,11 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         return;
       }
 
-      if (mounted)
+      if (mounted) {
         Scrollable.of(context)
             .position
             .correctBy(SmartRefresherConstants.minScrollSettlingOffset);
+      }
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _position?.outOfRange == true) {
           activity!.delegate.goBallistic(0);
