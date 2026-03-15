@@ -182,10 +182,10 @@ These are unresolved issues and unmerged PRs from `https://github.com/peng8350/f
 - [x] **SBOM generation** — Add a step in CI that generates a Software Bill of Materials (`sbom.json`) on every release using `cyclonedx-dart`
 
 ### Safe API Design
-- [ ] **Input validation on `RefreshController`** — Guard `requestRefresh`, `requestLoading`, and `scrollTo` against null, negative, or out-of-range arguments with clear `AssertionError` messages in debug mode
-- [ ] **`onRefreshFailed` exception surface** — Ensure exceptions thrown inside the consumer-supplied refresh callback are caught, surfaced via `onRefreshFailed`, and never silently swallowed
-- [ ] **No `dynamic` in public API** — Audit all public method signatures; replace `dynamic` with typed alternatives or generics
-- [ ] **Sensitive data guard** — Document explicitly that `SmartRefresher` callbacks must not be used to cache or log scroll positions or user data; add a note in API docs
+- [x] **Input validation on `RefreshController`** — Guard `requestRefresh`, `requestLoading`, and `scrollTo` against null, negative, or out-of-range arguments with clear `AssertionError` messages in debug mode
+- [x] **`onRefreshFailed` exception surface** — Ensure exceptions thrown inside the consumer-supplied refresh callback are caught, surfaced via `onRefreshFailed`, and never silently swallowed
+- [x] **No `dynamic` in public API** — Audit all public method signatures; replace `dynamic` with typed alternatives or generics
+- [x] **Sensitive data guard** — Document explicitly that `SmartRefresher` callbacks must not be used to cache or log scroll positions or user data; add a note in API docs
 
 ### Disclosure & Hardening
 - [ ] **`SECURITY.md`** — Publish a responsible disclosure policy describing how to privately report vulnerabilities, the response SLA, and the CVE assignment process
@@ -223,7 +223,7 @@ These are unresolved issues and unmerged PRs from `https://github.com/peng8350/f
 - [ ] **Declarative controller** — Replace `RefreshController` with a purely reactive `SmartRefreshNotifier` (`ChangeNotifier`-based); imperative `requestRefresh()` retained as a convenience shim
 - [ ] **Parallax header API** — First-class `SmartRefresher.parallax` constructor with configurable scroll factor and min/max bounds
 - [ ] **Multi-axis support** — Horizontal pull-to-refresh for carousels and horizontal paging lists
-- [ ] **Comprehensive migration guide** — `MIGRATING_v2.md` with before/after code samples for every breaking change
+- [ ] **Comprehensive migration guide** — `MIGRATING.md` with before/after code samples for every breaking change
 
 **Deliverable:** v2.0.0 — declarative API, parallax header, horizontal refresh, infinite scroll without a wrapper.
 

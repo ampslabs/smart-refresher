@@ -228,9 +228,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         HapticFeedback.vibrate();
       }
       if (refresher!.onRefresh != null) {
-        final Function callback = refresher!.onRefresh!;
         try {
-          final dynamic result = (callback as dynamic)();
+          // Cast to dynamic function to capture potential Future return
+          final dynamic result = (refresher!.onRefresh! as dynamic)();
           if (result is Future) {
             result.catchError((Object e, StackTrace s) {
               refresher!.controller.refreshFailed(error: e, stackTrace: s);
@@ -434,9 +434,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         HapticFeedback.vibrate();
       }
       if (refresher!.onLoading != null) {
-        final Function callback = refresher!.onLoading!;
         try {
-          final dynamic result = (callback as dynamic)();
+          // Cast to dynamic function to capture potential Future return
+          final dynamic result = (refresher!.onLoading! as dynamic)();
           if (result is Future) {
             result.catchError((Object e, StackTrace s) {
               refresher!.controller.loadFailed(error: e, stackTrace: s);

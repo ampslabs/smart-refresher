@@ -37,6 +37,11 @@ typedef RefresherBuilder = Widget Function(
 ///
 /// Requires a [RefreshController] to manage the state of the indicators.
 ///
+/// **Security Note:**
+/// The callbacks [onRefresh] and [onLoading] should not be used
+/// to cache or log sensitive user data or precise scroll positions for tracking
+/// purposes, as these are triggered frequently during interaction.
+///
 /// See also:
 /// * [RefreshConfiguration], for global configuration.
 /// * [RefreshController], for managing header and footer states.
@@ -481,11 +486,14 @@ class RefreshController {
   }
 
   /// Triggers a pull-down refresh programmatically.
+  ///
+  /// The [duration] must be positive and [curve] must not be null.
   Future<void>? requestRefresh(
       {bool needMove = true,
       bool needCallback = true,
       Duration duration = SmartRefresherConstants.defaultAnimationDuration,
       Curve curve = Curves.linear}) {
+    assert(duration >= Duration.zero, 'duration must be positive');
     assert(position != null,
         'Try not to call requestRefresh() before build, please call after the ui was rendered');
     if (isRefresh) return Future<void>.value();
@@ -533,9 +541,12 @@ class RefreshController {
   }
 
   /// Triggers the two-level mode programmatically.
+  ///
+  /// The [duration] must be positive and [curve] must not be null.
   Future<void> requestTwoLevel(
       {Duration duration = SmartRefresherConstants.defaultAnimationDuration,
       Curve curve = Curves.linear}) {
+    assert(duration >= Duration.zero, 'duration must be positive');
     assert(position != null,
         'Try not to call requestRefresh() before build, please call after the ui was rendered');
     headerMode!.value = RefreshStatus.twoLevelOpening;
@@ -547,11 +558,14 @@ class RefreshController {
   }
 
   /// Triggers a pull-up load programmatically.
+  ///
+  /// The [duration] must be positive and [curve] must not be null.
   Future<void>? requestLoading(
       {bool needMove = true,
       bool needCallback = true,
       Duration duration = SmartRefresherConstants.defaultAnimationDuration,
       Curve curve = Curves.linear}) {
+    assert(duration >= Duration.zero, 'duration must be positive');
     assert(position != null,
         'Try not to call requestLoading() before build, please call after the ui was rendered');
     if (isLoading) return Future<void>.value();
