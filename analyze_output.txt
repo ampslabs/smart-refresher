@@ -1,0 +1,94 @@
+Analyzing ....
+
+  error - lib/src/indicator/bezier_indicator.dart:90:29 - Invalid constant value. - invalid_constant
+  error - lib/src/indicator/bezier_indicator.dart:90:42 - There's no constant named 'UnFollow' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'UnFollow'. - undefined_enum_constant
+  error - lib/src/indicator/classic_indicator.dart:98:24 - The parameter 'refreshStyle' can't have a value of 'null' because of its type, but the implicit default value is 'null'. Try adding either an explicit non-'null' default value or the 'required' modifier. - missing_default_value_for_parameter
+  error - lib/src/indicator/classic_indicator.dart:313:11 - The parameter 'loadStyle' can't have a value of 'null' because of its type, but the implicit default value is 'null'. Try adding either an explicit non-'null' default value or the 'required' modifier. - missing_default_value_for_parameter
+  error - lib/src/indicator/custom_indicator.dart:80:24 - The parameter 'refreshStyle' can't have a value of 'null' because of its type, but the implicit default value is 'null'. Try adding either an explicit non-'null' default value or the 'required' modifier. - missing_default_value_for_parameter
+  error - lib/src/indicator/custom_indicator.dart:157:11 - The parameter 'loadStyle' can't have a value of 'null' because of its type, but the implicit default value is 'null'. Try adding either an explicit non-'null' default value or the 'required' modifier. - missing_default_value_for_parameter
+  error - lib/src/indicator/glass_indicator.dart:86:39 - There's no constant named 'Front' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Front'. - undefined_enum_constant
+  error - lib/src/indicator/ios17_indicator.dart:155:39 - There's no constant named 'Follow' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Follow'. - undefined_enum_constant
+  error - lib/src/indicator/link_indicator.dart:79:35 - There's no constant named 'ShowAlways' in 'LoadStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'ShowAlways'. - undefined_enum_constant
+  error - lib/src/indicator/material3_indicator.dart:56:39 - There's no constant named 'Front' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Front'. - undefined_enum_constant
+  error - lib/src/indicator/material_indicator.dart:52:28 - Invalid constant value. - invalid_constant
+  error - lib/src/indicator/material_indicator.dart:52:41 - There's no constant named 'Front' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Front'. - undefined_enum_constant
+  error - lib/src/indicator/skeleton_footer.dart:46:33 - There's no constant named 'ShowWhenLoading' in 'LoadStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'ShowWhenLoading'. - undefined_enum_constant
+  error - lib/src/indicator/skeleton_footer.dart:65:33 - There's no constant named 'ShowWhenLoading' in 'LoadStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'ShowWhenLoading'. - undefined_enum_constant
+  error - lib/src/indicator/twolevel_indicator.dart:135:26 - There's no constant named 'Follow' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Follow'. - undefined_enum_constant
+  error - lib/src/indicator/twolevel_indicator.dart:136:26 - There's no constant named 'Behind' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Behind'. - undefined_enum_constant
+  error - lib/src/indicator/waterdrop_header.dart:52:42 - Invalid constant value. - invalid_constant
+  error - lib/src/indicator/waterdrop_header.dart:52:55 - There's no constant named 'UnFollow' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'UnFollow'. - undefined_enum_constant
+  error - lib/src/internals/indicator_wrap.dart:48:40 - There's no constant named 'Follow' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Follow'. - undefined_enum_constant
+  error - lib/src/internals/indicator_wrap.dart:68:34 - There's no constant named 'ShowAlways' in 'LoadStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'ShowAlways'. - undefined_enum_constant
+  error - lib/src/internals/indicator_wrap.dart:120:45 - There's no constant named 'Front' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Front'. - undefined_enum_constant
+  error - lib/src/internals/indicator_wrap.dart:201:51 - There's no constant named 'Front' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Front'. - undefined_enum_constant
+  error - lib/src/internals/indicator_wrap.dart:429:41 - There's no constant named 'ShowWhenLoading' in 'LoadStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'ShowWhenLoading'. - undefined_enum_constant
+  error - lib/src/internals/indicator_wrap.dart:515:49 - There's no constant named 'ShowAlways' in 'LoadStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'ShowAlways'. - undefined_enum_constant
+  error - lib/src/internals/indicator_wrap.dart:517:45 - There's no constant named 'HideAlways' in 'LoadStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'HideAlways'. - undefined_enum_constant
+  error - lib/src/internals/slivers.dart:118:38 - There's no constant named 'Front' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Front'. - undefined_enum_constant
+  error - lib/src/internals/slivers.dart:128:38 - There's no constant named 'Front' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Front'. - undefined_enum_constant
+  error - lib/src/internals/slivers.dart:178:38 - There's no constant named 'Front' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Front'. - undefined_enum_constant
+  error - lib/src/internals/slivers.dart:191:38 - There's no constant named 'Behind' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Behind'. - undefined_enum_constant
+  error - lib/src/internals/slivers.dart:217:27 - There's no constant named 'Follow' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Follow'. - undefined_enum_constant
+  error - lib/src/internals/slivers.dart:231:27 - There's no constant named 'Behind' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Behind'. - undefined_enum_constant
+  error - lib/src/internals/slivers.dart:242:27 - There's no constant named 'UnFollow' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'UnFollow'. - undefined_enum_constant
+  error - lib/src/internals/slivers.dart:257:27 - There's no constant named 'Front' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Front'. - undefined_enum_constant
+  error - lib/src/smart_refresher.dart:244:13 - Invalid constant value. - invalid_constant
+           - The error is in the super constructor invocation of 'ClassicHeader', and occurs here at lib/src/indicator/classic_indicator.dart:98:24.
+  error - lib/src/smart_refresher.dart:248:39 - Invalid constant value. - invalid_constant
+           - The error is in the super constructor invocation of 'ClassicFooter', and occurs here at lib/src/indicator/classic_indicator.dart:313:11.
+  error - test/accessibility_test.dart:13:17 - Invalid constant value. - invalid_constant
+           - The error is in the super constructor invocation of 'ClassicHeader', and occurs here at lib/src/indicator/classic_indicator.dart:98:24.
+  error - test/accessibility_test.dart:34:17 - Invalid constant value. - invalid_constant
+           - The error is in the super constructor invocation of 'ClassicHeader', and occurs here at lib/src/indicator/classic_indicator.dart:98:24.
+  error - test/accessibility_test.dart:60:17 - Invalid constant value. - invalid_constant
+           - The error is in the super constructor invocation of 'Material3Header', and occurs here at lib/src/indicator/material3_indicator.dart:56:11.
+  error - test/accessibility_test.dart:81:17 - Invalid constant value. - invalid_constant
+           - The error is in the super constructor invocation of 'iOS17Header', and occurs here at lib/src/indicator/ios17_indicator.dart:155:11.
+  error - test/accessibility_test.dart:103:17 - Invalid constant value. - invalid_constant
+           - The error is in the super constructor invocation of 'SkeletonFooter', and occurs here at lib/src/indicator/skeleton_footer.dart:46:11.
+  error - test/complex_slivers_test.dart:56:34 - Const variables must be initialized with a constant value. Try changing the initializer to be a constant expression. - const_initialized_with_non_constant_value
+  error - test/complex_slivers_test.dart:56:34 - Invalid constant value. - invalid_constant
+           - The error is in the super constructor invocation of 'ClassicHeader', and occurs here at lib/src/indicator/classic_indicator.dart:98:24.
+  error - test/glass_header_test.dart:8:24 - Invalid constant value. - invalid_constant
+           - The error is in the super constructor invocation of 'GlassHeader', and occurs here at lib/src/indicator/glass_indicator.dart:86:11.
+  error - test/glass_header_test.dart:8:24 - The default value of an optional parameter must be constant. - non_constant_default_value
+  error - test/glass_header_test.dart:83:17 - Invalid constant value. - invalid_constant
+           - The error is in the super constructor invocation of 'GlassHeader', and occurs here at lib/src/indicator/glass_indicator.dart:86:11.
+  error - test/glass_header_test.dart:121:17 - Invalid constant value. - invalid_constant
+           - The error is in the super constructor invocation of 'GlassHeader', and occurs here at lib/src/indicator/glass_indicator.dart:86:11.
+  error - test/ios17_header_test.dart:76:17 - Invalid constant value. - invalid_constant
+           - The error is in the super constructor invocation of 'iOS17Header', and occurs here at lib/src/indicator/ios17_indicator.dart:155:11.
+  error - test/ios17_header_test.dart:85:34 - Const variables must be initialized with a constant value. Try changing the initializer to be a constant expression. - const_initialized_with_non_constant_value
+  error - test/ios17_header_test.dart:85:34 - Invalid constant value. - invalid_constant
+           - The error is in the super constructor invocation of 'iOS17Header', and occurs here at lib/src/indicator/ios17_indicator.dart:155:11.
+  error - test/ios17_header_test.dart:86:48 - There's no constant named 'Follow' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Follow'. - undefined_enum_constant
+  error - test/ios17_header_test.dart:212:34 - Const variables must be initialized with a constant value. Try changing the initializer to be a constant expression. - const_initialized_with_non_constant_value
+  error - test/ios17_header_test.dart:212:34 - Invalid constant value. - invalid_constant
+           - The error is in the super constructor invocation of 'iOS17Header', and occurs here at lib/src/indicator/ios17_indicator.dart:155:11.
+  error - test/refresh_physics_test.dart:324:34 - There's no constant named 'HideAlways' in 'LoadStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'HideAlways'. - undefined_enum_constant
+  error - test/refresh_test.dart:275:19 - Invalid constant value. - invalid_constant
+           - The error is in the super constructor invocation of 'ClassicHeader', and occurs here at lib/src/indicator/classic_indicator.dart:98:24.
+  error - test/repro_659_test.dart:15:19 - Invalid constant value. - invalid_constant
+           - The error is in the super constructor invocation of 'ClassicHeader', and occurs here at lib/src/indicator/classic_indicator.dart:98:24.
+  error - test/skeleton_footer_test.dart:9:14 - A value of type 'Null' can't be assigned to a parameter of type 'LoadStyle' in a const constructor. Try using a subtype, or removing the keyword 'const'. - const_constructor_param_type_mismatch
+  error - test/skeleton_footer_test.dart:9:58 - There's no constant named 'ShowWhenLoading' in 'LoadStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'ShowWhenLoading'. - undefined_enum_constant
+  error - test/skeleton_footer_test.dart:111:19 - A value of type 'Null' can't be assigned to a parameter of type 'LoadStyle' in a const constructor. Try using a subtype, or removing the keyword 'const'. - const_constructor_param_type_mismatch
+  error - test/skeleton_footer_test.dart:125:19 - A value of type 'Null' can't be assigned to a parameter of type 'LoadStyle' in a const constructor. Try using a subtype, or removing the keyword 'const'. - const_constructor_param_type_mismatch
+  error - test/skeleton_footer_test.dart:137:19 - A value of type 'Null' can't be assigned to a parameter of type 'LoadStyle' in a const constructor. Try using a subtype, or removing the keyword 'const'. - const_constructor_param_type_mismatch
+  error - test/skeleton_footer_test.dart:155:19 - A value of type 'Null' can't be assigned to a parameter of type 'LoadStyle' in a const constructor. Try using a subtype, or removing the keyword 'const'. - const_constructor_param_type_mismatch
+  error - test/skeleton_footer_test.dart:169:19 - A value of type 'Null' can't be assigned to a parameter of type 'LoadStyle' in a const constructor. Try using a subtype, or removing the keyword 'const'. - const_constructor_param_type_mismatch
+  error - test/skeleton_footer_test.dart:262:19 - A value of type 'Null' can't be assigned to a parameter of type 'LoadStyle' in a const constructor. Try using a subtype, or removing the keyword 'const'. - const_constructor_param_type_mismatch
+  error - test/skeleton_footer_test.dart:292:19 - A value of type 'Null' can't be assigned to a parameter of type 'LoadStyle' in a const constructor. Try using a subtype, or removing the keyword 'const'. - const_constructor_param_type_mismatch
+  error - test/skeleton_footer_test.dart:442:29 - A value of type 'Null' can't be assigned to a parameter of type 'LoadStyle' in a const constructor. Try using a subtype, or removing the keyword 'const'. - const_constructor_param_type_mismatch
+  error - test/smart_refresher_test.dart:378:40 - There's no constant named 'Front' in 'RefreshStyle'. Try correcting the name to the name of an existing constant, or defining a constant named 'Front'. - undefined_enum_constant
+   info - lib/src/indicator/classic_indicator.dart:306:71 - The referenced name isn't visible in scope. Try adding an import for the referenced name. - comment_references
+   info - lib/src/indicator/glass_indicator.dart:29:10 - The referenced name isn't visible in scope. Try adding an import for the referenced name. - comment_references
+   info - lib/src/indicator/glass_indicator.dart:30:8 - The referenced name isn't visible in scope. Try adding an import for the referenced name. - comment_references
+   info - lib/src/indicator/twolevel_indicator.dart:72:52 - The referenced name isn't visible in scope. Try adding an import for the referenced name. - comment_references
+   info - lib/src/indicator/twolevel_indicator.dart:73:51 - The referenced name isn't visible in scope. Try adding an import for the referenced name. - comment_references
+   info - lib/src/internals/slivers.dart:33:76 - The referenced name isn't visible in scope. Try adding an import for the referenced name. - comment_references
+   info - test/skeleton_footer_test.dart:13:20 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - test/skeleton_footer_test.dart:17:20 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+
+74 issues found.

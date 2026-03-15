@@ -102,13 +102,13 @@ class RefreshPhysics extends ScrollPhysics {
       return null;
     }
     RenderViewport? result;
-    context.visitChildElements((Element e) {
-      final RenderObject? renderObject = e.findRenderObject();
+    context.visitChildElements((Element element) {
+      final RenderObject? renderObject = element.findRenderObject();
       if (renderObject is RenderViewport) {
         assert(result == null);
         result = renderObject;
       } else {
-        result = findViewport(e);
+        result = findViewport(element);
       }
     });
     return result;

@@ -171,6 +171,26 @@ ScrollBar(
 
 ---
 
+## SmartRefresher.builder
+
+A specialized constructor for building the list content based on the current [ContentStatus] (idle, loading, empty, error). This is the recommended pattern for integrating with `FutureProvider` (Riverpod) or `BlocBuilder`.
+
+```dart
+SmartRefresher.builder(
+  controller: _controller,
+  loading: const Center(child: CircularProgressIndicator()), // Initial load slot
+  empty: const Center(child: Text('No items found')),        // Empty data slot
+  error: const Center(child: Text('Something went wrong')),  // Initial error slot
+  builder: (context, physics) => ListView.builder(
+    physics: physics, // IMPORTANT: use the provided physics
+    itemCount: items.length,
+    itemBuilder: (c, i) => ListTile(title: Text(items[i])),
+  ),
+)
+```
+
+---
+
 ## RefreshController
 
 `RefreshController` is the bridge between your data layer and the refresh widget. Create one per `SmartRefresher` and keep it alive with the same lifecycle as the widget — typically as a field in a `StatefulWidget`.
@@ -282,6 +302,22 @@ MaterialApp(
       ),
     ],
   ),
+)
+```
+
+---
+
+## RefreshConfiguration (Global Defaults)
+
+Configure global defaults for all `SmartRefresher` widgets in its subtree. Usually placed at the root of your app.
+
+```dart
+RefreshConfiguration(
+  headerTriggerDistance: 80.0,        // Distance to trigger refresh
+  footerTriggerDistance: 15.0,        // Distance to trigger load-more
+  enableThresholdHaptic: true,        // Haptic feedback at pull threshold (iOS)
+  enableBallisticRefresh: false,      // Auto-refresh when dragging fast
+  child: MaterialApp(...),
 )
 ```
 

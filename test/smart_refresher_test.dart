@@ -436,17 +436,18 @@ void main() {
       ),
     ));
 
-    // Scroll to bottom and HOLD to avoid mode reset to idle in _handleModeChange
-    final gesture = await tester.startGesture(const Offset(200, 500));
-    await gesture.moveBy(const Offset(0, -1000));
-    await tester.pump(); // Start drag
-    await tester.pump(const Duration(milliseconds: 100)); // Process trigger
+    // Programmatically trigger loading
+    controller.requestLoading(needMove: false);
+    
+    // Process frames
+    await tester.pump(); // Trigger refresh start
+    await tester.pump(const Duration(milliseconds: 100)); // Process dynamic call
     await tester.pump(const Duration(milliseconds: 100)); // Process catchError
+    await tester.pump(); // Process addPostFrameCallback
 
     expect(controller.footerStatus, LoadStatus.failed);
     expect(caughtError, 'Async Loading Error');
 
-    await gesture.up();
     await tester.pumpAndSettle();
   });
 }

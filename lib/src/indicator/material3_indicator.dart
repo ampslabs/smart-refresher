@@ -234,9 +234,6 @@ class Material3HeaderState extends RefreshIndicatorState<Material3Header>
           width: _spinnerSize,
           height: _spinnerSize,
           child: CircularProgressIndicator(
-            // TODO: Remove when the package minimum Flutter SDK is raised to 3.27+.
-            // ignore: deprecated_member_use
-            year2023: false,
             value: mode == RefreshStatus.refreshing ? null : _dragProgress,
             color: indicatorTheme.primaryColor,
             backgroundColor: indicatorTheme.trackColor,

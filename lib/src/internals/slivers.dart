@@ -138,8 +138,8 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   }
 
   /// Sets the flag to trigger a dimension update.
-  set updateFlag(bool u) {
-    _updateFlag = u;
+  set updateFlag(bool shouldUpdate) {
+    _updateFlag = shouldUpdate;
     markNeedsLayout();
   }
 

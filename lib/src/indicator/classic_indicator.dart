@@ -112,7 +112,7 @@ class ClassicHeader extends RefreshIndicator {
     this.failedText,
     this.idleText,
     this.iconPos = IconPosition.left,
-    this.spacing = 15.0,
+    this.spacing = SmartRefresherConstants.defaultIndicatorSpacing,
     this.refreshingIcon,
     this.failedIcon,
     this.completeIcon,
@@ -171,8 +171,8 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                             : mode == RefreshStatus.refreshing
                                 ? widget.refreshingIcon ??
                                     SizedBox(
-                                      width: 25.0,
-                                      height: 25.0,
+                                      width: SmartRefresherConstants.defaultIndicatorIconSize,
+                                      height: SmartRefresherConstants.defaultIndicatorIconSize,
                                       child: defaultTargetPlatform ==
                                               TargetPlatform.iOS
                                           ? CupertinoTheme(
@@ -185,7 +185,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                                             )
                                           : CircularProgressIndicator(
                                               color: theme.primaryColor,
-                                              strokeWidth: 2.0,
+                                              strokeWidth: SmartRefresherConstants.defaultIndicatorStrokeWidth,
                                             ),
                                     )
                                 : widget.twoLevelView;
@@ -323,7 +323,7 @@ class ClassicFooter extends LoadIndicator {
     this.canLoadingText,
     this.failedIcon,
     this.iconPos = IconPosition.left,
-    this.spacing = 15.0,
+    this.spacing = SmartRefresherConstants.defaultIndicatorSpacing,
     this.completeDuration = SmartRefresherConstants.defaultAnimationDuration,
     this.loadingIcon,
     this.canLoadingIcon,
@@ -361,8 +361,8 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
     final Widget? icon = mode == LoadStatus.loading
         ? widget.loadingIcon ??
             SizedBox(
-              width: 25.0,
-              height: 25.0,
+              width: SmartRefresherConstants.defaultIndicatorIconSize,
+              height: SmartRefresherConstants.defaultIndicatorIconSize,
               child: defaultTargetPlatform == TargetPlatform.iOS
                   ? CupertinoTheme(
                       data: CupertinoThemeData(
@@ -372,7 +372,7 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
                     )
                   : CircularProgressIndicator(
                       color: theme.primaryColor,
-                      strokeWidth: 2.0,
+                      strokeWidth: SmartRefresherConstants.defaultIndicatorStrokeWidth,
                     ),
             )
         : mode == LoadStatus.noMore
@@ -390,7 +390,7 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
 
   @override
   Future<void> endLoading() {
-    return Future.delayed(widget.completeDuration);
+    return endRefreshWithTimer(widget.completeDuration);
   }
 
   @override

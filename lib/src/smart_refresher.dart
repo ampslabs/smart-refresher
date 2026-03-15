@@ -8,12 +8,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:async';
-import 'package:smart_refresher/src/internals/slivers.dart';
 import 'internals/indicator_wrap.dart';
 import 'internals/refresh_physics.dart';
 import 'internals/mixins.dart';
-import 'indicator/classic_indicator.dart';
-import 'indicator/material_indicator.dart';
 
 // ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
 // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
@@ -155,6 +152,10 @@ class SmartRefresher extends StatefulWidget {
         slivers = null;
 
   /// Creates a [SmartRefresher] using a custom builder.
+  ///
+  /// This constructor allows you to build the content based on the current
+  /// [ContentStatus] (idle, loading, empty, error). You can provide specific
+  /// widgets for the [loading], [empty], and [error] states.
   const SmartRefresher.builder({
     super.key,
     required this.controller,
@@ -185,6 +186,9 @@ class SmartRefresher extends StatefulWidget {
         center = null;
 
   /// Creates a [SmartRefresher] with a list of slivers.
+  ///
+  /// This constructor is useful when you want to use [SmartRefresher] with
+  /// complex sliver-based layouts where you already have a list of slivers.
   const SmartRefresher.slivers({
     super.key,
     required this.controller,
@@ -389,6 +393,10 @@ class RefreshController {
     return _headerStreamController!.stream;
   }
 
+  /// Exposes the refresh state as a stream for reactive consumers.
+  /// Alias for [headerStream].
+  Stream<RefreshStatus> get stream => headerStream;
+
   /// A stream of the footer's loading status.
   Stream<LoadStatus> get footerStream {
     _footerStreamController ??= StreamController<LoadStatus>.broadcast();
@@ -449,18 +457,18 @@ class RefreshController {
 
   StatefulElement? _findIndicator(BuildContext context, Type elementType) {
     StatefulElement? result;
-    context.visitChildElements((Element e) {
+    context.visitChildElements((Element element) {
       if (elementType == RefreshIndicator) {
-        if (e.widget is RefreshIndicator) {
-          result = e as StatefulElement?;
+        if (element.widget is RefreshIndicator) {
+          result = element as StatefulElement?;
         }
       } else {
-        if (e.widget is LoadIndicator) {
-          result = e as StatefulElement?;
+        if (element.widget is LoadIndicator) {
+          result = element as StatefulElement?;
         }
       }
 
-      result ??= _findIndicator(e, elementType);
+      result ??= _findIndicator(element, elementType);
     });
     return result;
   }
@@ -475,7 +483,7 @@ class RefreshController {
   Future<void>? requestRefresh(
       {bool needMove = true,
       bool needCallback = true,
-      Duration duration = const Duration(milliseconds: 500),
+      Duration duration = SmartRefresherConstants.defaultAnimationDuration,
       Curve curve = Curves.linear}) {
     assert(position != null,
         'Try not to call requestRefresh() before build, please call after the ui was rendered');
@@ -492,11 +500,14 @@ class RefreshController {
       _refresherState!.setCanDrag(false);
     }
     if (needMove) {
-      return Future<void>.delayed(const Duration(milliseconds: 50))
+      return Future<void>.delayed(SmartRefresherConstants.defaultSettleDuration)
           .then((_) async {
         await position
-            ?.animateTo(position!.minScrollExtent - 0.0001,
-                duration: duration, curve: curve)
+            ?.animateTo(
+                position!.minScrollExtent -
+                    SmartRefresherConstants.minScrollSettlingOffset,
+                duration: duration,
+                curve: curve)
             .then((_) {
           if (_refresherState != null && _refresherState!.mounted) {
             _refresherState!.setCanDrag(true);
@@ -527,7 +538,7 @@ class RefreshController {
     assert(position != null,
         'Try not to call requestRefresh() before build, please call after the ui was rendered');
     headerMode!.value = RefreshStatus.twoLevelOpening;
-    return Future<void>.delayed(const Duration(milliseconds: 50))
+    return Future<void>.delayed(SmartRefresherConstants.defaultSettleDuration)
         .then((_) async {
       await position?.animateTo(position!.minScrollExtent,
           duration: duration, curve: curve);
@@ -554,7 +565,7 @@ class RefreshController {
       _refresherState!.setCanDrag(false);
     }
     if (needMove) {
-      return Future<void>.delayed(const Duration(milliseconds: 50))
+      return Future<void>.delayed(SmartRefresherConstants.defaultSettleDuration)
           .then((_) async {
         await position
             ?.animateTo(position!.maxScrollExtent,
@@ -730,9 +741,9 @@ class RefreshConfiguration extends InheritedWidget {
       this.enableLoadingWhenNoData = false,
       this.enableBallisticRefresh = false,
       this.springDescription = const SpringDescription(
-        mass: 2.2,
-        stiffness: 150,
-        damping: 16,
+        mass: SmartRefresherConstants.defaultSpringMass,
+        stiffness: SmartRefresherConstants.defaultSpringStiffness,
+        damping: SmartRefresherConstants.defaultSpringDamping,
       ),
       this.enableScrollWhenRefreshCompleted = false,
       this.enableLoadingWhenFailed = true,
@@ -877,9 +888,14 @@ class RefreshNotifier<T> extends ChangeNotifier implements ValueListenable<T> {
   /// The stack trace associated with the error.
   StackTrace? stackTrace;
 
+  /// The current value of the notifier.
   @override
   T get value => _value;
 
+  /// Sets a new value and notifies listeners.
+  ///
+  /// If the new value is not [RefreshStatus.failed] or [LoadStatus.failed],
+  /// the [error] and [stackTrace] are automatically cleared.
   set value(T newValue) {
     if (_value == newValue) return;
     _value = newValue;

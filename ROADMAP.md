@@ -131,14 +131,14 @@ These are unresolved issues and unmerged PRs from `https://github.com/peng8350/f
 - [x] `RefreshController` → add `ValueNotifier`-based state exposure
 - [x] `RefreshController.stream` — Expose state as a `Stream<RefreshStatus>` for reactive consumers
 - [x] `onRefreshFailed` callback — Distinct error-state callback; lets the indicator show failure without the consumer managing it manually
-- [ ] Haptic feedback opt-in — `HapticFeedback.mediumImpact()` at pull threshold, disabled by default
-- [ ] Riverpod / Provider / BLoC integration examples
+- [x] Haptic feedback opt-in — `HapticFeedback.mediumImpact()` at pull threshold, disabled by default
+- [x] Riverpod / Provider / BLoC integration examples
 - [ ] Hosted Documentation Site — Docusaurus or Mintlify with rich live code previews
-- [ ] `SmartRefresher.builder` constructor — Slots for empty/error/loading states
-- [ ] Deprecate legacy Chinese comments — 100% English across all source files
-- [ ] Comprehensive API docs — Rich `///` doc comments for all public members
+- [x] `SmartRefresher.builder` constructor — Slots for empty/error/loading states
+- [x] Deprecate legacy Chinese comments — 100% English across all source files
+- [x] Comprehensive API docs — Rich `///` doc comments for all public members
 - [ ] pub.dev score improvement — Target 140+ pub points
-- [ ] Migration guide — Publish `MIGRATING.md`
+- [x] Migration guide — Publish `MIGRATING.md`
 
 **Deliverable:** v1.0.0 — stable API, 140+ pub points, migration guide, full documentation.
 
@@ -150,12 +150,12 @@ These are unresolved issues and unmerged PRs from `https://github.com/peng8350/f
 **Goal:** Reduce technical debt accumulated during rapid bug-fix phases and establish measurable performance baselines that prevent regressions.
 
 ### Code Cleanup
-- [ ] **Dead code removal** — Audit all files for unreachable branches, unused fields, and deprecated internal helpers left over from the upstream codebase; remove without replacement
-- [ ] **Consistent naming conventions** — Align all identifiers with Dart's official style guide (lowerCamelCase, no Hungarian prefixes, no single-letter variables outside loops)
-- [ ] **Extract magic constants** — Move hardcoded numeric and string literals into named constants or a dedicated `SmartRefresherDefaults` class
-- [ ] **Decompose `SmartRefresherState`** — The main state class is currently a monolith; split drag handling, animation control, and sliver composition into focused mixins
-- [ ] **Standardise async patterns** — Replace ad-hoc `Future.delayed` workarounds with proper `TickerProvider` / `SchedulerBinding.addPostFrameCallback` patterns throughout
-- [ ] **Remove all upstream TODO/FIXME comments** — Either resolve the underlying issue or log a tracked GitHub issue; no stale comments in v1.1
+- [x] **Dead code removal** — Audit all files for unreachable branches, unused fields, and deprecated internal helpers left over from the upstream codebase; remove without replacement
+- [x] **Consistent naming conventions** — Align all identifiers with Dart's official style guide (lowerCamelCase, no Hungarian prefixes, no single-letter variables outside loops)
+- [x] **Extract magic constants** — Move hardcoded numeric and string literals into named constants or a dedicated `SmartRefresherDefaults` class
+- [x] **Decompose `SmartRefresherState`** — The main state class is currently a monolith; split drag handling, animation control, and sliver composition into focused mixins
+- [x] **Standardise async patterns** — Replace ad-hoc `Future.delayed` workarounds with proper `TickerProvider` / `SchedulerBinding.addPostFrameCallback` patterns throughout
+- [x] **Remove all upstream TODO/FIXME comments** — Either resolve the underlying issue or log a tracked GitHub issue; no stale comments in v1.1
 
 ### Performance
 - [ ] **Rebuild minimisation** — Wrap indicator widgets in `RepaintBoundary` and audit `setState` call sites so only the indicator layer repaints during a drag, not the full list

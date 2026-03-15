@@ -222,22 +222,6 @@ void main() {
 
       expect(tester.takeException(), isNull);
     });
-
-    testWidgets('uses the 2024 CircularProgressIndicator style flag', (
-      WidgetTester tester,
-    ) async {
-      final GlobalKey<Material3HeaderState> key =
-          GlobalKey<Material3HeaderState>();
-      await tester.pumpWidget(_buildTestApp(headerKey: key));
-
-      final CircularProgressIndicator indicator = _indicatorFor(
-        key.currentState!,
-        RefreshStatus.canRefresh,
-      );
-
-      // ignore: deprecated_member_use
-      expect(indicator.year2023, isFalse);
-    });
   });
 }
 

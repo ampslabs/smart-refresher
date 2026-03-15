@@ -106,4 +106,31 @@ abstract final class SmartRefresherConstants {
 
   /// Default duration the indicator stays in "completed" or "failed" state.
   static const Duration defaultCompleteDuration = Duration(milliseconds: 600);
+
+  /// Default duration to wait for the UI to settle before state changes.
+  static const Duration defaultSettleDuration = Duration(milliseconds: 50);
+
+  /// Default spring mass for the refresher's physics.
+  static const double defaultSpringMass = 2.2;
+
+  /// Default spring stiffness for the refresher's physics.
+  static const double defaultSpringStiffness = 150.0;
+
+  /// Default spring damping for the refresher's physics.
+  static const double defaultSpringDamping = 16.0;
+
+  /// Small offset used to trigger scroll notifications or settle scroll position.
+  static const double minScrollSettlingOffset = 0.00001;
+
+  /// Default threshold for scroll extent to avoid accidental triggers at the edge.
+  static const double defaultScrollThreshold = 2.0;
+
+  /// Default size for the spinner icon.
+  static const double defaultIndicatorIconSize = 25.0;
+
+  /// Default stroke width for circular indicators.
+  static const double defaultIndicatorStrokeWidth = 2.0;
+
+  /// Default spacing between icon and text in indicators.
+  static const double defaultIndicatorSpacing = 15.0;
 }

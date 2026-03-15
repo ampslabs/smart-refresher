@@ -169,7 +169,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   @override
   void _handleModeChange() {
-    if (!mounted) {
+    if (!mounted || mode == _lastMode) {
       return;
     }
     update();
@@ -260,6 +260,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     } else if (mode == RefreshStatus.twoLeveling) {
       refresherState!.setCanDrag(configuration!.enableScrollWhenTwoLevel);
     }
+    _lastMode = mode;
     onModeChange(mode);
   }
 
@@ -309,7 +310,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     with IndicatorStateMixin<T, LoadStatus>, LoadingProcessor {
   bool _isHide = false;
   bool _enableLoading = false;
-  LoadStatus? _lastMode = LoadStatus.idle;
 
   @override
   double _calculateScrollOffset() {
@@ -334,7 +334,11 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
   @override
   Future<void> endLoading() {
-    return Future.delayed(const Duration());
+    final Completer<void> completer = Completer<void>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) completer.complete();
+    });
+    return completer.future;
   }
 
   /// Resets the loading state after completion.
@@ -347,7 +351,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         return;
       }
 
-      if (mounted) Scrollable.of(context).position.correctBy(0.00001);
+      if (mounted) Scrollable.of(context).position.correctBy(SmartRefresherConstants.minScrollSettlingOffset);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _position?.outOfRange == true) {
           activity!.delegate.goBallistic(0);
@@ -362,7 +366,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   bool _checkIfCanLoading() {
     if (_position!.maxScrollExtent - _position!.pixels <=
             configuration!.footerTriggerDistance &&
-        _position!.extentBefore > 2.0 &&
+        _position!.extentBefore > SmartRefresherConstants.defaultScrollThreshold &&
         _enableLoading) {
       if (!configuration!.enableLoadingWhenFailed &&
           mode == LoadStatus.failed) {
@@ -383,7 +387,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
   @override
   void _handleModeChange() {
-    if (!mounted || _isHide) {
+    if (!mounted || _isHide || mode == _lastMode) {
       return;
     }
 
@@ -444,8 +448,8 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
     if (activity is DragScrollActivity) {
       if (_checkIfCanLoading()) {
         mode = LoadStatus.canLoading;
-      } else {
-        mode = _lastMode;
+      } else if (mode == LoadStatus.canLoading) {
+        mode = LoadStatus.idle;
       }
     }
     if (activity is BallisticScrollActivity) {
@@ -559,6 +563,9 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   /// Whether the indicator is currently in a floating state.
   bool get floating => _floating;
 
+  /// The current state of the indicator.
+  V? _lastMode;
+
   /// Sets the current mode of the indicator.
   set mode(V? mode) {
     if (_mode != null && mode != null) {
@@ -574,9 +581,13 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   /// The current scroll activity.
   ScrollActivity? get activity => _position!.activity;
 
+  /// The current scroll position of the refresher.
   ScrollPosition? _position;
 
-  /// Triggers a UI update.
+  /// The scroll position of the refresher's inner scrollable.
+  ScrollPosition? get position => _position;
+
+  /// Triggers a UI update by calling [setState] if the widget is mounted.
   void update() {
     if (mounted) setState(() {});
   }
@@ -612,6 +623,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
       _mode?.removeListener(_handleModeChange);
       _mode = newMode;
       _mode?.addListener(_handleModeChange);
+      _lastMode = _mode?.value;
     }
     if (newPosition != _position) {
       _position?.removeListener(_handleOffsetChange);

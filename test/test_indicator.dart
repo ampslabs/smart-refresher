@@ -12,7 +12,6 @@ class TestHeader extends RefreshIndicator {
   const TestHeader({super.key});
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _TestHeaderState();
   }
 }
@@ -20,7 +19,6 @@ class TestHeader extends RefreshIndicator {
 class _TestHeaderState extends RefreshIndicatorState<TestHeader> {
   @override
   Widget buildContent(BuildContext context, RefreshStatus? mode) {
-    // TODO: implement buildContent
     return Text(mode == RefreshStatus.idle
         ? 'idle'
         : mode == RefreshStatus.refreshing
@@ -45,7 +43,6 @@ class TestFooter extends LoadIndicator {
   const TestFooter({super.key});
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _TestFooterState();
   }
 }
@@ -53,7 +50,6 @@ class TestFooter extends LoadIndicator {
 class _TestFooterState extends LoadIndicatorState<TestFooter> {
   @override
   Widget buildContent(BuildContext context, LoadStatus? mode) {
-    // TODO: implement buildContent
     return Text(mode == LoadStatus.failed
         ? 'failed'
         : mode == LoadStatus.loading
