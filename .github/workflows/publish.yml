@@ -22,16 +22,5 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Generate SBOM
-        run: |
-          dart pub global activate cyclonedx_dart
-          dart pub global run cyclonedx_dart:make -o sbom.json
-
-      - name: Upload SBOM
-        uses: actions/upload-artifact@v7.0.0
-        with:
-          name: sbom
-          path: sbom.json
-
       - name: Publish to pub.dev
         run: dart pub publish --force
