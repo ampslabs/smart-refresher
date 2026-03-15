@@ -1,0 +1,75 @@
+---
+title: API Reference
+description: Detailed technical specifications for SmartRefresher and RefreshController.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+This reference covers the core classes of the `smart_refresher` package. For visual customization, see [Theming](/reference/theming).
+
+## `SmartRefresher`
+
+The primary widget that coordinates indicators and scroll physics.
+
+| Property | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `controller` | `RefreshController` | **Required** | The state manager for this refresher. |
+| `child` | `Widget?` | `null` | The scrollable content (e.g., `ListView`). |
+| `header` | `Widget?` | `ClassicHeader()` | The top indicator for pull-to-refresh. |
+| `footer` | `Widget?` | `ClassicFooter()` | The bottom indicator for load-more. |
+| `enablePullDown` | `bool` | `true` | Enables/disables pull-to-refresh. |
+| `enablePullUp` | `bool` | `false` | Enables/disables pull-up loading. |
+| `onRefresh` | `VoidCallback?` | `null` | Called when the user pulls past the threshold. |
+| `onLoading` | `VoidCallback?` | `null` | Called when the user reaches the bottom. |
+| `scrollController`| `ScrollController?`| `null` | Optional custom scroll controller. |
+
+---
+
+## `RefreshController`
+
+The `RefreshController` is used to communicate with the `SmartRefresher` widget from your business logic (bloc, provider, or state).
+
+### Control Methods
+
+#### `requestRefresh()`
+Triggers the refresh state and animation immediately without user interaction.
+
+#### `refreshCompleted({bool resetFooterState = false})`
+Ends the refresh animation. If `resetFooterState` is true, it also resets the footer from a "noData" state back to "idle".
+
+#### `refreshFailed()`
+Ends the refresh animation but shows the "Failed" state of the header.
+
+#### `loadComplete()`
+Ends the infinite-scroll loading state and prepares the footer for the next pull.
+
+#### `loadNoData()`
+Switches the footer to a "No more data" state. The footer will typically show a message or hide itself.
+
+#### `loadFailed()`
+Ends the loading state but shows the "Failed" state of the footer.
+
+### State Accessors
+
+- `headerStatus`: Returns the current `RefreshStatus` (idle, canRefresh, refreshing, completed, failed).
+- `footerStatus`: Returns the current `LoadStatus` (idle, canLoading, loading, noData, failed).
+
+<Aside type="caution">
+  Always call `dispose()` on your `RefreshController` in the `dispose()` method of your `StatefulWidget` to prevent memory leaks.
+</Aside>
+
+---
+
+## `RefreshConfiguration`
+
+A widget used at the root of your app to define global behavior for all refreshers in its subtree.
+
+```dart
+RefreshConfiguration(
+  headerTriggerDistance: 80.0,
+  footerTriggerDistance: 15.0,
+  maxOverScrollExtent: 100.0,
+  enableScrollWhenRefreshCompleted: true,
+  child: MaterialApp(...),
+)
+```

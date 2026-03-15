@@ -1,0 +1,55 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+import { Icon } from '@astrojs/starlight/components';
+
+const { hero, entry } = Astro.props;
+const title = Astro.props.title || hero?.data?.title || entry?.data?.title || 'smart_refresher';
+const tagline = Astro.props.tagline || hero?.data?.tagline || entry?.data?.hero?.tagline;
+const actions = Astro.props.actions || hero?.data?.actions || entry?.data?.hero?.actions;
+---
+
+<div class="hero-wrapper">
+  <div class="hero-grid">
+    <div class="hero-left-content">
+      <div class="badge-row">
+        <slot name="badges" />
+      </div>
+      
+      <h1 class="hero-h1">
+        {title}
+      </h1>
+      
+      {tagline && <p class="hero-p">{tagline}</p>}
+      
+      {actions && (
+        <div class="hero-cta-group">
+          {actions.map((action: any) => (
+            <a href={action.link} class={`cta-button cta-${action.variant || 'secondary'}`}>
+              {action.icon && <Icon name={action.icon as any} size="1.25rem" />}
+              <span>{action.text}</span>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+    
+    <div class="hero-right-visual">
+      <div class="code-art-container">
+        <div class="window-frame">
+          <div class="window-bar">
+            <div class="window-controls">
+              <span class="dot-ctrl close"></span>
+              <span class="dot-ctrl minimize"></span>
+              <span class="dot-ctrl expand"></span>
+            </div>
+            <div class="window-tab">example.dart</div>
+          </div>
+          <div class="window-body">
+            <slot name="code" />
+          </div>
+        </div>
+        <div class="window-glow"></div>
+      </div>
+    </div>
+  </div>
+</div>

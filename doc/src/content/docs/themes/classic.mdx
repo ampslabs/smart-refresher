@@ -1,0 +1,176 @@
+---
+title: ClassicHeader & ClassicFooter
+description: The default, platform-adaptive pull-to-refresh indicators for Android and iOS.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+`ClassicHeader` and `ClassicFooter` are the default indicators bundled with `smart_refresher`. They combine an icon and a status text label, and automatically adapt their spinner to `CircularProgressIndicator` on Android and `CupertinoActivityIndicator` on iOS.
+
+---
+
+## Basic Usage
+
+```dart
+SmartRefresher(
+  controller: _controller,
+  enablePullDown: true,
+  enablePullUp: true,
+  header: const ClassicHeader(),
+  footer: const ClassicFooter(),
+  onRefresh: _onRefresh,
+  onLoading: _onLoading,
+  child: ListView.builder(...),
+)
+```
+
+---
+
+## `ClassicHeader` Properties
+
+| Property | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `idleText` | `String?` | `"Pull down to refresh"` | Text shown when idle. |
+| `releaseText` | `String?` | `"Release to refresh"` | Text shown when the threshold is crossed. |
+| `refreshingText` | `String?` | `"Refreshing..."` | Text shown during the active refresh. |
+| `completeText` | `String?` | `"Refresh Complete"` | Text shown on success. |
+| `failedText` | `String?` | `"Refresh Failed"` | Text shown on failure. |
+| `idleIcon` | `Widget?` | `↓ arrow icon` | Icon for the idle state. |
+| `releaseIcon` | `Widget?` | `↺ refresh icon` | Icon when armed. |
+| `refreshingIcon` | `Widget?` | Platform spinner | Icon during refresh. |
+| `completeIcon` | `Widget?` | `✓ check icon` | Icon on success. |
+| `failedIcon` | `Widget?` | `⚠ error icon` | Icon on failure. |
+| `iconPos` | `IconPosition` | `.left` | Position of the icon relative to text. |
+| `spacing` | `double` | `16.0` | Gap between the icon and the label text. |
+| `color` | `Color?` | Theme primary | Color for the spinner and default icons. |
+| `arrowColor` | `Color?` | Theme arrow | Color for the directional arrow icons. |
+| `iconColor` | `Color?` | Theme icon | Color for complete/failed icons. |
+| `textStyle` | `TextStyle?` | Theme text | Style for the status label. |
+| `outerBuilder` | `OuterBuilder?` | `null` | Wraps the entire indicator (e.g., for custom background). |
+| `height` | `double` | `60.0` | Height reserved for the header. |
+| `completeDuration` | `Duration` | `600ms` | How long the complete/failed state is visible. |
+
+### `IconPosition` Values
+
+| Value | Behaviour |
+| :--- | :--- |
+| `.left` | Icon to the left of the text (default). |
+| `.right` | Icon to the right of the text. |
+| `.top` | Icon above the text. |
+| `.bottom` | Icon below the text. |
+
+---
+
+## `ClassicFooter` Properties
+
+| Property | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `idleText` | `String?` | `"Pull up to load"` | Text when the footer is visible but idle. |
+| `canLoadingText` | `String?` | `"Release to load"` | Text when the user has pulled past the trigger. |
+| `loadingText` | `String?` | `"Loading..."` | Text during active loading. |
+| `noDataText` | `String?` | `"No more data"` | Text in the `noData` state. |
+| `failedText` | `String?` | `"Load Failed"` | Text when loading fails. |
+| `idleIcon` | `Widget?` | `↑ arrow icon` | Icon for the idle state. |
+| `canLoadingIcon` | `Widget?` | `↺ autorenew icon` | Icon when armed to load. |
+| `loadingIcon` | `Widget?` | Platform spinner | Icon during loading. |
+| `noMoreIcon` | `Widget?` | `null` | Optional icon for the noData state. |
+| `failedIcon` | `Widget?` | `⚠ error icon` | Icon on failure. |
+| `color` | `Color?` | Theme primary | Color for all default icons and the spinner. |
+| `textStyle` | `TextStyle?` | Theme text | Style for the status text. |
+| `iconPos` | `IconPosition` | `.left` | Position of the icon relative to text. |
+| `spacing` | `double` | `16.0` | Gap between the icon and the label text. |
+| `outerBuilder` | `OuterBuilder?` | `null` | Wraps the entire footer indicator. |
+| `height` | `double` | `60.0` | Height reserved for the footer. |
+
+---
+
+## Customisation Examples
+
+### Custom Text Labels
+
+```dart
+ClassicHeader(
+  idleText: 'Swipe down to refresh',
+  releaseText: 'Let go!',
+  refreshingText: 'Hold on...',
+  completeText: 'Done ✓',
+  failedText: 'Something went wrong',
+)
+```
+
+### Custom Colors
+
+```dart
+ClassicHeader(
+  color: Colors.deepPurple,      // spinner color
+  arrowColor: Colors.purple,     // arrow icon color
+  iconColor: Colors.green,       // complete/fail icon color
+)
+```
+
+### Custom Icons
+
+```dart
+ClassicHeader(
+  idleIcon: const Icon(Icons.south, color: Colors.blue),
+  releaseIcon: const Icon(Icons.north, color: Colors.orange),
+  completeIcon: const SizedBox.shrink(), // hide on complete
+)
+```
+
+### Custom Background via `outerBuilder`
+
+```dart
+ClassicHeader(
+  outerBuilder: (child) => Container(
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        colors: [Colors.deepPurple.shade900, Colors.black],
+      ),
+    ),
+    child: child,
+  ),
+)
+```
+
+---
+
+## Localization
+
+`ClassicHeader` and `ClassicFooter` both support i18n via `RefreshLocalizations`. Wrap your app to provide localized strings:
+
+```dart
+MaterialApp(
+  localizationsDelegates: [
+    RefreshLocalizations.delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ],
+  supportedLocales: const [
+    Locale('en'),
+    Locale('zh'),
+    // ... other supported locales
+  ],
+  ...
+)
+```
+
+<Aside type="tip">
+  If `RefreshLocalizations` is not found in the tree (e.g., in tests), the indicators fall back automatically to English strings.
+</Aside>
+
+---
+
+## Two-Level Support
+
+`ClassicHeader` exposes additional properties for two-level refresh:
+
+```dart
+ClassicHeader(
+  canTwoLevelText: 'Pull further to open',
+  canTwoLevelIcon: const Icon(Icons.open_in_full),
+  twoLevelView: MySecondLevelWidget(), // full-screen widget shown on two-level open
+)
+```
+
+See the [Core Architecture](/explanation/architecture) page for a full explanation of the two-level refresh state machine.

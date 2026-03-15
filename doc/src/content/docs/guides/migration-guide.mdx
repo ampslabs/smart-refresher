@@ -1,0 +1,67 @@
+---
+title: Migration Guide
+description: Smoothly transition from pull_to_refresh to smart_refresher.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+`smart_refresher` is a drop-in replacement and modernization of the original `pull_to_refresh` package. This guide outlines the minimal changes needed to upgrade your project.
+
+## Why Upgrade?
+
+- **Flutter 3.x Compatibility**: Built for the latest Flutter and Dart 3.
+- **Material 3 Support**: Native primary colors and elevation support.
+- **Improved iOS feel**: Support for iOS 17 bounce and haptics.
+- **Zero Dependencies**: Reduced package size and maintenance overhead.
+
+---
+
+## Migration Steps
+
+1. **Update `pubspec.yaml`**
+    Replace the old package with the new one:
+
+    ```yaml
+    dependencies:
+      # - pull_to_refresh: ^2.0.0
+      smart_refresher: ^1.0.0
+    ```
+
+2. **Global Search and Replace Imports**
+    Update your import statements across the project:
+
+    ```dart
+    // From:
+    import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+    // To:
+    import 'package:smart_refresher/smart_refresher.dart';
+    ```
+
+3. **Update Theme (Optional)**
+    If you were using `RefreshConfiguration` with old header builders, they are still supported, but we recommend switching to the new theme-aware indicators:
+
+    ```dart
+    // Old way
+    headerBuilder: () => ClassicHeader(),
+
+    // New way (respects global SmartRefresherTheme)
+    headerBuilder: () => const ClassicHeader(),
+    ```
+
+---
+
+## What has changed?
+
+### 1. Theming Extension
+Instead of passing colors to every header, use `SmartRefresherThemeData` in your `ThemeData.extensions`. This is the most significant architectural improvement.
+
+### 2. Streamlined Indicators
+We have unified the indicator API. Every built-in header (`Classic`, `WaterDrop`, `Material3`, etc.) now shares a common configuration pattern for haptics and spacing.
+
+### 3. Controller Lifecycle
+The `RefreshController` must now be disposed of. While previously some versions might have been more lenient, `smart_refresher` strictly enforces disposal to prevent leaks in large-scale apps.
+
+<Aside type="note">
+  If you have highly complex custom indicators extending `RefreshIndicator`, they should still work without modification, as the base classes remain compatible.
+</Aside>

@@ -1,0 +1,89 @@
+---
+title: GlassHeader
+description: A frosted-glass morphism pull-to-refresh header.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+`GlassHeader` renders a frosted-glass panel that slides in from the top of the scroll view. It uses `BackdropFilter` to blur the content behind it, producing a modern glassmorphism effect that works especially well on image-heavy backgrounds.
+
+---
+
+## Basic Usage
+
+```dart
+SmartRefresher(
+  controller: _controller,
+  header: const GlassHeader(),
+  onRefresh: _onRefresh,
+  child: ListView.builder(...),
+)
+```
+
+---
+
+## Properties
+
+| Property | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `blurX` | `double` | `10.0` | Horizontal Gaussian blur radius for the backdrop. |
+| `blurY` | `double` | `10.0` | Vertical Gaussian blur radius for the backdrop. |
+| `color` | `Color` | `Colors.white30` | Fill color of the glass panel (use a semi-transparent color). |
+| `progressIndicatorColor` | `Color` | `Colors.white` | Color of the `CircularProgressIndicator` shown during refresh. |
+| `child` | `Widget?` | `null` | Custom child placed inside the glass panel. |
+| `height` | `double` | `60.0` | Height reserved for the header. |
+| `completeDuration` | `Duration` | `600ms` | Time the complete state is shown. |
+
+---
+
+## Examples
+
+### Subtle Light Blur
+
+```dart
+GlassHeader(
+  blurX: 12.0,
+  blurY: 12.0,
+  color: Colors.white.withOpacity(0.15),
+  progressIndicatorColor: Colors.white,
+)
+```
+
+### Dark Tinted Glass
+
+```dart
+GlassHeader(
+  blurX: 20.0,
+  blurY: 20.0,
+  color: Colors.black.withOpacity(0.2),
+  progressIndicatorColor: Colors.white70,
+)
+```
+
+### Custom Child Inside Glass
+
+```dart
+GlassHeader(
+  color: Colors.white.withOpacity(0.2),
+  child: const Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Icon(Icons.refresh, color: Colors.white),
+      SizedBox(width: 10),
+      Text('Refreshing…', style: TextStyle(color: Colors.white)),
+    ],
+  ),
+)
+```
+
+---
+
+## Tips
+
+<Aside type="tip">
+  `GlassHeader` looks best when the scroll view has a rich background — an image, gradient, or colorful pattern. On a plain white background the blur has no visual effect.
+</Aside>
+
+<Aside type="note">
+  `BackdropFilter` can be expensive on older devices. Test performance on your minimum supported device. If needed, set `blurX` and `blurY` to lower values (4–6) to reduce GPU load.
+</Aside>

@@ -1,0 +1,201 @@
+---
+title: Themes & Built-in Indicators
+description: A complete guide to all 5 built-in refresh indicator themes and how to use them.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+`smart_refresher` ships with **5 distinct visual themes** for both the header (pull-to-refresh) and footer (load-more). Each theme is a self-contained widget that handles all refresh states automatically.
+
+---
+
+## 1. ClassicHeader (Default)
+
+The default, platform-adaptive indicator. On Android it renders a `CircularProgressIndicator`; on iOS it uses a `CupertinoActivityIndicator`.
+
+```dart
+SmartRefresher(
+  header: const ClassicHeader(),
+  footer: const ClassicFooter(),
+  controller: _controller,
+  onRefresh: _onRefresh,
+  child: ListView.builder(...),
+)
+```
+
+### Classic Header Options
+
+| Property | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `refreshingText` | `String` | `"Refreshing..."` | Text shown during active refresh. |
+| `completeText` | `String` | `"Refresh Complete"` | Text shown on success. |
+| `failedText` | `String` | `"Refresh Failed"` | Text shown on failure. |
+| `idleText` | `String` | `"Pull down to refresh"` | Text shown at rest. |
+| `releaseText` | `String` | `"Release to refresh"` | Text shown when armed. |
+
+---
+
+## 2. Material3Header
+
+A Material Design 3 floating indicator that lifts off the page with an elevation shadow and uses your `ThemeData.colorScheme`.
+
+```dart
+SmartRefresher(
+  header: Material3Header(
+    elevation: 8.0,   // Optional: controls card shadow depth
+  ),
+  controller: _controller,
+  onRefresh: _onRefresh,
+  child: ListView.builder(...),
+)
+```
+
+<Aside type="tip">
+  `Material3Header` automatically picks up `colorScheme.surface` and `colorScheme.onSurface` from your app's `ThemeData`. Simply update your theme and it adapts.
+</Aside>
+
+---
+
+## 3. iOS17Header
+
+A pixel-perfect recreation of the iOS 17 native pull-to-refresh indicator, featuring a 12-spoke "tick" geometry and authentic haptic feedback via the `HapticFeedback` API.
+
+```dart
+SmartRefresher(
+  header: const iOS17Header(),
+  controller: _controller,
+  onRefresh: _onRefresh,
+  child: ListView.builder(...),
+)
+```
+
+### Haptic Configuration
+
+Enable threshold haptics globally via `RefreshConfiguration`:
+
+```dart
+RefreshConfiguration(
+  enableThresholdHaptic: true,  // Vibrates when the user crosses the pull threshold
+  child: MaterialApp(...),
+)
+```
+
+<Aside type="note">
+  Haptic feedback is only functional on physical devices. Simulators and emulators will silently ignore haptic calls.
+</Aside>
+
+---
+
+## 4. WaterDropHeader & BezierHeader
+
+These themes use Flutter's `CustomPainter` to create fluid, liquid-feeling animations as the user pulls:
+
+- **`WaterDropHeader`**: A droplet that stretches and snaps back.
+- **`BezierHeader`**: A wave-like curve that bends with the pull distance.
+
+```dart
+// WaterDrop feel
+SmartRefresher(
+  header: const WaterDropHeader(),
+  controller: _controller,
+  onRefresh: _onRefresh,
+  child: ListView.builder(...),
+)
+
+// Bezier wave feel
+SmartRefresher(
+  header: const BezierHeader(
+    bezierColor: Colors.blue,
+  ),
+  controller: _controller,
+  onRefresh: _onRefresh,
+  child: ListView.builder(...),
+)
+```
+
+---
+
+## 5. GlassHeader
+
+A premium glassmorphism-style indicator that blurs the content beneath it. Perfect for editorial, photo-heavy, or modern-style apps.
+
+```dart
+SmartRefresher(
+  header: const GlassHeader(),
+  controller: _controller,
+  onRefresh: _onRefresh,
+  child: ListView.builder(...),
+)
+```
+
+<Aside type="tip">
+  `GlassHeader` uses `BackdropFilter`, which can be GPU-intensive. Test on lower-end devices and set `enablePullDown: false` on screens where it's not needed.
+</Aside>
+
+---
+
+## Footer Variants
+
+All footer types share a similar pattern. The most common are:
+
+### ClassicFooter
+
+```dart
+SmartRefresher(
+  enablePullUp: true,
+  footer: ClassicFooter(
+    loadingText: "Loading...",
+    noDataText: "No more items",
+    failedText: "Load failed. Tap to retry.",
+  ),
+  controller: _controller,
+  onLoading: _onLoading,
+  child: ListView.builder(...),
+)
+```
+
+### CustomFooter
+
+Use a `CustomFooter` for a fully bespoke load-more indicator. The `builder` function receives the current `LoadStatus`:
+
+```dart
+SmartRefresher(
+  enablePullUp: true,
+  footer: CustomFooter(
+    builder: (context, mode) {
+      Widget body;
+      if (mode == LoadStatus.idle) {
+        body = const Text("Pull up to load more");
+      } else if (mode == LoadStatus.loading) {
+        body = const CircularProgressIndicator();
+      } else if (mode == LoadStatus.noData) {
+        body = const Text("You've reached the end 🎉");
+      } else {
+        body = const Text("Load failed. Tap to retry.");
+      }
+      return SizedBox(height: 55.0, child: Center(child: body));
+    },
+  ),
+  controller: _controller,
+  onLoading: _onLoading,
+  child: ListView.builder(...),
+)
+```
+
+---
+
+## Setting App-Wide Defaults
+
+Instead of configuring each `SmartRefresher` manually, set defaults at the root of your app:
+
+```dart
+RefreshConfiguration(
+  headerBuilder: () => const Material3Header(),  // Default header for all refreshers
+  footerBuilder: () => const ClassicFooter(),    // Default footer for all refreshers
+  headerTriggerDistance: 80.0,
+  footerTriggerDistance: 15.0,
+  child: MaterialApp(...),
+)
+```
+
+For color/style theming, use `SmartRefresherThemeData` in your `ThemeData.extensions`. See the [Theming reference](/reference/theming) for full details.

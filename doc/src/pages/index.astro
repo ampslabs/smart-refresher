@@ -1,0 +1,1033 @@
+---
+import PackageBadges from "../components/PackageBadges.astro";
+import Features from "../components/Features.astro";
+import CTA from "../components/CTA.astro";
+import Footer from "../components/Footer.astro";
+import { Icon } from "@astrojs/starlight/components";
+
+const title = "smart_refresher";
+const description =
+  "The most complete pull-to-refresh and infinite loading solution for Flutter. Robust, customizable, and reliable.";
+const site = Astro.site ?? new URL("https://docs.example.com");
+const canonical = new URL(Astro.url.pathname, site).href;
+const ogImage = new URL("/og-image.png", site).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} — Flutter Pull-to-Refresh</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- OG / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Theme color -->
+    <meta
+      name="theme-color"
+      content="#0a0a09"
+      media="(prefers-color-scheme: dark)"
+    />
+    <meta
+      name="theme-color"
+      content="#fafaf9"
+      media="(prefers-color-scheme: light)"
+    />
+
+    <!-- Theme sync: read Starlight's localStorage key immediately to avoid flash -->
+    <script is:inline>
+      (function () {
+        const stored = localStorage.getItem("starlight-theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+        const theme =
+          stored === "dark" || stored === "light"
+            ? stored
+            : prefersDark
+              ? "dark"
+              : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
+
+    <!-- Shared CSS vars so components work -->
+    <style is:global>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* ── Dark theme (default) ── */
+      :root,
+      [data-theme="dark"] {
+        --sl-font: "Plus Jakarta Sans", system-ui, sans-serif;
+        --sl-font-mono: "JetBrains Mono", monospace;
+        --sl-color-accent-low: #1e1b4b;
+        --sl-color-accent: #818cf8;
+        --sl-color-accent-high: #a5b4fc;
+        --sl-color-accent-rgb: 129, 140, 248;
+        --sl-color-white: #fafaf9;
+        --sl-color-gray-1: #e7e7e4;
+        --sl-color-gray-2: #d6d3d1;
+        --sl-color-gray-3: #a3a3a3;
+        --sl-color-gray-4: #737373;
+        --sl-color-gray-5: #404040;
+        --sl-color-gray-6: #1c1c1a;
+        --sl-color-black: #0a0a09;
+        --sl-color-bg: #0a0a09;
+        --sl-color-text: #e7e7e4;
+        --sl-color-hairline: #2e2e2c;
+        --sl-color-hairline-light: #1c1c1a;
+        --sl-content-width: 88rem;
+      }
+
+      /* ── Light theme ── */
+      [data-theme="light"] {
+        --sl-color-accent-low: #ede9fe;
+        --sl-color-accent: #6366f1;
+        --sl-color-accent-high: #4f46e5;
+        --sl-color-accent-rgb: 99, 102, 241;
+        --sl-color-white: #1c1c1e;
+        --sl-color-gray-1: #2d2d2f;
+        --sl-color-gray-2: #48484a;
+        --sl-color-gray-3: #636366;
+        --sl-color-gray-4: #8e8e93;
+        --sl-color-gray-5: #d1d1d6;
+        --sl-color-gray-6: #f2f2f7;
+        --sl-color-black: #fafafa;
+        --sl-color-bg: #ffffff;
+        --sl-color-text: #1c1c1e;
+        --sl-color-hairline: #e5e5ea;
+        --sl-color-hairline-light: #f2f2f7;
+      }
+
+      html {
+        -webkit-font-smoothing: antialiased;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: var(--sl-font);
+        background:
+          radial-gradient(
+            at 80% 0%,
+            rgba(var(--sl-color-accent-rgb), 0.1) 0px,
+            transparent 50%
+          ),
+          radial-gradient(
+            at 20% 80%,
+            rgba(var(--sl-color-accent-rgb), 0.05) 0px,
+            transparent 40%
+          ),
+          var(--sl-color-bg);
+        color: var(--sl-color-text);
+        line-height: 1.6;
+        min-height: 100vh;
+        overflow-x: hidden;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      /* nav */
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        height: 4rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 clamp(1.5rem, 5vw, 4rem);
+        border-bottom: 1px solid var(--sl-color-hairline);
+        background: rgba(var(--sl-color-bg-hex, 10, 10, 9), 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        max-width: 100%;
+        transition:
+          background 0.3s,
+          border-color 0.3s;
+      }
+
+      [data-theme="light"] .nav {
+        background: rgba(255, 255, 255, 0.88);
+      }
+
+      .nav-logo {
+        font-family: "Outfit", sans-serif;
+        font-weight: 800;
+        font-size: 1.1rem;
+        letter-spacing: -0.02em;
+        color: var(--sl-color-white);
+        text-decoration: none;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        list-style: none;
+      }
+
+      .nav-links a {
+        font-size: 0.9rem;
+        color: var(--sl-color-gray-3);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+
+      .nav-links a:hover {
+        color: var(--sl-color-white);
+      }
+
+      .nav-cta {
+        background: var(--sl-color-accent) !important;
+        color: #fff !important;
+        padding: 0.45rem 1.1rem;
+        border-radius: 8px;
+        font-weight: 600 !important;
+        font-size: 0.875rem !important;
+      }
+
+      .nav-right {
+        display: none;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .nav-hamburger {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: 1px solid var(--sl-color-hairline);
+        background: transparent;
+        cursor: pointer;
+        padding: 8px 7px;
+      }
+
+      .nav-hamburger span {
+        display: block;
+        height: 2px;
+        background: var(--sl-color-gray-3);
+        border-radius: 2px;
+        transition:
+          transform 0.25s,
+          opacity 0.25s;
+      }
+
+      .nav-hamburger.active span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+      }
+      .nav-hamburger.active span:nth-child(2) {
+        opacity: 0;
+      }
+      .nav-hamburger.active span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+      }
+
+      /* Theme toggle — pill */
+      .theme-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.3rem 0.65rem;
+        border-radius: 99px;
+        border: 1px solid var(--sl-color-hairline);
+        background: rgba(var(--sl-color-accent-rgb), 0.06);
+        color: var(--sl-color-gray-3);
+        cursor: pointer;
+        font-size: 0;
+        transition:
+          border-color 0.2s,
+          background 0.2s,
+          color 0.2s;
+        line-height: 0;
+      }
+
+      .theme-toggle:hover {
+        border-color: rgba(var(--sl-color-accent-rgb), 0.5);
+        background: rgba(var(--sl-color-accent-rgb), 0.12);
+        color: var(--sl-color-accent);
+      }
+
+      .theme-toggle svg {
+        width: 17px;
+        height: 17px;
+        flex-shrink: 0;
+        transition:
+          transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+          opacity 0.2s;
+      }
+
+      /* Moon visible in dark, hidden in light */
+      .theme-toggle .icon-moon {
+        display: block;
+      }
+      .theme-toggle .icon-sun {
+        display: none;
+      }
+      [data-theme="light"] .theme-toggle .icon-moon {
+        display: none;
+      }
+      [data-theme="light"] .theme-toggle .icon-sun {
+        display: block;
+      }
+
+      /* Track dots */
+      .toggle-track {
+        width: 26px;
+        height: 15px;
+        border-radius: 99px;
+        background: rgba(var(--sl-color-accent-rgb), 0.25);
+        position: relative;
+        transition: background 0.25s;
+      }
+      .toggle-knob {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: var(--sl-color-accent);
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      [data-theme="light"] .toggle-knob {
+        transform: translateX(11px);
+      }
+      [data-theme="light"] .toggle-track {
+        background: rgba(var(--sl-color-accent-rgb), 0.4);
+      }
+
+      /* wrapper */
+      .page-content {
+        max-width: 88rem;
+        margin: 0 auto;
+        padding: 0 clamp(1.5rem, 5vw, 4rem);
+      }
+
+      /* ── HERO ── */
+      .hero-section {
+        padding-top: calc(4rem + clamp(4rem, 12vh, 8rem));
+        padding-bottom: clamp(4rem, 10vh, 6rem);
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: clamp(2rem, 5vw, 5rem);
+        align-items: center;
+      }
+
+      .hero-left {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .hero-badges {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .hero-h1 {
+        font-family: "Outfit", sans-serif;
+        font-size: clamp(3.5rem, 8vw, 6rem);
+        font-weight: 900;
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+        /* dark mode gradient (default) */
+        background: linear-gradient(to bottom right, #fafaf9 30%, #a3a3a3);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* light mode: near-black gradient so it's visible on white */
+      [data-theme="light"] .hero-h1 {
+        background: linear-gradient(to bottom right, #1c1917 30%, #57534e);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .hero-tagline {
+        font-size: clamp(1.1rem, 2vw, 1.35rem);
+        color: var(--sl-color-gray-3);
+        line-height: 1.55;
+        max-width: 44ch;
+        font-weight: 400;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.8rem 1.6rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        font-family: var(--sl-font);
+      }
+
+      .btn-primary {
+        background: var(--sl-color-accent);
+        color: #fff;
+        box-shadow: 0 10px 30px rgba(var(--sl-color-accent-rgb), 0.35);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 40px rgba(var(--sl-color-accent-rgb), 0.45);
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--sl-color-hairline);
+        color: var(--sl-color-gray-1);
+      }
+
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.07);
+        border-color: rgba(255, 255, 255, 0.15);
+      }
+
+      /* ── CODE WINDOW ── */
+      .hero-right {
+        perspective: 1200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .code-window-wrap {
+        position: relative;
+        width: 100%;
+      }
+
+      .code-window-glow {
+        position: absolute;
+        inset: -20%;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(var(--sl-color-accent-rgb), 0.2) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .code-window {
+        position: relative;
+        z-index: 1;
+        background: #0d1117;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        overflow: hidden;
+        box-shadow:
+          0 40px 80px rgba(0, 0, 0, 0.6),
+          0 0 0 1px rgba(255, 255, 255, 0.03);
+        transform: rotateX(5deg) rotateY(-8deg) rotateZ(0.5deg);
+        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .hero-right:hover .code-window {
+        transform: rotateX(1deg) rotateY(-2deg) rotateZ(0deg);
+      }
+
+      .code-window-bar {
+        background: #161b22;
+        height: 48px;
+        padding: 0 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      .code-dots {
+        display: flex;
+        gap: 6px;
+      }
+
+      .code-dot {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+      }
+
+      .code-dot.red {
+        background: #ff5f56;
+      }
+      .code-dot.yellow {
+        background: #ffbd2e;
+      }
+      .code-dot.green {
+        background: #27c93f;
+      }
+
+      .code-filename {
+        font-family: var(--sl-font-mono);
+        font-size: 0.78rem;
+        color: var(--sl-color-gray-4);
+      }
+
+      .code-body {
+        padding: 1.5rem 1.75rem;
+        font-family: var(--sl-font-mono);
+        font-size: 0.82rem;
+        line-height: 1.65;
+        color: #e2e8f0;
+        overflow-x: auto;
+      }
+
+      .code-body pre {
+        margin: 0;
+        white-space: pre;
+      }
+
+      /* syntax tokens */
+      .t-kw {
+        color: #c792ea;
+      }
+      .t-fn {
+        color: #82aaff;
+      }
+      .t-cls {
+        color: #ffcb6b;
+      }
+      .t-str {
+        color: #c3e88d;
+      }
+      .t-cm {
+        color: #546e7a;
+        font-style: italic;
+      }
+      .t-pn {
+        color: #89ddff;
+      }
+      .t-num {
+        color: #f78c6c;
+      }
+
+      /* ── SECTION shared ── */
+      .section-label {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.25em;
+        color: var(--sl-color-accent);
+        margin-bottom: 1.25rem;
+        text-align: center;
+      }
+
+      .section-title {
+        font-family: "Outfit", sans-serif;
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-weight: 900;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+        background: linear-gradient(
+          to bottom,
+          var(--sl-color-white),
+          var(--sl-color-gray-3)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* ── FEATURES ── */
+      .features-section {
+        padding: 8rem 0;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-top: 5rem;
+      }
+
+      .feature-card {
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid var(--sl-color-hairline);
+        border-radius: 20px;
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(var(--sl-color-accent-rgb), 0.4);
+        background: rgba(var(--sl-color-accent-rgb), 0.05);
+      }
+
+      .feature-icon {
+        width: 48px;
+        height: 48px;
+        background: var(--sl-color-accent-low);
+        color: var(--sl-color-accent);
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        font-size: 1.4rem;
+      }
+
+      .feature-card h3 {
+        font-family: "Outfit", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--sl-color-white);
+        letter-spacing: -0.01em;
+      }
+
+      .feature-card p {
+        font-size: 0.9375rem;
+        color: var(--sl-color-gray-3);
+        line-height: 1.6;
+      }
+
+      /* ── CTA section ── */
+      .cta-section-wrap {
+        padding: 0 0 0;
+      }
+
+      /* Fix CTA component text overlap — CTA.astro uses a negative margin that causes overlap */
+      .cta-section-wrap :global(.cta-description) {
+        margin-top: 1rem !important;
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 860px) {
+        .hero-grid {
+          grid-template-columns: 1fr;
+        }
+        .hero-right {
+          display: none;
+        }
+        .hero-left {
+          align-items: center;
+          text-align: center;
+        }
+        .hero-h1 {
+          text-align: center;
+        }
+        .hero-tagline {
+          text-align: center;
+        }
+        .hero-actions {
+          justify-content: center;
+        }
+
+        /* Hide links, show hamburger */
+        .nav-links {
+          display: none;
+        }
+        .nav-hamburger {
+          display: flex;
+        }
+
+        /* Mobile dropdown open */
+        .nav-links.open {
+          display: flex;
+          flex-direction: column;
+          position: fixed;
+          top: 4rem;
+          left: 0;
+          right: 0;
+          background: rgba(10, 10, 9, 0.97);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border-bottom: 1px solid var(--sl-color-hairline);
+          padding: 1rem 1.5rem 1.5rem;
+          gap: 0;
+          z-index: 99;
+        }
+
+        [data-theme="light"] .nav-links.open {
+          background: rgba(255, 255, 255, 0.97);
+        }
+
+        .nav-links.open li {
+          border-bottom: 1px solid var(--sl-color-hairline-light);
+        }
+        .nav-links.open li:last-child {
+          border-bottom: none;
+        }
+        .nav-links.open a,
+        .nav-links.open button {
+          padding: 0.9rem 0 !important;
+          font-size: 1rem !important;
+          width: 100%;
+          justify-content: flex-start;
+        }
+
+        /* Show the mobile controls group */
+        .nav-right {
+          display: flex !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── NAV ── -->
+    <nav class="nav">
+      <a href="/" class="nav-logo">smart_refresher</a>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a href="/getting-started/installation/">Installation</a></li>
+        <li><a href="/guides/themes/">Themes</a></li>
+        <li><a href="/reference/api/">API Reference</a></li>
+        <li>
+          <a
+            href="https://github.com/ampslabs/smart-refresher"
+            target="_blank"
+            rel="noopener">GitHub</a>
+        </li>
+        <li>
+          <button
+            class="theme-toggle"
+            id="theme-toggle"
+            aria-label="Toggle colour theme"
+          >
+            <svg
+              class="icon-moon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <span class="toggle-track" aria-hidden="true"
+              ><span class="toggle-knob"></span></span
+            >
+            <svg
+              class="icon-sun"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line><line
+                x1="12"
+                y1="21"
+                x2="12"
+                y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line
+                x1="18.36"
+                y1="18.36"
+                x2="19.78"
+                y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line><line
+                x1="21"
+                y1="12"
+                x2="23"
+                y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line
+                x1="18.36"
+                y1="5.64"
+                x2="19.78"
+                y2="4.22"></line>
+            </svg>
+          </button>
+        </li>
+        <li>
+          <a
+            href="/getting-started/quick-start/"
+            class="btn btn-primary nav-cta">Get Started</a>
+        </li>
+      </ul>
+
+      <!-- Mobile: always-visible controls -->
+      <div class="nav-right" id="nav-right">
+        <button
+          class="theme-toggle"
+          id="theme-toggle-mobile"
+          aria-label="Toggle colour theme"
+        >
+          <svg
+            class="icon-moon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <span class="toggle-track" aria-hidden="true"
+            ><span class="toggle-knob"></span></span
+          >
+          <svg
+            class="icon-sun"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line><line
+              x1="12"
+              y1="21"
+              x2="12"
+              y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line
+              x1="18.36"
+              y1="18.36"
+              x2="19.78"
+              y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line><line
+              x1="21"
+              y1="12"
+              x2="23"
+              y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line
+              x1="18.36"
+              y1="5.64"
+              x2="19.78"
+              y2="4.22"></line>
+          </svg>
+        </button>
+        <button
+          class="nav-hamburger"
+          id="nav-hamburger"
+          aria-label="Open navigation"
+          aria-expanded="false"
+        >
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ── HERO ── -->
+    <div class="page-content">
+      <section class="hero-section">
+        <div class="hero-grid">
+          <!-- Left -->
+          <div class="hero-left">
+            <div class="hero-badges">
+              <PackageBadges packageName="smart_refresher" />
+            </div>
+
+            <h1 class="hero-h1">smart_<br />refresher</h1>
+
+            <p class="hero-tagline">
+              The most complete pull-to-refresh and infinite loading solution
+              for Flutter. Robust, customizable, and production-ready.
+            </p>
+
+            <div class="hero-actions">
+              <a href="/getting-started/quick-start/" class="btn btn-primary">
+                <Icon name="right-arrow" size="1.1rem" />
+                Get Started
+              </a>
+              <a
+                href="https://github.com/ampslabs/smart-refresher"
+                class="btn btn-secondary"
+                target="_blank"
+                rel="noopener"
+              >
+                <Icon name="external" size="1.1rem" />
+                GitHub
+              </a>
+            </div>
+          </div>
+
+          <!-- Right: Code Window -->
+          <div class="hero-right">
+            <div class="code-window-wrap">
+              <div class="code-window-glow"></div>
+              <div class="code-window">
+                <div class="code-window-bar">
+                  <div class="code-dots">
+                    <span class="code-dot red"></span>
+                    <span class="code-dot yellow"></span>
+                    <span class="code-dot green"></span>
+                  </div>
+                  <span class="code-filename">example.dart</span>
+                </div>
+                <div class="code-body">
+                  <pre><span class="t-cls">SmartRefresher</span><span class="t-pn">(</span>
+  controller<span class="t-pn">:</span> _refreshController<span class="t-pn">,</span>
+  <span class="t-cm">// enable infinite scroll</span>
+  enablePullDown<span class="t-pn">:</span> <span class="t-kw">true</span><span class="t-pn">,</span>
+  enablePullUp<span class="t-pn">:</span> <span class="t-kw">true</span><span class="t-pn">,</span>
+  header<span class="t-pn">:</span> <span class="t-kw">const</span> <span class="t-cls">WaterDropHeader</span><span class="t-pn">(),</span>
+  onRefresh<span class="t-pn">:</span> _onRefresh<span class="t-pn">,</span>
+  onLoading<span class="t-pn">:</span> _onLoading<span class="t-pn">,</span>
+  child<span class="t-pn">:</span> <span class="t-cls">ListView</span><span class="t-pn">.</span><span class="t-fn">builder</span><span class="t-pn">(</span>
+    itemCount<span class="t-pn">:</span> items<span class="t-pn">.</span>length<span class="t-pn">,</span>
+    itemBuilder<span class="t-pn">:</span> <span class="t-pn">(</span>c<span class="t-pn">,</span> i<span class="t-pn">)</span> <span class="t-pn">=></span> <span class="t-cls">ItemTile</span><span class="t-pn">(</span>items<span class="t-pn">[</span>i<span class="t-pn">]),</span>
+  <span class="t-pn">),</span>
+<span class="t-pn">)</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── FEATURES ── -->
+      <section class="features-section">
+        <span class="section-label">Capabilities</span>
+        <h2 class="section-title">
+          Everything you need<br />for smooth scrolling.
+        </h2>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Easy to Use</h3>
+            <p>
+              Wrap any scrollable widget with <code>SmartRefresher</code> and you're
+              done. No complex setup required.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🎨</div>
+            <h3>5 Built-in Themes</h3>
+            <p>
+              Classic, Material 3, iOS 17, WaterDrop, and Glassmorphism — or
+              build your own custom indicator.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🚀</div>
+            <h3>High Performance</h3>
+            <p>
+              Sliver-native architecture for smooth 60fps animations even with
+              large lists and complex scroll views.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🧩</div>
+            <h3>State Management Ready</h3>
+            <p>
+              First-class integration with Riverpod, Bloc, Provider, and any
+              other reactive state solution.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📱</div>
+            <h3>All Platforms</h3>
+            <p>
+              Works on iOS, Android, Web, macOS, Windows, and Linux — wherever
+              Flutter runs.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>Dart 3 & Flutter 3.x</h3>
+            <p>
+              Fully null-safe, no external dependencies, and compatible with the
+              latest Flutter releases.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── CTA ── -->
+      <div class="cta-section-wrap">
+        <CTA />
+      </div>
+    </div>
+
+    <!-- ── FOOTER ── -->
+    <Footer />
+
+    <!-- Theme + hamburger: plain JS after DOM ready -->
+    <script is:inline>
+      document.addEventListener("DOMContentLoaded", function () {
+        // ── Theme toggles (desktop + mobile) ──────────────────
+        function applyThemeToggle(btn) {
+          if (!btn) return;
+          btn.addEventListener("click", function () {
+            var html = document.documentElement;
+            var next =
+              html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+            html.setAttribute("data-theme", next);
+            try {
+              localStorage.setItem("starlight-theme", next);
+            } catch (e) {}
+          });
+        }
+        applyThemeToggle(document.getElementById("theme-toggle"));
+        applyThemeToggle(document.getElementById("theme-toggle-mobile"));
+
+        // ── Hamburger ─────────────────────────────────────────
+        var hamburger = document.getElementById("nav-hamburger");
+        var navLinks = document.getElementById("nav-links");
+        if (hamburger && navLinks) {
+          hamburger.addEventListener("click", function () {
+            var open = navLinks.classList.toggle("open");
+            hamburger.classList.toggle("active", open);
+            hamburger.setAttribute("aria-expanded", open ? "true" : "false");
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

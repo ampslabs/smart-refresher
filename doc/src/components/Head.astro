@@ -1,0 +1,49 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+import Default from '@astrojs/starlight/components/Head.astro';
+import { ClientRouter } from 'astro:transitions';
+
+const { entry, lang } = Astro.props;
+const siteUrl = Astro.site ?? new URL('https://docs.example.com');
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+const title = entry?.data?.title ?? 'Docs';
+const description = entry?.data?.description ?? 'A high-performance Flutter package for scrollable content.';
+const ogImage = new URL('/og-image.png', siteUrl).href;
+---
+
+<!-- Starlight Default Head -->
+<Default {...Astro.props}><slot /></Default>
+
+<ClientRouter />
+
+<!-- Fonts Preconnect -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+<!-- SEO Meta Tags -->
+<link rel="canonical" href={canonical} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonical} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:locale" content={lang ?? 'en'} />
+
+<!-- JSON-LD -->
+<script type="application/ld+json" set:html={JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareSourceCode',
+  name: title,
+  description: description,
+  url: canonical,
+  inLanguage: lang ?? 'en',
+})} />
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#fafaf9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0a0a09" media="(prefers-color-scheme: dark)" />

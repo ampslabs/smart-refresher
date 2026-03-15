@@ -1,0 +1,83 @@
+---
+interface Props {
+  type?: 'note' | 'tip' | 'warning' | 'danger';
+  title?: string;
+}
+
+const { type = 'note', title } = Astro.props;
+
+const icons = {
+  note: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
+  tip: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.989-2.386l-.548-.547z" /></svg>`,
+  warning: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>`,
+  danger: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path d="M12 10V6m0 0a2 2 0 100 0m0 0a2 2 0 100 0" /></svg>`
+};
+---
+
+<div class={`callout callout-${type}`}>
+  <div class="callout-header">
+    <div class="callout-icon" set:html={icons[type]} />
+    {title && <span class="callout-title">{title}</span>}
+  </div>
+  <div class="callout-content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .callout {
+    margin: 1.5rem 0;
+    padding: 1.25rem;
+    border-radius: 12px;
+    border: 1px solid transparent;
+  }
+
+  .callout-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+
+  .callout-icon {
+    display: flex;
+    opacity: 0.9;
+  }
+
+  .callout-content {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--sl-color-gray-5);
+  }
+
+  /* Variants */
+  .callout-note {
+    background: color-mix(in srgb, var(--sl-color-accent) 5%, transparent);
+    border-color: color-mix(in srgb, var(--sl-color-accent) 20%, transparent);
+    color: var(--sl-color-accent);
+  }
+  .callout-tip {
+    background: rgba(16, 185, 129, 0.05);
+    border-color: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+  }
+  .callout-warning {
+    background: rgba(245, 158, 11, 0.05);
+    border-color: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+  }
+  .callout-danger {
+    background: rgba(239, 68, 68, 0.05);
+    border-color: rgba(239, 68, 68, 0.2);
+    color: #ef4468;
+  }
+
+  [data-theme='dark'] .callout-content {
+    color: var(--sl-color-gray-6);
+  }
+</style>

@@ -1,0 +1,112 @@
+---
+title: State Management Integration
+description: Patterns for using smart_refresher with Riverpod, Bloc, and Provider.
+---
+
+import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+Integrating `smart_refresher` with your state management solution is essential for building production-ready apps. The key is coordinating the `RefreshController` with your data fetching logic.
+
+## The `SmartRefresher.builder` Pattern
+
+The most elegant way to integrate with reactive state is using the `.builder` constructor. It allows you to separate the refresh logic from your list's layout.
+
+```dart
+SmartRefresher.builder(
+  controller: _controller,
+  onRefresh: () => ref.refresh(myProvider.future), // Riverpod example
+  builder: (context, physics) {
+    return ListView.builder(
+      physics: physics, // IMPORTANT: Use the provided physics
+      itemCount: data.length,
+      itemBuilder: (c, i) => ItemTile(data[i]),
+    );
+  },
+)
+```
+
+---
+
+## Integration Examples
+
+<Tabs>
+  <TabItem label="Riverpod">
+    ```dart
+    final itemsProvider = FutureProvider<List<Item>>((ref) async {
+      return await api.fetchItems();
+    });
+
+    // In your Widget
+    final items = ref.watch(itemsProvider);
+    
+    return items.when(
+      data: (list) => SmartRefresher(
+        controller: _controller,
+        onRefresh: () async {
+           await ref.refresh(itemsProvider.future);
+           _controller.refreshCompleted();
+        },
+        child: ListView.builder(...),
+      ),
+      loading: () => const LoadingSpinner(),
+      error: (e, stack) => ErrorView(e),
+    );
+    ```
+  </TabItem>
+  
+  <TabItem label="Bloc / Cubit">
+    ```dart
+    return BlocConsumer<MyBloc, MyState>(
+      listener: (context, state) {
+        if (state is MyLoadSuccess) {
+          _controller.refreshCompleted();
+          _controller.loadComplete();
+        } else if (state is MyLoadFailure) {
+          _controller.refreshFailed();
+        }
+      },
+      builder: (context, state) {
+        return SmartRefresher(
+          controller: _controller,
+          onRefresh: () => context.read<MyBloc>().add(RefreshTriggered()),
+          child: ListView(...),
+        );
+      },
+    );
+    ```
+  </TabItem>
+</Tabs>
+
+## Handling "No More Data"
+
+When your state manager determines that the last page has been reached, the UI should reflect this to prevent unnecessary API calls.
+
+```dart
+// In your listener or after fetching data
+if (data.isEmpty || data.length < pageSize) {
+  _controller.loadNoData();
+} else {
+  _controller.loadComplete();
+}
+```
+
+---
+
+## Best Practices
+
+### 1. Don't Store Controllers in State
+Keep your `RefreshController` in the `StatefulWidget`'s `State` class. It manages UI-specific animations and shouldn't live in your Business Logic/Store.
+
+### 2. Manual State Reset
+If you switch filters or search terms, remember to reset the controller so the user can "load more" from the new results:
+
+```dart
+void onSearch(String query) {
+  _controller.resetNoData(); // Resets footer from "No more data" to active
+  _bloc.add(SearchData(query));
+}
+```
+
+<Aside type="tip">
+  If you're using **Riverpod**, you can use a `Provider` to manage the fetching logic and simply call `ref.refresh()` inside the `onRefresh` callback.
+</Aside>

@@ -1,0 +1,96 @@
+---
+title: Theming & Visual Styles
+description: Learn how to skin and theme your refresh indicators.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+`smart_refresher` comes with 5 distinct visual styles (themes) out of the box, all of which respect your Flutter `ThemeData` and can be customized via the `SmartRefresherTheme` API.
+
+## Built-in Visual Themes
+
+These are the 5 primary indicator styles you can use:
+
+### 1. Classic (Platform Adaptive)
+The default style. It uses a simple arrow and text on mobile, adapting its spinner to `CircularProgressIndicator` on Android and `CupertinoActivityIndicator` on iOS.
+
+```dart
+header: ClassicHeader()
+```
+
+### 2. Material 3
+Follows the latest Material Design 3 guidelines with a floating circular card and refined animations. It pulls primary colors directly from your `ThemeData.colorScheme.surface`.
+
+```dart
+header: Material3Header()
+```
+
+### 3. iOS 17 Style
+A pixel-perfect recreation of the native iOS 17 refresh indicator with 12-spoke geometry and authentic haptic feedback.
+
+```dart
+header: iOS17Header()
+```
+
+### 4. Bezier & WaterDrop
+For a more "liquid" feel, the Bezier and WaterDrop indicators use canvas animations to create a stretching effect as you pull.
+
+```dart
+header: WaterDropHeader() // or BezierHeader()
+```
+
+### 5. Glassmorphism
+A premium blurred indicator style that blends with the content behind it, perfect for modern, editorial-style apps.
+
+```dart
+header: GlassHeader()
+```
+
+---
+
+## Global Theming
+
+Instead of configuring every `SmartRefresher` manually, you can set app-wide defaults using `SmartRefresherThemeData`.
+
+### Setting App-wide Defaults
+Add `SmartRefresherThemeData` to your `ThemeData.extensions` in your `MaterialApp`:
+
+```dart
+MaterialApp(
+  theme: ThemeData(
+    useMaterial3: true,
+    extensions: [
+      SmartRefresherThemeData(
+        primaryColor: Colors.deepPurple,
+        accentColor: Colors.amber,
+        material3Elevation: 8.0,
+        iosTickColor: Colors.grey,
+      ),
+    ],
+  ),
+)
+```
+
+### Local Overrides
+You can override the theme for a specific part of your app by wrapping it in a `SmartRefresherTheme` widget:
+
+```dart
+SmartRefresherTheme(
+  data: SmartRefresherThemeData(
+    primaryColor: Colors.red,
+  ),
+  child: MyRefreshableList(),
+)
+```
+
+## Responsive States
+
+All themes handle 4 distinct visual states automatically:
+1. **Idle**: Waiting for pull.
+2. **Pulling**: User is dragging; indicators often show progress or "release to refresh" hints.
+3. **Refreshing/Loading**: The active state where your backend logic runs.
+4. **Success/Failed**: Brief visual feedback before the indicator slides away.
+
+<Aside type="note">
+  If you are building a custom indicator, use the `IndicatorThemeData.resolve(context)` helper to ensure your custom widget respects the global app theme automatically.
+</Aside>

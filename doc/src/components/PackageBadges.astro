@@ -1,0 +1,60 @@
+---
+/**
+ * PackageBadges component
+ * Automatically detects whether to show pub.dev (Dart/Flutter) 
+ * or npmjs.com badges based on the project environment.
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+
+interface Props {
+  packageName: string;
+}
+
+const { packageName } = Astro.props;
+
+// Detection logic: Check for pubspec.yaml in the root (assuming root is 2 levels up from src/components)
+// In a real build, we'd use process.cwd() or relative paths.
+// Since we are in starlight/src/components, root is ../../
+const rootDir = path.resolve('./'); 
+// Starlight is usually run from its folder, but the package might be in the parent.
+const hasPubspec = fs.existsSync(path.join(rootDir, '../pubspec.yaml'));
+const ecosystem = hasPubspec ? 'pub' : 'npm';
+
+const encoded = encodeURIComponent(packageName);
+
+const badges = ecosystem === 'pub' ? [
+  { img: `https://img.shields.io/pub/v/${encoded}?style=flat-square&color=4f46e5`, href: `https://pub.dev/packages/${packageName}` },
+  { img: `https://img.shields.io/pub/likes/${encoded}?style=flat-square&color=4f46e5`, href: `https://pub.dev/packages/${packageName}/score` },
+  { img: `https://img.shields.io/pub/points/${encoded}?style=flat-square&color=4f46e5`, href: `https://pub.dev/packages/${packageName}/score` }
+] : [
+  { img: `https://img.shields.io/npm/v/${encoded}?style=flat-square&color=4f46e5`, href: `https://www.npmjs.com/package/${packageName}` },
+  { img: `https://img.shields.io/npm/dm/${encoded}?style=flat-square&color=4f46e5`, href: `https://www.npmjs.com/package/${packageName}` },
+  { img: `https://img.shields.io/bundlephobia/minzip/${encoded}?style=flat-square&color=4f46e5`, href: `https://bundlephobia.com/package/${packageName}` }
+];
+---
+
+<div class="package-badges">
+  {badges.map(b => (
+    <a href={b.href} target="_blank" rel="noopener noreferrer">
+      <img src={b.img} alt="Package badge" height="20" />
+    </a>
+  ))}
+</div>
+
+<style>
+  .package-badges {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  .package-badges a {
+    display: flex;
+    transition: opacity 0.2s;
+  }
+  .package-badges a:hover {
+    opacity: 0.8;
+  }
+</style>

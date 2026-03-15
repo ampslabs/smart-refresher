@@ -1,0 +1,149 @@
+---
+title: SkeletonFooter
+description: A shimmer-animated skeleton placeholder footer for infinite loading.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+`SkeletonFooter` replaces the standard loading spinner in infinite-scroll scenarios with animated **shimmer skeleton placeholders** — the same pattern used by Facebook, LinkedIn, and YouTube while content loads. This technique shows users a preview of the incoming layout rather than a spinner, reducing perceived loading time.
+
+---
+
+## Basic Usage
+
+Skeleton footers are typically used with `enablePullUp: true` for infinite loading:
+
+```dart
+SmartRefresher(
+  controller: _controller,
+  enablePullDown: true,
+  enablePullUp: true,               // infinite scroll
+  header: const ClassicHeader(),
+  footer: SkeletonFooter(
+    child: Column(
+      children: List.generate(
+        3,
+        (_) => const SkeletonListTile(),   // built-in skeleton card
+      ),
+    ),
+  ),
+  onRefresh: _onRefresh,
+  onLoading: _onLoading,
+  child: ListView.builder(...),
+)
+```
+
+---
+
+## `SkeletonFooter` Properties
+
+| Property | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `child` | `Widget` | **Required** | The skeleton layout that will shimmer while loading. |
+| `height` | `double` | `60.0` | Minimum height reserved for the footer. |
+| `baseColor` | `Color` | `Colors.grey.shade300` | Base color of the shimmer animation. |
+| `highlightColor` | `Color` | `Colors.grey.shade100` | Bright highlight color that sweeps across. |
+| `direction` | `ShimmerDirection` | `.ltr` | Direction the shimmer sweeps — left-to-right or right-to-left. |
+| `period` | `Duration` | `1500ms` | Duration of one full shimmer sweep. |
+
+---
+
+## Built-in Skeleton Widgets
+
+`smart_refresher` ships a small library of pre-built skeleton cards you can compose:
+
+### `SkeletonListTile`
+
+Mimics a `ListTile` with a leading circle, and two text lines:
+
+```dart
+const SkeletonListTile(
+  hasLeading: true,
+  lineCount: 2,
+  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+)
+```
+
+### `SkeletonAvatar`
+
+A circular or rectangular shimmer placeholder:
+
+```dart
+SkeletonAvatar(
+  style: SkeletonAvatarStyle(
+    shape: BoxShape.circle,
+    width: 56,
+    height: 56,
+  ),
+)
+```
+
+### `SkeletonLine`
+
+A single shimmer line with configurable width:
+
+```dart
+SkeletonLine(
+  style: SkeletonLineStyle(
+    width: 200,
+    height: 16,
+    borderRadius: BorderRadius.circular(8),
+  ),
+)
+```
+
+---
+
+## Shimmer Direction
+
+| Value | Sweep direction |
+| :--- | :--- |
+| `ShimmerDirection.ltr` | Left → Right (default) |
+| `ShimmerDirection.rtl` | Right → Left |
+| `ShimmerDirection.ttb` | Top → Bottom |
+| `ShimmerDirection.btt` | Bottom → Top |
+
+---
+
+## Full Example
+
+```dart
+SkeletonFooter(
+  baseColor: const Color(0xFFE0E0E0),
+  highlightColor: const Color(0xFFF5F5F5),
+  period: const Duration(milliseconds: 1200),
+  child: Padding(
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      children: [
+        for (int i = 0; i < 3; i++)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Row(
+              children: [
+                const SkeletonAvatar(
+                  style: SkeletonAvatarStyle(width: 48, height: 48, shape: BoxShape.circle),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SkeletonLine(style: SkeletonLineStyle(height: 14, width: double.infinity)),
+                      const SizedBox(height: 8),
+                      SkeletonLine(style: SkeletonLineStyle(height: 14, width: 160)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    ),
+  ),
+)
+```
+
+<Aside type="tip">
+  Match `baseColor` and `highlightColor` to your app's surface color in both light and dark modes so the skeleton blends naturally into the layout.
+</Aside>

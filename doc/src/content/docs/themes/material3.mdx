@@ -1,0 +1,116 @@
+---
+title: Material3Header
+description: A floating, Material Design 3 pull-to-refresh indicator that adapts to your app's color scheme.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+`Material3Header` is a pull-to-refresh header that follows the [Material Design 3 progress indicator guidelines](https://m3.material.io/components/progress-indicators). It renders as a small circular card that lifts off the screen and shows an `M3`-style arc spinner.
+
+---
+
+## Basic Usage
+
+```dart
+SmartRefresher(
+  controller: _controller,
+  header: const Material3Header(),
+  onRefresh: _onRefresh,
+  child: ListView.builder(...),
+)
+```
+
+---
+
+## Properties
+
+| Property | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `color` | `Color?` | `ProgressIndicatorTheme` → `ColorScheme.primary` | Spinner and success icon color. |
+| `backgroundColor` | `Color?` | `ColorScheme.surfaceContainerLow` | Floating container background. |
+| `elevation` | `double` | `6.0` | Shadow depth of the circular card. |
+| `completeIcon` | `Widget?` | `Icons.check_circle_outline` | Widget shown on successful refresh. |
+| `failedIcon` | `Widget?` | `Icons.error_outline` | Widget shown on failed refresh. |
+| `height` | `double` | `80.0` | Height reserved for the header. |
+| `completeDuration` | `Duration` | `600ms` | How long the success/failure icon is shown. |
+| `refreshStyle` | `RefreshStyle` | `.front` | Controls how the header interacts with the list scroll. |
+| `semanticsLabel` | `String?` | Localized string | Accessibility label for screen readers. |
+| `semanticsHint` | `String?` | `null` | Accessibility hint for screen readers. |
+
+---
+
+## Theme Integration
+
+`Material3Header` reads its colors directly from Flutter's `ThemeData`, so it adapts automatically to light/dark modes and seeded color schemes.
+
+```dart
+// In your MaterialApp or ThemeProvider:
+MaterialApp(
+  theme: ThemeData(
+    useMaterial3: true,
+    colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
+  ),
+  // Material3Header will pick up teal as its primary color automatically.
+)
+```
+
+You can also override at the widget level:
+
+```dart
+SmartRefresher(
+  header: Material3Header(
+    color: Colors.deepOrange,
+    backgroundColor: Colors.deepOrange.shade50,
+    elevation: 12.0,
+  ),
+  ...
+)
+```
+
+---
+
+## Custom Completion Icons
+
+```dart
+Material3Header(
+  completeIcon: const Icon(
+    Icons.cloud_done_outlined,
+    size: 20,
+    color: Colors.green,
+  ),
+  failedIcon: const Icon(
+    Icons.cloud_off_outlined,
+    size: 20,
+    color: Colors.red,
+  ),
+)
+```
+
+---
+
+## How It Animates
+
+The indicator uses two `AnimationController`s internally:
+
+- **Scale controller** (`400ms`, emphasized decelerate curve): Scales the circular card in when armed and out when idle. This matches the M3 motion spec for appearing elements.
+- **Icon fade controller** (`250ms`): Fades in the success/failure icon after the spinner collapses.
+
+Pull progress is tracked and mapped directly to the spinner's `value` property (a determinate arc) until the user releases, at which point it switches to an indeterminate animation.
+
+<Aside type="tip">
+  `Material3Header` uses `RefreshStyle.front` by default — the card floats on top of the list content, which matches how native Material 3 apps render the indicator.
+</Aside>
+
+---
+
+## Accessibility
+
+- The indicator provides a live-region via `Semantics` with a dynamic `label` that changes from *"Pull down to refresh"* → *"Refreshing..."* → *"Refresh complete"*.
+- Override with `semanticsLabel` for a custom message, or `semanticsHint` for an additional description.
+
+```dart
+Material3Header(
+  semanticsLabel: 'Loading latest messages',
+  semanticsHint: 'Double-tap to cancel',
+)
+```

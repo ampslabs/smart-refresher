@@ -1,0 +1,87 @@
+---
+title: Quick Start
+description: Build your first pull-to-refresh list in minutes.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+This guide will walk you through the basic implementation of `smart_refresher` in a `StatefulWidget`.
+
+## Basic Implementation
+
+To add refresh and loading capabilities, you need two things: a `RefreshController` to manage the state and the `SmartRefresher` widget to wrap your list.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:smart_refresher/smart_refresher.dart';
+
+class MyList extends StatefulWidget {
+  const MyList({super.key});
+
+  @override
+  State<MyList> createState() => _MyListState();
+}
+
+class _MyListState extends State<MyList> {
+  // 1. Initialize the controller
+  final RefreshController _refreshController = RefreshController();
+  List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
+
+  // 2. Define the refresh logic
+  void _onRefresh() async {
+    await Future.delayed(const Duration(milliseconds: 1000));
+    // Update your data source
+    _refreshController.refreshCompleted();
+  }
+
+  // 3. Define the loading logic
+  void _onLoading() async {
+    await Future.delayed(const Duration(milliseconds: 1000));
+    items.add((items.length + 1).toString());
+    if (mounted) setState(() {});
+    _refreshController.loadComplete();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        header: const WaterDropHeader(),
+        footer: const ClassicFooter(),
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        onLoading: _onLoading,
+        child: ListView.builder(
+          itemBuilder: (c, i) => Card(child: Center(child: Text(items[i]))),
+          itemExtent: 100.0,
+          itemCount: items.length,
+        ),
+      ),
+    );
+  }
+}
+```
+
+## Key Components
+
+### RefreshController
+The `RefreshController` allows you to programmatically trigger or finish refresh/load actions. 
+- `refreshCompleted()`: Ends the refresh state with success.
+- `refreshFailed()`: Ends the refresh state showing a failure animation.
+- `loadComplete()`: Ends the loading state with success.
+- `loadNoData()`: Tells the refresher there are no more items to load.
+
+### SmartRefresher Widget
+The main wrapper for your scrollable content. It handles the touch gestures and coordinates with the indicators.
+
+<Aside type="tip">
+  Always wrap your `ListView` or `GridView` directly. If you have multiple slivers, use `SmartRefresher.slivers`.
+</Aside>
+
+## Next Steps
+
+- Explore [Built-in Headers](/reference/headers) to change the look and feel.
+- Learn about [Theming](/reference/theming) to match your app's branding.
+- Dive into [Multi-sliver Layouts](/guides/multi-sliver-layouts) for complex pages.

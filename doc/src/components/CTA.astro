@@ -1,0 +1,103 @@
+---
+import { Icon } from '@astrojs/starlight/components';
+---
+
+<section class="cta-section">
+  <div class="cta-gradient-bg"></div>
+  <div class="cta-content">
+    <span class="section-label">Ready to dive in?</span>
+    <h2 class="section-title">Start building today.</h2>
+    <p class="cta-description">
+      Join thousands of developers building high-performance Flutter apps with smart_refresher.
+    </p>
+    <div class="cta-actions">
+      <a href="/getting-started/quick-start/" class="cta-button primary">
+        <span>Quick Start Guide</span>
+        <Icon name="right-arrow" size="1.2rem" />
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-section {
+    position: relative;
+    padding: 5rem 2rem;
+    margin: 4rem 0;
+    text-align: center;
+    overflow: hidden;
+    border-radius: 2rem;
+    background: rgba(var(--sl-color-accent-rgb), 0.03);
+    border: 1px solid rgba(var(--sl-color-accent-rgb), 0.1);
+  }
+
+  .cta-gradient-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(circle, rgba(var(--sl-color-accent-rgb), 0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .cta-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .cta-description {
+    font-size: 1.25rem;
+    color: var(--sl-color-gray-3);
+    margin: 1.5rem auto 3rem;
+    max-width: 50ch;
+    line-height: 1.6;
+  }
+
+  .cta-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .cta-button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    border-radius: 99rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .cta-button.primary {
+    background: var(--sl-color-accent);
+    color: white;
+    box-shadow: 0 10px 20px -10px rgba(var(--sl-color-accent-rgb), 0.5);
+  }
+
+  .cta-button.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -10px rgba(var(--sl-color-accent-rgb), 0.6);
+    filter: brightness(1.1);
+  }
+
+  .cta-button span {
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 768px) {
+    .cta-section {
+      padding: 3.5rem 1.5rem;
+    }
+    .cta-description {
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
+  }
+</style>

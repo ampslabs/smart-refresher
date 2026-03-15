@@ -1,0 +1,99 @@
+---
+title: WaterDropHeader
+description: A fluid water-drop pull-to-refresh animation for Flutter.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+`WaterDropHeader` renders a playful water-droplet that stretches downward as you pull and snaps back with a ripple when released. It is one of the most visually distinctive headers bundled with `smart_refresher`.
+
+---
+
+## Basic Usage
+
+```dart
+SmartRefresher(
+  controller: _controller,
+  header: const WaterDropHeader(),
+  onRefresh: _onRefresh,
+  child: ListView.builder(...),
+)
+```
+
+---
+
+## Properties
+
+| Property | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `color` | `Color` | `Colors.white` | Fill color of the water drop. |
+| `inertiaDistance` | `double` | `0.0` | Extra inertia stretch distance beyond the trigger threshold. |
+| `completeIcon` | `Widget?` | `Icon(Icons.done, color: Colors.grey)` | Widget shown on successful refresh completion. |
+| `failedIcon` | `Widget?` | `Icon(Icons.close, color: Colors.grey)` | Widget shown on failed refresh. |
+| `completeDuration` | `Duration` | `600ms` | Time the complete/failed state is visible before dismissal. |
+| `waterDropColor` | `Color` | `const Color(0xFF00BFFF)` | Color of the animated drop itself. |
+| `idleIcon` | `Widget?` | `null` | Optional icon overlaid in the idle drop. |
+| `height` | `double` | `60.0` | Height reserved for the header. |
+
+---
+
+## Customisation
+
+### Custom Drop Color
+
+```dart
+WaterDropHeader(
+  waterDropColor: Colors.indigo,
+  color: Colors.white,
+)
+```
+
+### Custom Completion Icons
+
+```dart
+WaterDropHeader(
+  completeIcon: const Icon(Icons.cloud_done, color: Colors.green),
+  failedIcon: const Icon(Icons.cloud_off, color: Colors.red),
+  completeDuration: const Duration(milliseconds: 800),
+)
+```
+
+---
+
+## How It Animates
+
+The header uses a **Bezier-curve** path to simulate the elastic water surface:
+
+1. **Idle → Drag**: The drop elongates vertically proportional to the pull offset.
+2. **Threshold crossed**: The neck of the drop narrows, simulating surface tension.
+3. **Release**: The drop detaches with a elastic snap and a circular ripple appears.
+4. **Refreshing → Complete**: A spinner plays, then the completion icon fades in.
+
+<Aside type="tip">
+  Pair `WaterDropHeader` with `RefreshStyle.front` (the default) for best effect — the drop needs to visually float above the list content.
+</Aside>
+
+---
+
+## WaterDropMaterialHeader
+
+A material-flavored variant is also available:
+
+```dart
+SmartRefresher(
+  header: WaterDropMaterialHeader(
+    backgroundColor: Theme.of(context).colorScheme.primary,
+    color: Theme.of(context).colorScheme.onPrimary,
+  ),
+  ...
+)
+```
+
+`WaterDropMaterialHeader` wraps a `CircularProgressIndicator` inside the drop and matches the Material Design elevation and color system.
+
+| Property | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `backgroundColor` | `Color` | `Theme primary` | Drop background / container fill. |
+| `color` | `Color` | `Colors.white` | Progress indicator color. |
+| `distance` | `double` | `50.0` | Vertical travel distance of the drop before snapping. |
+| `offset` | `double` | `0.0` | Horizontal offset of the drop from center. |

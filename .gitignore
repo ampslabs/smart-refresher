@@ -1,7 +1,6 @@
 .DS_Store
 .dart_tool/
 .packages
-.pub/
 .flutter-plugins
 .flutter-plugins-dependencies
 
@@ -21,3 +20,6 @@ pubspec.lock
 
 0
 test_results.txt
+
+# Docs specific ignores
+doc/node_modules/

@@ -1,0 +1,57 @@
+---
+title: Global Configuration
+description: Fine-tune the behavior and distances for your entire application.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+While each `SmartRefresher` can be configured individually, we recommend using `RefreshConfiguration` at the root of your app to ensure a consistent feel across all pages.
+
+## `RefreshConfiguration`
+
+Wrap your `MaterialApp` with this widget to set global defaults.
+
+```dart
+RefreshConfiguration(
+  headerTriggerDistance: 80.0,        // Drag distance to trigger refresh
+  footerTriggerDistance: 50.0,        // Distance from bottom to trigger loading
+  maxOverScrollExtent: 100,           // Maximum allowed overscroll distance
+  maxUnderScrollExtent: 0,            // Maximum allowed underscroll distance
+  headerBuilder: () => ClassicHeader(), // Default header for the whole app
+  footerBuilder: () => ClassicFooter(), // Default footer for the whole app
+  enableScrollWhenRefreshCompleted: true, // Allow scrolling while refresh is finishing
+  enableBallisticRefresh: false,      // Trigger refresh on fast flick
+  child: MaterialApp(
+    ...
+  ),
+)
+```
+
+## Distance Metrics
+
+Understanding the distance parameters is key to a smooth user experience.
+
+| Property | Description | Recommended |
+| :--- | :--- | :--- |
+| `headerTriggerDistance` | How far the user must pull down to activate the refresh. | `60.0` - `80.0` |
+| `footerTriggerDistance` | How close to the bottom the user must scroll to trigger a load-more. | `15.0` - `50.0` |
+| `maxOverScrollExtent` | The hard limit of how far the list can be pulled beyond its bounds. | `headerTrigger + 20` |
+
+## Advanced Behaviors
+
+### Haptic Feedback
+You can enable haptic feedback when the pull threshold is crossed. This is especially useful for `iOS17Header`.
+
+```dart
+RefreshConfiguration(
+  enableThresholdHaptic: true,
+  child: ...,
+)
+```
+
+### Ballistic Refresh
+If enabled, a high-velocity "flick" toward the top of the list will trigger a refresh even if the user hasn't pulled down slowly to the threshold.
+
+<Aside type="note">
+  Behavioral settings in `RefreshConfiguration` are overtaken by individual `SmartRefresher` properties if they are explicitly set on the widget.
+</Aside>

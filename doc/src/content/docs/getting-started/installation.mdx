@@ -1,0 +1,44 @@
+---
+title: Installation
+description: Get smart_refresher up and running in your Flutter project.
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+`smart_refresher` is a powerful Flutter widget designed to provide seamless pull-to-refresh and infinite-scroll loading for any scrollable widget. It is compatible with Flutter 3.x and Dart 3.
+
+1. **Add Dependency**
+    Add `smart_refresher` to your `pubspec.yaml` file:
+    ```yaml
+    dependencies:
+      smart_refresher: ^1.0.0
+    ```
+
+2. **Install Package**
+    Run the following command in your terminal to fetch the package:
+    ```bash
+    flutter pub get
+    ```
+
+3. **Import the Library**
+    Add the import statement to your Dart files where you intend to use the refresher:
+    ```dart
+    import 'package:smart_refresher/smart_refresher.dart';
+    ```
+
+## Platform Support
+
+`smart_refresher` supports all major Flutter platforms out of the box:
+
+| Platform | Support | Status |
+| :--- | :--- | :--- |
+| **Android** | ✅ Supported | Full Material 3 Support |
+| **iOS** | ✅ Supported | Native iOS 17 Feel & Haptics |
+| **Web** | ✅ Supported | WASM / CanvasKit Optimized |
+| **Desktop** | ✅ Supported | macOS, Windows, Linux |
+
+## Requirements
+
+-   **Flutter:** 3.27.0 or higher
+-   **Dart:** 3.0.0 or higher
+-   **No external dependencies:** We keep the package lightweight and robust.

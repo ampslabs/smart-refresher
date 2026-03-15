@@ -1,0 +1,71 @@
+---
+title: Multi-sliver Layouts
+description: Using smart_refresher with CustomScrollView and complex sliver lists.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+For complex pages containing `SliverAppBar`, `SliverGrid`, or multiple `SliverList`s, the standard `SmartRefresher` constructor won't work because it expects a single child widget.
+
+For these cases, use the `SmartRefresher.slivers` constructor.
+
+## Basic Sliver Usage
+
+The `.slivers` constructor takes a list of `slivers` instead of a single `child`. It automatically injects the refresh and load indicators as slivers at the correct positions.
+
+```dart
+SmartRefresher.slivers(
+  controller: _refreshController,
+  onRefresh: _onRefresh,
+  onLoading: _onLoading,
+  slivers: [
+    const SliverAppBar(
+      pinned: true,
+      expandedHeight: 200.0,
+      flexibleSpace: FlexibleSpaceBar(
+        title: Text("Sliver Refresher"),
+        background: Image.network("https://example.com/banner.jpg", fit: BoxFit.cover),
+      ),
+    ),
+    SliverGrid(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      delegate: SliverChildBuilderDelegate(
+        (c, i) => Card(child: Center(child: Text("Grid $i"))),
+        childCount: 10,
+      ),
+    ),
+    SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (c, i) => ListTile(title: Text("List Item $i")),
+        childCount: 20,
+      ),
+    ),
+  ],
+)
+```
+
+## How It Works
+
+`SmartRefresher.slivers` creates a `CustomScrollView` internally. 
+- The **Header** is placed as a `SliverToBoxAdapter` at the very top (index 0).
+- Your **Slivers** are placed in the middle.
+- The **Footer** is placed at the very bottom.
+
+<Aside type="caution">
+  Do not use `SmartRefresher.slivers` inside another `CustomScrollView`. `SmartRefresher` must own the viewport to handle its physics correctly.
+</Aside>
+
+## Advanced: Pinning the Header
+
+If you want the header to remain visible during refresh even if the user scrolls back up past it, you can configure the `refreshStyle` in your header:
+
+```dart
+header: ClassicHeader(
+  refreshStyle: RefreshStyle.Front, // Header stays on top of content
+)
+```
+
+Common styles include:
+- `Follow`: Header moves with the content.
+- `Behind`: Content moves over the header.
+- `Front`: Header is pinned to the top layer.

@@ -1,0 +1,43 @@
+---
+import { Icon } from '@astrojs/starlight/components';
+
+const features = [
+  {
+    title: 'Easy to use',
+    description: 'Just wrap your scrollable widget with SmartRefresher and you are good to go. No complex setup required.',
+    icon: 'setting',
+  },
+  {
+    title: 'Fully Customizable',
+    description: 'Support custom header and footer. Build your own refresh animations or use pre-built ones.',
+    icon: 'add-document',
+  },
+  {
+    title: 'High Performance',
+    description: 'Optimized for large lists and complex scroll views with smooth 60fps animations.',
+    icon: 'rocket',
+  },
+  {
+    title: 'Multi-Platform',
+    description: 'Works seamlessly everywhere Flutter works — iOS, Android, Web, and Desktop.',
+    icon: 'laptop',
+  },
+];
+---
+
+<div class="features-container" style="padding-top: 10rem;">
+  <span class="section-label">Capabilities</span>
+  <h2 class="section-title">Everything you need to build smooth scrolling experiences.</h2>
+  
+  <div class="features-grid">
+    {features.map((feature) => (
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <Icon name={feature.icon} size="1.5rem" />
+        </div>
+        <h3>{feature.title}</h3>
+        <p>{feature.description}</p>
+      </div>
+    ))}
+  </div>
+</div>

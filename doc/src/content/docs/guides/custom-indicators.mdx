@@ -1,0 +1,92 @@
+---
+title: Custom Indicators
+description: A recipe for building bespoke refresh animations and styles.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+When the [built-in themes](/reference/theming) don't match your brand's unique personality, `smart_refresher` allows you to build completely custom indicators from scratch using the `CustomHeader` and `CustomFooter` builders.
+
+## The Builder Pattern
+
+Both `CustomHeader` and `CustomFooter` provide a `builder` function that gives you the current `RefreshStatus` or `LoadStatus`. You can use this state to drive your animations.
+
+### Example: Lottie Animation Header
+
+Lottie is perfect for high-quality refresh animations. Here is how you can integrate it:
+
+```dart
+CustomHeader(
+  builder: (context, mode) {
+    return Container(
+      height: 80.0,
+      child: Center(
+        child: Lottie.asset(
+          'assets/animations/refresh.json',
+          // Only play while in the active 'refreshing' state
+          animate: mode == RefreshStatus.refreshing,
+          repeat: true,
+        ),
+      ),
+    );
+  },
+)
+```
+
+---
+
+## Building a State-Aware Indicator
+
+A truly premium indicator responds to different phases of the pull gesture. 
+
+1. **Idle & Pulling**: Show a hint or a subtle progress indicator.
+2. **Armed (canRefresh)**: Change the visual style (e.g., flip an arrow) to signify that releasing will trigger the action.
+3. **Refreshing**: Show a persistent loading state.
+4. **Completed/Failed**: Show final feedback (checkmark or cross).
+
+### implementation Example
+
+```dart
+CustomHeader(
+  builder: (context, mode) {
+    Widget body;
+    if (mode == RefreshStatus.idle) {
+      body = const Text("Pull down");
+    } else if (mode == RefreshStatus.refreshing) {
+      body = const CircularProgressIndicator();
+    } else if (mode == RefreshStatus.failed) {
+      body = const Text("Load Failed!");
+    } else if (mode == RefreshStatus.canRefresh) {
+      body = const Text("Release to refresh");
+    } else {
+      body = const Text("Success");
+    }
+    
+    return SizedBox(
+      height: 55.0,
+      child: Center(child: body),
+    );
+  },
+)
+```
+
+---
+
+## Advanced: Complex Transitions
+
+If you need more control (like the exact pull distance for a parallax effect), you can wrap your builder logic with an `IndicatorThemeData.resolve(context)` call to ensure your custom UI inherits colors from the rest of the app automatically.
+
+### RefreshStatus Reference
+
+| Status | Usage |
+| :--- | :--- |
+| `idle` | Waiting for user interaction. |
+| `canRefresh` | User pulled past the trigger distance; release now to refresh. |
+| `refreshing` | `onRefresh` callback is currently running. |
+| `completed` | `refreshCompleted()` was called. |
+| `failed` | `refreshFailed()` was called. |
+| `twoLeveling` | The user pulled exceptionally far to open the second level. |
+
+<Aside type="tip">
+  For most custom indicators, a height between `60.0` and `80.0` feels most natural on modern mobile devices.
+</Aside>

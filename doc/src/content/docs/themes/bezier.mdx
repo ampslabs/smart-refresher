@@ -1,0 +1,104 @@
+---
+title: BezierHeader & BezierCircleHeader
+description: Smooth Bezier-curve-based pull-to-refresh headers with a morphing wave animation.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+`BezierHeader` and `BezierCircleHeader` render a morphing Bezier-curve wave at the top of the scroll view. As you pull, the wave stretches; on release, it springs back with a fluid elastic motion.
+
+---
+
+## Basic Usage
+
+```dart
+// Flat header with a wave + spinner
+SmartRefresher(
+  header: BezierHeader(
+    bezierAlign: BezierAlign.bottom,
+    child: Center(child: CircularProgressIndicator(color: Colors.white)),
+  ),
+  ...
+)
+
+// Circle variant — shows a floating disc with a spinner
+SmartRefresher(
+  header: const BezierCircleHeader(),
+  ...
+)
+```
+
+---
+
+## `BezierHeader` Properties
+
+| Property | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `color` | `Color` | `Colors.blue` | Fill color of the Bezier wave. |
+| `bezierAlign` | `BezierAlign` | `.bottom` | Whether the control point pulls from the top or bottom. |
+| `child` | `Widget?` | `null` | Widget placed inside the wave (e.g., a spinner or logo). |
+| `height` | `double` | `80.0` | Height reserved for the header. |
+| `completeDuration` | `Duration` | `500ms` | How long the complete state is shown. |
+| `enableFollowWhenNoFreeze` | `bool` | `false` | If `true`, the header follows the list during the refresh animation. |
+
+### `BezierAlign` Values
+
+| Value | Effect |
+| :--- | :--- |
+| `.top` | Control point anchored at the top — deep pull curve. |
+| `.bottom` | Control point anchored at the bottom — shallow wave (default). |
+
+---
+
+## `BezierCircleHeader` Properties
+
+| Property | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `color` | `Color` | `Colors.blue` | Disc and background fill color. |
+| `child` | `Widget?` | `CircularProgressIndicator(white)` | Content inside the floating disc. |
+| `height` | `double` | `80.0` | Height reserved for the header. |
+| `completeDuration` | `Duration` | `500ms` | How long the complete state is shown. |
+
+---
+
+## Examples
+
+### Custom Wave Color & Child
+
+```dart
+BezierHeader(
+  color: const Color(0xFF7C3AED), // purple
+  bezierAlign: BezierAlign.bottom,
+  child: const Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+      SizedBox(width: 12),
+      Text('Loading...', style: TextStyle(color: Colors.white)),
+    ],
+  ),
+)
+```
+
+### Minimal `BezierCircleHeader`
+
+```dart
+BezierCircleHeader(
+  color: Colors.teal,
+  child: const Icon(Icons.refresh, color: Colors.white),
+)
+```
+
+---
+
+## How the Bezier Curve Works
+
+The header draws a `CustomPainter` using a **cubic Bezier path** whose control point is offset vertically by the current scroll offset:
+
+- At rest: a flat line (no wave visible).
+- During pull: the midpoint of the curve is pulled down proportional to `dragOffset`, forming the wave.
+- On release: `AnimationController` springs the control point back to zero using a physics-based `SpringSimulation`.
+
+<Aside type="note">
+  `BezierHeader` uses `RefreshStyle.front` internally. Setting `refreshStyle` on the `SmartRefresher` to anything else will cause the wave to clip incorrectly.
+</Aside>

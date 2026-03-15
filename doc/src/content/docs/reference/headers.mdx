@@ -1,0 +1,94 @@
+---
+title: Headers Reference
+description: Complete reference for all built-in SmartRefresher header widgets.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+`SmartRefresher` accepts any widget as its `header:` prop, as long as it is a subclass of `RefreshIndicator` from `smart_refresher`. The table below maps every built-in header to its dedicated reference page.
+
+---
+
+## Built-in Headers at a Glance
+
+| Header | Style | Haptics | Platform |
+| :--- | :--- | :--- | :--- |
+| [`ClassicHeader`](/themes/classic) | Text + icon label | ✗ | All |
+| [`Material3Header`](/themes/material3) | Floating M3 card | ✗ | All |
+| [`Ios17Header`](/themes/ios17) | 12-spoke tick | ✅ iOS | All |
+| [`WaterDropHeader`](/themes/waterdrop) | Fluid water drop | ✗ | All |
+| [`WaterDropMaterialHeader`](/themes/waterdrop) | Material water drop | ✗ | All |
+| [`BezierHeader`](/themes/bezier) | Morphing wave | ✗ | All |
+| [`BezierCircleHeader`](/themes/bezier) | Floating disc | ✗ | All |
+| [`GlassHeader`](/themes/glass) | Frosted glass | ✗ | All |
+
+---
+
+## Common Properties
+
+All headers share the following base properties inherited from `RefreshIndicator`:
+
+| Property | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `height` | `double` | `60.0` | Height of the refresh area reserved in the scroll view. |
+| `refreshStyle` | `RefreshStyle` | `.follow` | How the header interacts with the list scroll. |
+| `completeDuration` | `Duration` | `600ms` | How long the success/failure state is shown before dismissal. |
+
+---
+
+## `RefreshStyle` Values
+
+| Value | Description |
+| :--- | :--- |
+| `.follow` | Header scrolls with the list content (default). |
+| `.unfollow` | Header stays fixed; the list scrolls below it. |
+| `.front` | Header appears on top of the list (used by WaterDrop, Bezier). |
+| `.behind` | Header is revealed behind the list as it scrolls down. |
+
+---
+
+## Choosing a Header
+
+```
+Need platform defaults?        → ClassicHeader
+Following Material You?        → Material3Header
+Building an iOS app?           → Ios17Header (with haptics)
+Want a playful animation?      → WaterDropHeader or BezierHeader
+Have a rich background image?  → GlassHeader
+Building a custom indicator?   → See Custom Indicators guide
+```
+
+---
+
+## Implementing a Custom Header
+
+Any widget that extends `RefreshIndicator` can be used as a header. The minimum implementation:
+
+```dart
+class MyHeader extends RefreshIndicator {
+  const MyHeader({super.key})
+      : super(height: 80, refreshStyle: RefreshStyle.follow);
+
+  @override
+  State<StatefulWidget> createState() => _MyHeaderState();
+}
+
+class _MyHeaderState extends RefreshIndicatorState<MyHeader> {
+  @override
+  Widget buildContent(BuildContext context, RefreshStatus? mode) {
+    return Center(
+      child: switch (mode) {
+        RefreshStatus.idle       => const Text('Pull down'),
+        RefreshStatus.canRefresh => const Text('Release!'),
+        RefreshStatus.refreshing => const CircularProgressIndicator(),
+        RefreshStatus.completed  => const Icon(Icons.check),
+        _                        => const SizedBox.shrink(),
+      },
+    );
+  }
+}
+```
+
+<Aside type="tip">
+  See the [Custom Indicators guide](/guides/custom-indicators) for advanced patterns including animation controllers and `onOffsetChange` callbacks.
+</Aside>

@@ -1,0 +1,125 @@
+---
+title: Ios17Header
+description: A pixel-perfect iOS 17 pull-to-refresh indicator with haptic feedback.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+`Ios17Header` is a Cupertino-style indicator that recreates the native iOS 17 pull-to-refresh experience. It renders a **12-spoke tick spinner** whose ticks progressively appear while pulling, then rotate with a comet-tail gradient when refreshing. On physical iOS devices, it fires a `HapticFeedback.mediumImpact()` at the moment the threshold is crossed.
+
+---
+
+## Basic Usage
+
+```dart
+SmartRefresher(
+  controller: _controller,
+  header: const Ios17Header(),
+  onRefresh: _onRefresh,
+  child: ListView.builder(...),
+)
+```
+
+---
+
+## Properties
+
+| Property | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `color` | `Color?` | `CupertinoColors.systemFill` | Tint color of the 12 tick marks. |
+| `radius` | `double` | `10.0` | Radius of the spinner (distance from center to tip of tick). |
+| `showLastUpdated` | `bool` | `false` | When `true`, shows a timestamp below the indicator after a successful refresh. |
+| `enableHaptic` | `bool` | `true` | Fires `HapticFeedback.mediumImpact()` when the refresh threshold is crossed (iOS only). |
+| `lastUpdatedTextBuilder` | `String Function(DateTime)?` | `null` | Custom formatter for the "Updated X min ago" text. |
+| `height` | `double` | `60.0` | Height reserved for the header. |
+| `completeDuration` | `Duration` | `300ms` | How long the completed state is shown before dismissal. |
+| `refreshStyle` | `RefreshStyle` | `.follow` | The indicator follows the list scroll. |
+| `semanticsLabel` | `String?` | Localized string | Accessibility label for screen readers. |
+| `semanticsHint` | `String?` | `null` | Accessibility hint. |
+
+---
+
+## Enabling the "Last Updated" Timestamp
+
+```dart
+Ios17Header(
+  showLastUpdated: true,
+  // Optional custom text format
+  lastUpdatedTextBuilder: (updatedAt) {
+    final diff = DateTime.now().difference(updatedAt);
+    if (diff.inSeconds < 60) return 'Just now';
+    return '${diff.inMinutes}m ago';
+  },
+)
+```
+
+The timestamp appears below the spinner once `refreshCompleted()` is called, then fades out during the dismiss animation.
+
+---
+
+## Haptic Feedback
+
+Haptic feedback fires at the moment the pull threshold is crossed (from `canRefresh` state inwards to `refreshing`). It uses `HapticFeedback.mediumImpact()` and is **only functional on physical iOS devices**.
+
+```dart
+// Disable haptics (e.g. for accessibility preferences):
+Ios17Header(enableHaptic: false)
+
+// Enable globally via RefreshConfiguration:
+RefreshConfiguration(
+  enableThresholdHaptic: true,
+  child: MaterialApp(...),
+)
+```
+
+<Aside type="note">
+  Haptic feedback is silently ignored in the iOS Simulator, Android, and Web. There's no need to guard the call — the SDK handles it gracefully.
+</Aside>
+
+---
+
+## How It Animates
+
+The indicator is composed of four `AnimationController`s:
+
+| Controller | Duration | Purpose |
+| :--- | :--- | :--- |
+| `_rotationController` | `1000ms`, repeating | Drives the comet-tail rotation during active refresh. |
+| `_scaleController` | `200ms`, elastic spring | Produces the "pop" scale effect when the threshold is crossed. |
+| `_opacityController` | `300ms` | Fades in the spinning gradient when refreshing begins. |
+| `_dismissController` | `300ms` | Scales and fades the spinner out on completion. |
+
+### The Tick Geometry
+
+The 12 ticks are drawn via a `CustomPainter` (`_ActivityIndicatorPainter`). Each tick is a rounded rectangle. Their **alpha values** are calculated per-tick based on `progress` and `rotationValue`:
+
+- **While pulling** (progress < 1.0): Ticks appear sequentially from the top, one per `1/12` of pull distance.
+- **While spinning** (progress ≥ 1.0): The leading tick is `255` alpha; each subsequent tick in the comet tail uses `[255, 220, 184, 148, 112, 76, 47, 47, ...]` alpha values, giving the trailing fade effect.
+
+---
+
+## The `Ios17ActivityIndicator` Widget
+
+`Ios17ActivityIndicator` is a reusable public widget if you want to embed the iOS 17 spinner anywhere else in your UI:
+
+```dart
+Ios17ActivityIndicator(
+  color: CupertinoColors.systemGrey,
+  radius: 12.0,
+  progress: 0.75,          // how many ticks are visible (0.0–1.0 while pulling)
+  rotationValue: 0.3,      // spinner rotation (0.0–1.0, where 1.0 = full turn)
+  gradientOpacity: 1.0,    // intensity of the comet-tail gradient
+)
+```
+
+---
+
+## Accessibility
+
+Both `Ios17Header` and `Ios17ActivityIndicator` expose `semanticsLabel` and `semanticsHint`. The header's label transitions through localized strings for each `RefreshStatus`.
+
+```dart
+Ios17Header(
+  semanticsLabel: 'Pull down to reload messages',
+)
+```
