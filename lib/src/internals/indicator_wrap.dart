@@ -4,8 +4,6 @@
     createTime:2018-05-14 3:39 PM
  */
 
-// ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
-// ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
 import 'dart:async';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -416,6 +414,7 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
             refresher!.controller.footerMode!.error ?? 'Unknown error',
             refresher!.controller.footerMode!.stackTrace);
       }
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       if (_position!.activity!.velocity < 0 &&
           _lastMode == LoadStatus.loading &&
           !_position!.outOfRange &&
@@ -597,6 +596,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
   RefreshNotifier<V>? _mode;
 
   /// The current scroll activity.
+  // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
   ScrollActivity? get activity => _position!.activity;
 
   /// The current scroll position of the refresher.

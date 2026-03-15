@@ -3,8 +3,6 @@
     Email: peng8350@gmail.com
     createTime:2018-05-02 2:39 PM
  */
-// ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
-// ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
@@ -255,6 +253,7 @@ class RefreshPhysics extends ScrollPhysics {
     final double bottomBoundary =
         position.maxScrollExtent + maxUnderScrollExtent! + bottomExtra;
 
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     if (scrollPosition.activity is BallisticScrollActivity) {
       if (topHitBoundary != double.infinity) {
         if (value < -topHitBoundary! && -topHitBoundary! <= position.pixels) {
@@ -283,6 +282,7 @@ class RefreshPhysics extends ScrollPhysics {
       return value - bottomBoundary;
     }
 
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     if (scrollPosition.activity is DragScrollActivity) {
       if (maxOverScrollExtent != double.infinity &&
           value < position.pixels &&

@@ -12,9 +12,6 @@ import 'package:smart_refresher/src/internals/indicator_wrap.dart';
 import 'package:smart_refresher/src/internals/refresh_physics.dart';
 import 'package:smart_refresher/src/internals/mixins.dart';
 
-// ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
-// ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-
 import 'package:smart_refresher/src/internals/enums.dart';
 
 export 'package:smart_refresher/src/internals/enums.dart';
@@ -480,6 +477,7 @@ class RefreshController {
 
   void _listenScrollEnd() {
     if (position != null && position!.outOfRange) {
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       position?.activity?.applyNewDimensions();
     }
   }
@@ -524,8 +522,7 @@ class RefreshController {
             } else {
               headerMode!.setValueWithNoNotify(RefreshStatus.refreshing);
               if (indicatorElement.state.mounted) {
-                (indicatorElement.state as RefreshIndicatorState)
-                    .setState(() {});
+                (indicatorElement.state as RefreshIndicatorState).update();
               }
             }
           }
@@ -592,7 +589,7 @@ class RefreshController {
             } else {
               footerMode!.setValueWithNoNotify(LoadStatus.loading);
               if (indicatorElement.state.mounted) {
-                (indicatorElement.state as LoadIndicatorState).setState(() {});
+                (indicatorElement.state as LoadIndicatorState).update();
               }
             }
           }

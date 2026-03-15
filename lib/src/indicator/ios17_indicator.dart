@@ -1,5 +1,3 @@
-// ignore_for_file: camel_case_types
-
 import 'dart:ui' as ui show lerpDouble;
 import 'dart:math' as math;
 
