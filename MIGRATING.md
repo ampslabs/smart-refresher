@@ -22,7 +22,7 @@ dependencies:
   # pull_to_refresh: ^2.0.0
   
   # Add this:
-  smart_refresher: ^0.2.0
+  smart_refresher: ^1.0.0
 ```
 
 ### 2. Update Imports

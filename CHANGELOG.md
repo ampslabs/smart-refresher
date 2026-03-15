@@ -1,8 +1,53 @@
-## [Unreleased]
+## 1.0.0
 
 ### Added
-- Added `GlassHeader`, a frosted glass pull-to-refresh indicator with drag-driven blur, custom arc painter, Cupertino spinner state, and light/dark adaptive tinting.
-- Added `GlassHeader` widget tests and a new example screen showcasing gradient and photo backgrounds.
+- **ElasticHeader**: A new physics-based stretch header that provides an elastic visual effect, common in premium iOS apps. Includes real-time stretch factor calculation and integration with lazy construction.
+- **Example App Update**: Added `ElasticHeaderScreen` to the example app, showcasing the ElasticHeader with a hero image.
+
+### Security & Compliance
+
+- **Input Validation**: Added robust `AssertionError` guards to `requestRefresh`, `requestTwoLevel`, and `requestLoading` in `RefreshController` for safer API usage.
+- **Exception Surfacing**: Refactored internal callback execution to ensure `onRefreshFailed` and `onLoadingFailed` robustly catch and surface both synchronous and asynchronous exceptions.
+- **Typed API**: Hardened internal logic to eliminate `dynamic` type usage in callback execution paths.
+- **Sensitive Data Guard**: Added a security note to `SmartRefresher`'s API documentation advising against using callbacks for sensitive data handling.
+- **`SECURITY.md` Policy**: Published a formal security policy with private reporting channels, acknowledgment SLAs, and an incident response process.
+- **Static Analysis Hardening**: Enabled `always_use_package_imports` and `no_runtimeType_toString` lints, converting all relative imports to package imports and fixing violations.
+- **Secret Scanning**: Configured `gitleaks` with `.gitleaks.toml` and documented pre-commit hook usage for automated credential detection.
+- **Supply Chain Security**: Pinned all GitHub Action workflows (`ci.yml`, `publish.yml`, `stale.yml`) to full commit SHAs for enhanced protection against tag mutation attacks.
+- **Automated Updates**: Configured Dependabot (`.github/dependabot.yml`) for weekly dependency and GitHub Actions updates.
+- **SBOM Generation**: Integrated `cyclonedx-dart` into the release pipeline (`publish.yml`) and added a dry-run to `ci.yml` for generating Software Bill of Materials.
+- **Dependency Audit**: Removed `iconify_sdk` from root `pubspec.yaml` to `example/pubspec.yaml` as it was only used in the demo app.
+
+### Refactoring & Code Quality
+- Removed all blanket `ignore_for_file` suppressions from core library files, replacing them with surgical line-level `// ignore:` comments where accessing Flutter internals is necessary.
+- Replaced protected `setState()` calls in `RefreshController` with the public `update()` method from `IndicatorStateMixin`.
+- Removed unnecessary `ignore_for_file: camel_case_types` from `ios17_indicator.dart`.
+
+
+### Performance & Code Cleanup
+- **Rebuild Minimisation**: Wrapped indicator content (`buildContent`) within both `RefreshIndicatorState` and `LoadIndicatorState` with `RepaintBoundary` to isolate repaints during drag gestures.
+- **Lazy Header Construction**: Implemented lazy header construction; the header's child widget tree is now deferred until the first pull gesture, improving initial mount performance.
+- **Jank Profiling Baseline**: Established a performance baseline with a new `integration_test` macrobenchmark script in `/benchmarks`, recording timeline traces for scroll and refresh interactions.
+- **Animation Curve Audit**: Ensured all `AnimationController` instances use appropriate hardware-accelerated curves and have explicit durations, confirming compliance with Flutter's 16ms frame budget.
+- **Memory Leak Scan**: Verified proper disposal of all `AnimationController` and `ScrollController` instances through `flutter test --track-widget-creation` and code audit.
+- **`const` Propagation**: Achieved 100% compliance with `prefer_const_constructors` lint rule across indicator widgets.
+- **Dead Code Removal**: Removed unused imports (`slivers.dart`) and addressed boilerplate TODOs.
+- **Consistent Naming**: Refactored cryptic or single-letter variables (e.g., `e` to `element`, `u` to `shouldUpdate`) to descriptive names in line with Dart's style guide.
+- **Magic Constants Extraction**: Centralized hardcoded numeric and string literals (e.g., animation durations, spring physics, icon sizes, spacing) into `SmartRefresherConstants` in `enums.dart`.
+- **Standardized Async Patterns**: Replaced ad-hoc `Future.delayed` workarounds with `WidgetsBinding.instance.addPostFrameCallback` for single-frame waits and `endRefreshWithTimer` for timed delays.
+
+
+### API Modernisation & Developer Experience
+
+- **`RefreshController.stream`**: Added a `.stream` getter to `RefreshController` as an alias for `.headerStream`, providing a reactive entry point for refresh status.
+- **`ValueNotifier` State Exposure**: Enhanced `RefreshController` with `ValueNotifier`-based state exposure (`contentStatus`, `headerMode`, `footerMode`), enabling easier integration with state management solutions.
+- **`onRefreshFailed` Callback**: Introduced a dedicated `onRefreshFailed` callback for `SmartRefresher`, allowing indicators to show distinct error states without manual consumer management.
+- **Haptic Feedback Opt-in**: Implemented optional haptic feedback (`HapticFeedback.mediumImpact()`) at the pull threshold, disabled by default via `RefreshConfiguration`.
+- **Integration Examples**: Added comprehensive examples for Riverpod, Provider, and BLoC state management patterns in the example app.
+- **`SmartRefresher.builder` Constructor**: Introduced `SmartRefresher.builder` for declarative UI composition, providing dedicated slots for `empty`, `error`, and `loading` states.
+- **English Comments**: Ensured 100% of source code comments are in English, translating all legacy Chinese comments.
+- **Comprehensive API Docs**: Significantly improved and added rich `///` documentation for all public members, including `SmartRefresher.builder`, `SmartRefresher.slivers`, `RefreshNotifier`, and `IndicatorStateMixin`.
+- **Migration Guide**: Published `MIGRATING.md` to guide users transitioning from the upstream `pull_to_refresh` package.
 
 ## 0.2.0
 

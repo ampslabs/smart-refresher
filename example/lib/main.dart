@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_driver/driver_extension.dart';
 import 'package:iconify_sdk/iconify_sdk.dart';
 
 import 'app_router.dart';
@@ -19,7 +20,10 @@ import 'integrations/provider_example.dart';
 import 'integrations/builder_slots_example.dart';
 import 'theme/app_theme.dart';
 
-void main() => runApp(const IconifyApp(child: SmartRefresherDemoApp()));
+void main() {
+  enableFlutterDriverExtension();
+  runApp(const IconifyApp(child: SmartRefresherDemoApp()));
+}
 
 class SmartRefresherDemoApp extends StatefulWidget {
   const SmartRefresherDemoApp({super.key});
