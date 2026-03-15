@@ -22,6 +22,7 @@ export 'src/indicator/shimmer.dart';
 export 'src/indicator/skeleton_bones.dart';
 export 'src/indicator/skeleton_footer.dart';
 export 'src/indicator/twolevel_indicator.dart';
+export 'src/indicator/elastic_indicator.dart';
 export 'src/internals/refresh_localizations.dart';
 export 'src/theming/indicator_theme.dart';
 export 'src/theming/smart_refresher_theme.dart';
