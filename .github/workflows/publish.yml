@@ -28,7 +28,7 @@ jobs:
           dart pub global run cyclonedx_dart:make -o sbom.json
 
       - name: Upload SBOM
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea23f01194697d8f3575913f5 # v4.4.3
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: sbom
           path: sbom.json
