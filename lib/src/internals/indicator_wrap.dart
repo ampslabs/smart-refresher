@@ -75,6 +75,8 @@ abstract class LoadIndicator extends StatefulWidget {
 abstract class RefreshIndicatorState<T extends RefreshIndicator>
     extends State<T>
     with IndicatorStateMixin<T, RefreshStatus>, RefreshProcessor {
+  bool _hasConstructedChild = false;
+
   bool _inVisual() {
     return _position!.pixels < 0.0;
   }
@@ -95,6 +97,10 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   void _handleOffsetChange() {
     super._handleOffsetChange();
     final double overscrollPast = _calculateScrollOffset();
+    if (!_hasConstructedChild && (overscrollPast > 0.0 || mode != RefreshStatus.idle)) {
+      _hasConstructedChild = true;
+      update();
+    }
     onOffsetChange(overscrollPast);
   }
 
@@ -298,7 +304,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
                   Scrollable.of(context).axisDirection == AxisDirection.up
               ? 10
               : 0,
-          child: buildContent(context, mode!),
+          child: RepaintBoundary(
+            child: _hasConstructedChild ? buildContent(context, mode!) : const SizedBox.shrink(),
+          ),
         ));
   }
 }
@@ -537,7 +545,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
                   widget.onClick!();
                 }
               },
-              child: buildContent(context, mode!),
+              child: RepaintBoundary(
+                child: buildContent(context, mode!),
+              ),
             );
           },
         ));

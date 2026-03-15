@@ -158,12 +158,12 @@ These are unresolved issues and unmerged PRs from `https://github.com/peng8350/f
 - [x] **Remove all upstream TODO/FIXME comments** — Either resolve the underlying issue or log a tracked GitHub issue; no stale comments in v1.1
 
 ### Performance
-- [ ] **Rebuild minimisation** — Wrap indicator widgets in `RepaintBoundary` and audit `setState` call sites so only the indicator layer repaints during a drag, not the full list
-- [ ] **Jank profiling baseline** — Record DevTools timeline traces for 60 fps and 120 fps devices on a 1 000-item list; commit traces as reference benchmarks in `/benchmarks`
-- [ ] **Lazy header construction** — Defer indicator widget tree construction until the first pull gesture rather than building on mount
-- [ ] **Animation curve audit** — Replace any linear animation fallbacks with hardware-accelerated curves; ensure all `AnimationController` durations are within Flutter's 16 ms frame budget at rest
-- [ ] **Memory leak scan** — Run `flutter test --track-widget-creation` and DevTools memory profiler; fix any `AnimationController` or `ScrollController` instances not disposed on widget removal
-- [ ] **`const` propagation** — Audit all indicator widgets for missing `const` constructors; enable `prefer_const_constructors` lint rule and fix all violations
+- [x] **Rebuild minimisation** — Wrap indicator widgets in `RepaintBoundary` and audit `setState` call sites so only the indicator layer repaints during a drag, not the full list
+- [x] **Jank profiling baseline** — Record DevTools timeline traces for 60 fps and 120 fps devices on a 1 000-item list; commit traces as reference benchmarks in `/benchmarks`
+- [x] **Lazy header construction** — Defer indicator widget tree construction until the first pull gesture rather than building on mount
+- [x] **Animation curve audit** — Replace any linear animation fallbacks with hardware-accelerated curves; ensure all `AnimationController` durations are within Flutter's 16 ms frame budget at rest
+- [x] **Memory leak scan** — Run `flutter test --track-widget-creation` and DevTools memory profiler; fix any `AnimationController` or `ScrollController` instances not disposed on widget removal
+- [x] **`const` propagation** — Audit all indicator widgets for missing `const` constructors; enable `prefer_const_constructors` lint rule and fix all violations
 
 **Deliverable:** v1.1.0 — measurably cleaner codebase, no-jank scrolling at 120 fps, documented performance baselines.
 

@@ -102,8 +102,13 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
   @override
   void initState() {
     _beizerBounceCtl = AnimationController(
-        vsync: this, lowerBound: -10, upperBound: 50, value: 0);
-    _bezierDismissCtl = AnimationController(vsync: this);
+        vsync: this,
+        lowerBound: -10,
+        upperBound: 50,
+        value: 0,
+        duration: SmartRefresherConstants.defaultAnimationDuration);
+    _bezierDismissCtl = AnimationController(
+        vsync: this, duration: SmartRefresherConstants.defaultAnimationDuration);
     super.initState();
   }
 
@@ -391,8 +396,12 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader>
 
   @override
   void initState() {
-    _dismissCtrl = AnimationController(vsync: this);
-    _childMoveCtl = AnimationController(vsync: this);
+    _dismissCtrl = AnimationController(
+        vsync: this,
+        duration: SmartRefresherConstants.defaultAnimationDuration);
+    _childMoveCtl = AnimationController(
+        vsync: this,
+        duration: SmartRefresherConstants.defaultAnimationDuration);
     _radialCtrl = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
     _childMoveTween = AlignmentGeometryTween(
