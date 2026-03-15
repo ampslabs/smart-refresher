@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
 
-import '../internals/indicator_wrap.dart';
-import '../smart_refresher.dart';
-import '../theming/indicator_theme.dart';
-import '../internals/refresh_localizations.dart';
+import 'package:smart_refresher/src/internals/indicator_wrap.dart';
+import 'package:smart_refresher/src/smart_refresher.dart';
+import 'package:smart_refresher/src/theming/indicator_theme.dart';
+import 'package:smart_refresher/src/internals/refresh_localizations.dart';
 
 /// A Material 3 pull-to-refresh header that follows the 2024 circular indicator style.
 ///

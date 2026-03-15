@@ -188,9 +188,9 @@ These are unresolved issues and unmerged PRs from `https://github.com/peng8350/f
 - [x] **Sensitive data guard** — Document explicitly that `SmartRefresher` callbacks must not be used to cache or log scroll positions or user data; add a note in API docs
 
 ### Disclosure & Hardening
-- [ ] **`SECURITY.md`** — Publish a responsible disclosure policy describing how to privately report vulnerabilities, the response SLA, and the CVE assignment process
-- [ ] **Automated secret scanning** — Enable GitHub's native secret scanning and add a `gitleaks` pre-commit hook to the repo to prevent accidental credential commits
-- [ ] **Static analysis hardening** — Enable `avoid_dynamic_calls`, `always_use_package_imports`, and `no_runtimeType_toString` lints; fix all violations before release
+- [x] **`SECURITY.md`** — Publish a responsible disclosure policy describing how to privately report vulnerabilities, the response SLA, and the CVE assignment process
+- [x] **Automated secret scanning** — Enable GitHub's native secret scanning and add a `gitleaks` pre-commit hook to the repo to prevent accidental credential commits
+- [x] **Static analysis hardening** — Enable `avoid_dynamic_calls`, `always_use_package_imports`, and `no_runtimeType_toString` lints; fix all violations before release
 
 **Deliverable:** v1.2.0 — published `SECURITY.md`, clean dependency tree, hardened public API, automated secret scanning in CI.
 

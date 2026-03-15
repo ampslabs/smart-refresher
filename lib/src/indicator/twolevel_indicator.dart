@@ -5,8 +5,8 @@
  */
 
 import 'package:flutter/material.dart';
-import 'classic_indicator.dart';
-import '../smart_refresher.dart';
+import 'package:smart_refresher/src/indicator/classic_indicator.dart';
+import 'package:smart_refresher/src/smart_refresher.dart';
 
 /// Alignment for displaying content within the two-level header.
 enum TwoLevelDisplayAlignment {

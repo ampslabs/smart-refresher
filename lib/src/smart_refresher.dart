@@ -8,17 +8,16 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:async';
-import 'internals/indicator_wrap.dart';
-import 'internals/refresh_physics.dart';
-import 'internals/mixins.dart';
+import 'package:smart_refresher/src/internals/indicator_wrap.dart';
+import 'package:smart_refresher/src/internals/refresh_physics.dart';
+import 'package:smart_refresher/src/internals/mixins.dart';
 
 // ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
 // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-// ignore_for_file: DEPRECATED_MEMBER_USE
 
-import 'internals/enums.dart';
+import 'package:smart_refresher/src/internals/enums.dart';
 
-export 'internals/enums.dart';
+export 'package:smart_refresher/src/internals/enums.dart';
 
 /// Callback triggered when the two-level mode is opened or closed.
 typedef OnTwoLevel = void Function(bool isOpen);

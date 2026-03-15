@@ -7,10 +7,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import '../internals/indicator_wrap.dart';
-import '../smart_refresher.dart';
-import '../theming/indicator_theme.dart';
-import '../internals/refresh_localizations.dart';
+import 'package:smart_refresher/src/internals/indicator_wrap.dart';
+import 'package:smart_refresher/src/smart_refresher.dart';
+import 'package:smart_refresher/src/theming/indicator_theme.dart';
+import 'package:smart_refresher/src/internals/refresh_localizations.dart';
 
 const int _kTickCount = 12;
 const double _kTwoPi = math.pi * 2.0;

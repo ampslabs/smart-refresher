@@ -5,11 +5,11 @@
 
 import 'package:flutter/material.dart';
 
-import '../internals/enums.dart';
-import '../internals/indicator_wrap.dart';
-import '../internals/refresh_localizations.dart';
-import 'shimmer.dart';
-import 'skeleton_bones.dart';
+import 'package:smart_refresher/src/internals/enums.dart';
+import 'package:smart_refresher/src/internals/indicator_wrap.dart';
+import 'package:smart_refresher/src/internals/refresh_localizations.dart';
+import 'package:smart_refresher/src/indicator/shimmer.dart';
+import 'package:smart_refresher/src/indicator/skeleton_bones.dart';
 
 /// The preset skeleton layouts available out of the box.
 enum SkeletonBoneStyle {

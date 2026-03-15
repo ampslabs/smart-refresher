@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'smart_refresher_theme.dart';
+import 'package:smart_refresher/src/theming/smart_refresher_theme.dart';
 
 /// Fully resolved visual values consumed by indicator widgets.
 @immutable

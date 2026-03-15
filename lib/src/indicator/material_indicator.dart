@@ -6,9 +6,10 @@
 
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
-import '../internals/indicator_wrap.dart';
-import '../smart_refresher.dart';
-import '../theming/indicator_theme.dart';
+
+import 'package:smart_refresher/src/internals/indicator_wrap.dart';
+import 'package:smart_refresher/src/smart_refresher.dart';
+import 'package:smart_refresher/src/theming/indicator_theme.dart';
 
 // How much the scroll's drag gesture can overshoot the RefreshIndicator's
 // displacement; max displacement = _kDragSizeFactorLimit * displacement.

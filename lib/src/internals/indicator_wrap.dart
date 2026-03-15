@@ -11,8 +11,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
-import '../smart_refresher.dart';
-import 'slivers.dart';
+import 'package:smart_refresher/src/smart_refresher.dart';
+import 'package:smart_refresher/src/internals/slivers.dart';
 
 /// A callback that returns a [Future] with no value.
 typedef VoidFutureCallBack = Future<void> Function();

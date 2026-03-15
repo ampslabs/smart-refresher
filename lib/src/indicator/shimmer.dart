@@ -5,7 +5,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../theming/indicator_theme.dart';
+import 'package:smart_refresher/src/theming/indicator_theme.dart';
 
 class _SlidingGradientTransform extends GradientTransform {
   const _SlidingGradientTransform({required this.slidePercent});

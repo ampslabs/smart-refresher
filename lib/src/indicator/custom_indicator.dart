@@ -5,8 +5,8 @@
  */
 
 import 'package:flutter/widgets.dart';
-import '../internals/indicator_wrap.dart';
-import '../smart_refresher.dart';
+import 'package:smart_refresher/src/internals/indicator_wrap.dart';
+import 'package:smart_refresher/src/smart_refresher.dart';
 
 /// Custom header builder. The second parameter provides the current header state.
 typedef HeaderBuilder = Widget Function(

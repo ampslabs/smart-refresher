@@ -7,7 +7,7 @@
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 import 'package:flutter/rendering.dart';
-import '../smart_refresher.dart';
+import 'package:smart_refresher/src/smart_refresher.dart';
 
 /// A sliver widget that renders the refresh header.
 class SliverRefresh extends SingleChildRenderObjectWidget {

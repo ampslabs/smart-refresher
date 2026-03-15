@@ -2,25 +2,32 @@
 
 ## Supported Versions
 
-We only provide security updates for the latest major version.
+We actively maintain and provide security updates for the following versions of `smart_refresher`:
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 0.1.x   | :white_check_mark: |
-| < 0.1.0 | :x:                |
+| 1.1.x   | ✅ Yes             |
+| 1.0.x   | ❌ No              |
+| < 1.0.0 | ❌ No              |
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability within this project, please send an e-mail to security@ampslabs.com. All security vulnerabilities will be promptly addressed.
+**Please do not open a public GitHub issue for security vulnerabilities.**
 
-Please include the following information in your report:
+We take the security of this project seriously. If you believe you have found a security vulnerability, please report it privately by emailing the maintainers at [appatil595@gmail.com](mailto:appatil595@gmail.com).
 
-- Type of issue (e.g., buffer overflow, SQL injection, cross-site scripting, etc.)
-- Full paths of source file(s) related to the manifestation of the issue
-- The location of the affected code (tag/branch/commit or direct URL)
-- Any special configuration required to reproduce the issue
-- Step-by-step instructions to reproduce the issue
-- Proof-of-concept or exploit code (if possible)
-- Impact of the issue, including how an attacker might exploit it
+### Our Process
 
-We ask that you do not disclose the vulnerability publicly until we have had a chance to address it.
+1. **Acknowledgment:** You will receive an acknowledgment of your report within **48 hours**.
+2. **Investigation:** We will investigate the issue and may contact you for further details.
+3. **Response SLA:** We aim to provide a detailed response and a proposed fix/mitigation plan within **7 business days**.
+4. **CVE Assignment:** If the vulnerability is confirmed, we will coordinate with you to assign a CVE identifier and determine a public disclosure date.
+5. **Disclosure:** Once a fix is released, we will publish a security advisory.
+
+## Secret Scanning
+
+This repository uses GitHub's native secret scanning and local pre-commit hooks to prevent the accidental commitment of sensitive credentials (API keys, tokens, etc.).
+
+## Responsible Disclosure
+
+We appreciate the community's help in keeping `smart_refresher` secure. We ask that you give us a reasonable amount of time to resolve the issue before any public disclosure.

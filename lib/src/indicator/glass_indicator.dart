@@ -6,9 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
 
-import '../internals/indicator_wrap.dart';
-import '../smart_refresher.dart';
-import '../theming/smart_refresher_theme.dart';
+import 'package:smart_refresher/src/internals/indicator_wrap.dart';
+import 'package:smart_refresher/src/smart_refresher.dart';
+import 'package:smart_refresher/src/theming/smart_refresher_theme.dart';
 
 /// A frosted-glass pull-to-refresh header that floats above scroll content.
 ///

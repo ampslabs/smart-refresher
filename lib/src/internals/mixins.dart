@@ -2,12 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
-import '../smart_refresher.dart';
-import '../indicator/classic_indicator.dart';
-import '../indicator/material_indicator.dart';
-import 'indicator_wrap.dart';
-import 'refresh_physics.dart';
-import 'slivers.dart';
+import 'package:smart_refresher/src/smart_refresher.dart';
+import 'package:smart_refresher/src/indicator/classic_indicator.dart';
+import 'package:smart_refresher/src/indicator/material_indicator.dart';
+import 'package:smart_refresher/src/internals/indicator_wrap.dart';
+import 'package:smart_refresher/src/internals/refresh_physics.dart';
+import 'package:smart_refresher/src/internals/slivers.dart';
 
 /// Mixin for composing slivers in [SmartRefresherState].
 mixin RefresherSliverComposer on State<SmartRefresher> {

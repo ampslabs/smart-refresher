@@ -5,7 +5,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../theming/indicator_theme.dart';
+import 'package:smart_refresher/src/theming/indicator_theme.dart';
 
 Color _defaultBoneColor(BuildContext context) {
   return IndicatorThemeData.resolve(context).skeletonBoneColor;
