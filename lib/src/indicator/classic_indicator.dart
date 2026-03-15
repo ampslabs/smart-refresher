@@ -171,8 +171,10 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                             : mode == RefreshStatus.refreshing
                                 ? widget.refreshingIcon ??
                                     SizedBox(
-                                      width: SmartRefresherConstants.defaultIndicatorIconSize,
-                                      height: SmartRefresherConstants.defaultIndicatorIconSize,
+                                      width: SmartRefresherConstants
+                                          .defaultIndicatorIconSize,
+                                      height: SmartRefresherConstants
+                                          .defaultIndicatorIconSize,
                                       child: defaultTargetPlatform ==
                                               TargetPlatform.iOS
                                           ? CupertinoTheme(
@@ -185,7 +187,8 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
                                             )
                                           : CircularProgressIndicator(
                                               color: theme.primaryColor,
-                                              strokeWidth: SmartRefresherConstants.defaultIndicatorStrokeWidth,
+                                              strokeWidth: SmartRefresherConstants
+                                                  .defaultIndicatorStrokeWidth,
                                             ),
                                     )
                                 : widget.twoLevelView;
@@ -372,7 +375,8 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
                     )
                   : CircularProgressIndicator(
                       color: theme.primaryColor,
-                      strokeWidth: SmartRefresherConstants.defaultIndicatorStrokeWidth,
+                      strokeWidth:
+                          SmartRefresherConstants.defaultIndicatorStrokeWidth,
                     ),
             )
         : mode == LoadStatus.noMore

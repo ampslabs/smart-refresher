@@ -438,10 +438,11 @@ void main() {
 
     // Programmatically trigger loading
     controller.requestLoading(needMove: false);
-    
+
     // Process frames
     await tester.pump(); // Trigger refresh start
-    await tester.pump(const Duration(milliseconds: 100)); // Process dynamic call
+    await tester
+        .pump(const Duration(milliseconds: 100)); // Process dynamic call
     await tester.pump(const Duration(milliseconds: 100)); // Process catchError
     await tester.pump(); // Process addPostFrameCallback
 

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart' hide RefreshIndicator, RefreshIndicatorState;
+import 'package:flutter/material.dart'
+    hide RefreshIndicator, RefreshIndicatorState;
 import '../smart_refresher.dart';
 import '../indicator/classic_indicator.dart';
 import '../indicator/material_indicator.dart';
@@ -147,9 +148,7 @@ mixin RefresherSliverComposer on State<SmartRefresher> {
               childView.viewportBuilder(context, offset) as Viewport;
           if (widget.enablePullDown) {
             final Widget header = widget.header ??
-                (conf?.headerBuilder != null
-                    ? conf?.headerBuilder!()
-                    : null) ??
+                (conf?.headerBuilder != null ? conf?.headerBuilder!() : null) ??
                 defaultHeader;
             viewport.children.insert(0, header);
           }
@@ -204,8 +203,8 @@ mixin RefresherPhysicsMixin on State<SmartRefresher> {
   }
 
   /// Gets the [RefreshPhysics] for the refresher.
-  ScrollPhysics getRefresherPhysics(RefreshConfiguration? conf,
-      ScrollPhysics physics, bool canDrag) {
+  ScrollPhysics getRefresherPhysics(
+      RefreshConfiguration? conf, ScrollPhysics physics, bool canDrag) {
     final bool isBouncingPhysics = physics is BouncingScrollPhysics ||
         (physics is AlwaysScrollableScrollPhysics &&
             ScrollConfiguration.of(context)

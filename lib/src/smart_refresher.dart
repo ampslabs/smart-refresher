@@ -297,8 +297,9 @@ class SmartRefresherState extends State<SmartRefresher>
           return widget.builder!(
               context,
               getRefresherPhysics(
-                      configuration, const AlwaysScrollableScrollPhysics(), canDrag)
-                  as RefreshPhysics);
+                  configuration,
+                  const AlwaysScrollableScrollPhysics(),
+                  canDrag) as RefreshPhysics);
         },
       );
     } else {
@@ -747,14 +748,18 @@ class RefreshConfiguration extends InheritedWidget {
       ),
       this.enableScrollWhenRefreshCompleted = false,
       this.enableLoadingWhenFailed = true,
-      this.twiceTriggerDistance = SmartRefresherConstants.defaultTwiceTriggerDistance,
-      this.closeTwoLevelDistance = SmartRefresherConstants.defaultCloseTwoLevelDistance,
+      this.twiceTriggerDistance =
+          SmartRefresherConstants.defaultTwiceTriggerDistance,
+      this.closeTwoLevelDistance =
+          SmartRefresherConstants.defaultCloseTwoLevelDistance,
       this.skipCanRefresh = false,
       this.maxOverScrollExtent,
       this.enableBallisticLoad = true,
       this.maxUnderScrollExtent,
-      this.headerTriggerDistance = SmartRefresherConstants.defaultHeaderTriggerDistance,
-      this.footerTriggerDistance = SmartRefresherConstants.defaultFooterTriggerDistance,
+      this.headerTriggerDistance =
+          SmartRefresherConstants.defaultHeaderTriggerDistance,
+      this.footerTriggerDistance =
+          SmartRefresherConstants.defaultFooterTriggerDistance,
       this.hideFooterWhenNotFull = false,
       this.enableRefreshVibrate = false,
       this.enableLoadMoreVibrate = false,

@@ -14,6 +14,7 @@ void main() {
         home: Scaffold(
           body: SmartRefresher(
             controller: controller,
+            enablePullDown: true,
             enablePullUp: true,
             onRefresh: () async {
               await Future<void>.delayed(const Duration(milliseconds: 500));
@@ -41,15 +42,16 @@ void main() {
       () async {
         // Scroll down
         await tester.fling(
-            find.byType(ListView), const Offset(0, -1000), 10000);
+            find.byType(Scrollable), const Offset(0, -1000), 10000);
         await tester.pumpAndSettle();
 
         // Scroll back up
-        await tester.fling(find.byType(ListView), const Offset(0, 1000), 10000);
+        await tester.fling(
+            find.byType(Scrollable), const Offset(0, 1000), 10000);
         await tester.pumpAndSettle();
 
         // Pull to refresh
-        await tester.fling(find.byType(ListView), const Offset(0, 500), 2000);
+        await tester.fling(find.byType(Scrollable), const Offset(0, 500), 2000);
         await tester.pump(const Duration(seconds: 1));
         await tester.pumpAndSettle();
       },

@@ -97,7 +97,8 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   void _handleOffsetChange() {
     super._handleOffsetChange();
     final double overscrollPast = _calculateScrollOffset();
-    if (!_hasConstructedChild && (overscrollPast > 0.0 || mode != RefreshStatus.idle)) {
+    if (!_hasConstructedChild &&
+        (overscrollPast > 0.0 || mode != RefreshStatus.idle)) {
       _hasConstructedChild = true;
       update();
     }
@@ -305,7 +306,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
               ? 10
               : 0,
           child: RepaintBoundary(
-            child: _hasConstructedChild ? buildContent(context, mode!) : const SizedBox.shrink(),
+            child: _hasConstructedChild
+                ? buildContent(context, mode!)
+                : const SizedBox.shrink(),
           ),
         ));
   }
@@ -359,7 +362,10 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         return;
       }
 
-      if (mounted) Scrollable.of(context).position.correctBy(SmartRefresherConstants.minScrollSettlingOffset);
+      if (mounted)
+        Scrollable.of(context)
+            .position
+            .correctBy(SmartRefresherConstants.minScrollSettlingOffset);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _position?.outOfRange == true) {
           activity!.delegate.goBallistic(0);
@@ -374,7 +380,8 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
   bool _checkIfCanLoading() {
     if (_position!.maxScrollExtent - _position!.pixels <=
             configuration!.footerTriggerDistance &&
-        _position!.extentBefore > SmartRefresherConstants.defaultScrollThreshold &&
+        _position!.extentBefore >
+            SmartRefresherConstants.defaultScrollThreshold &&
         _enableLoading) {
       if (!configuration!.enableLoadingWhenFailed &&
           mode == LoadStatus.failed) {

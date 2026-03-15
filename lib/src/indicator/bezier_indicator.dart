@@ -108,7 +108,8 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
         value: 0,
         duration: SmartRefresherConstants.defaultAnimationDuration);
     _bezierDismissCtl = AnimationController(
-        vsync: this, duration: SmartRefresherConstants.defaultAnimationDuration);
+        vsync: this,
+        duration: SmartRefresherConstants.defaultAnimationDuration);
     super.initState();
   }
 
