@@ -43,6 +43,12 @@ const List<IndicatorEntry> _headers = <IndicatorEntry>[
     icon: 'mdi:star-outline',
     route: AppRoutes.glassHeader,
   ),
+  IndicatorEntry(
+    name: 'ElasticHeader',
+    tagline: 'Premium iOS stretch effect',
+    icon: 'mdi:image-filter-hdr',
+    route: AppRoutes.elasticHeader,
+  ),
 ];
 
 const List<IndicatorEntry> _footers = <IndicatorEntry>[

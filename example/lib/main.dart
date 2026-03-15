@@ -8,6 +8,7 @@ import 'screens/footers/skeleton_footer_screen.dart';
 import 'screens/headers/classic_header_screen.dart';
 import 'screens/headers/header_comparison_screen.dart';
 import 'screens/headers/ios17_header_screen.dart';
+import 'screens/elastic_header_screen.dart';
 import 'ui/example/glass_header_example.dart';
 import 'screens/headers/material3_header_screen.dart';
 import 'screens/home_screen.dart';
@@ -64,6 +65,7 @@ class _SmartRefresherDemoAppState extends State<SmartRefresherDemoApp> {
           AppRoutes.material3Header: (_) => const Material3HeaderScreen(),
           AppRoutes.ios17Header: (_) => const Ios17HeaderScreen(),
           AppRoutes.glassHeader: (_) => const GlassHeaderExample(),
+          AppRoutes.elasticHeader: (_) => const ElasticHeaderScreen(),
           AppRoutes.headerCompare: (_) => const HeaderComparisonScreen(),
           AppRoutes.classicFooter: (_) => const ClassicFooterScreen(),
           AppRoutes.skeletonFooter: (_) => const SkeletonFooterScreen(),
