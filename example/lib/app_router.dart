@@ -3,6 +3,7 @@ abstract final class AppRoutes {
   static const String classicHeader = '/headers/classic';
   static const String material3Header = '/headers/material3';
   static const String ios17Header = '/headers/ios17';
+  static const String waterDropHeader = '/headers/waterdrop';
   static const String glassHeader = '/headers/glass';
   static const String elasticHeader = '/headers/elastic';
   static const String headerCompare = '/headers/compare';

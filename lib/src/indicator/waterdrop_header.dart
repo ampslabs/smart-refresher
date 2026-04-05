@@ -61,6 +61,8 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
     with TickerProviderStateMixin {
   AnimationController? _animationController;
   late AnimationController _dismissCtl;
+  late AnimationController _dropCtl;
+  late Animation<double> _drop;
 
   @override
   void onOffsetChange(double offset) {
@@ -74,6 +76,7 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
   @override
   Future<void> readyToRefresh() {
     _dismissCtl.animateTo(0.0);
+    _dropCtl.forward();
     return _animationController!.animateTo(0.0);
   }
 
@@ -81,6 +84,9 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
   void initState() {
     _dismissCtl = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 400), value: 1.0);
+    _dropCtl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+    _drop = Tween<double>(begin: 0.0, end: 1.0).animate(_dropCtl);
     _animationController = AnimationController(
         vsync: this,
         upperBound: 50.0,
@@ -153,54 +159,87 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                   style: const TextStyle(color: Colors.grey))
             ],
           );
-    } else if (mode == RefreshStatus.idle || mode == RefreshStatus.canRefresh) {
-      return Semantics(
-        label: label,
-        hint: widget.semanticsHint,
-        child: FadeTransition(
-            opacity: _dismissCtl,
-            child: SizedBox(
-              height: 60.0,
-              child: Stack(
-                children: <Widget>[
-                  RotatedBox(
-                    quarterTurns:
-                        Scrollable.of(context).axisDirection == AxisDirection.up
-                            ? 10
-                            : 0,
-                    child: CustomPaint(
-                      painter: _QqPainter(
-                        color: widget.waterDropColor,
-                        listener: _animationController,
-                      ),
-                      child: Container(
-                        height: 60.0,
-                      ),
+    }
+
+    // Wrap the entire content in a single Semantics widget to fix the regression.
+    return Semantics(
+      label: label,
+      hint: widget.semanticsHint,
+      child: SizedBox(
+        height: 60.0,
+        child: Stack(
+          children: <Widget>[
+            // 1. The main content (spinner/complete/failed text)
+            if (child != null) Center(child: child),
+
+            // 2. The static top circle + stretching part
+            if (mode == RefreshStatus.idle ||
+                mode == RefreshStatus.canRefresh ||
+                mode == RefreshStatus.refreshing)
+              FadeTransition(
+                opacity: _dismissCtl,
+                child: RotatedBox(
+                  quarterTurns:
+                      Scrollable.of(context).axisDirection == AxisDirection.up
+                          ? 2
+                          : 0,
+                  child: CustomPaint(
+                    painter: _QqPainter(
+                      color: widget.waterDropColor,
+                      listener: _animationController,
+                    ),
+                    child: Container(
+                      height: 60.0,
                     ),
                   ),
-                  Container(
-                    alignment:
-                        Scrollable.of(context).axisDirection == AxisDirection.up
+                ),
+              ),
+
+            // 3. The idle icon (autorenew arrow)
+            if (mode == RefreshStatus.idle || mode == RefreshStatus.canRefresh)
+              FadeTransition(
+                opacity: _dismissCtl,
+                child: Container(
+                  alignment:
+                      Scrollable.of(context).axisDirection == AxisDirection.up
+                          ? Alignment.bottomCenter
+                          : Alignment.topCenter,
+                  margin:
+                      Scrollable.of(context).axisDirection == AxisDirection.up
+                          ? const EdgeInsets.only(bottom: 12.0)
+                          : const EdgeInsets.only(top: 12.0),
+                  child: widget.idleIcon,
+                ),
+              ),
+
+            // 4. The falling droplet (only during transition to refreshing)
+            if (mode == RefreshStatus.refreshing)
+              AnimatedBuilder(
+                builder: (BuildContext context, Widget? child) {
+                  final double offset = 20.0 + 30.0 * _drop.value;
+                  return Opacity(
+                    opacity: 1.0 - _drop.value,
+                    child: Padding(
+                      padding: Scrollable.of(context).axisDirection ==
+                              AxisDirection.up
+                          ? EdgeInsets.only(bottom: offset)
+                          : EdgeInsets.only(top: offset),
+                      child: Container(
+                        alignment: Scrollable.of(context).axisDirection ==
+                                AxisDirection.up
                             ? Alignment.bottomCenter
                             : Alignment.topCenter,
-                    margin:
-                        Scrollable.of(context).axisDirection == AxisDirection.up
-                            ? const EdgeInsets.only(bottom: 12.0)
-                            : const EdgeInsets.only(top: 12.0),
-                    child: widget.idleIcon,
-                  )
-                ],
-              ),
-            )),
-      );
-    }
-    return SizedBox(
-      height: 60.0,
-      child: Center(
-        child: Semantics(
-          label: label,
-          hint: widget.semanticsHint,
-          child: child,
+                        child: CircleAvatar(
+                          backgroundColor: widget.waterDropColor,
+                          radius: 10.0 * (1.0 - _drop.value),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                animation: _drop,
+              )
+          ],
         ),
       ),
     );
@@ -210,11 +249,13 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
   void resetValue() {
     _animationController!.reset();
     _dismissCtl.value = 1.0;
+    _dropCtl.reset();
   }
 
   @override
   void dispose() {
     _dismissCtl.dispose();
+    _dropCtl.dispose();
     _animationController!.dispose();
     super.dispose();
   }
@@ -233,49 +274,51 @@ class _QqPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     const double originH = 20.0;
     final double middleW = size.width / 2;
-
     const double circleSize = 12.0;
-
     const double scaleRatio = 0.1;
 
     final double offset = value;
 
     painter.color = color!;
     canvas.drawCircle(Offset(middleW, originH), circleSize, painter);
-    final Path path = Path();
-    path.moveTo(middleW - circleSize, originH);
 
-    //drawleft
-    path.cubicTo(
-        middleW - circleSize,
-        originH,
-        middleW - circleSize + value * scaleRatio,
-        originH + offset / 5,
-        middleW - circleSize + value * scaleRatio * 2,
-        originH + offset);
-    path.lineTo(
-        middleW + circleSize - value * scaleRatio * 2, originH + offset);
-    //draw right
-    path.cubicTo(
-        middleW + circleSize - value * scaleRatio * 2,
-        originH + offset,
-        middleW + circleSize - value * scaleRatio,
-        originH + offset / 5,
-        middleW + circleSize,
-        originH);
-    //draw upper circle
-    path.moveTo(middleW - circleSize, originH);
-    path.arcToPoint(Offset(middleW + circleSize, originH),
-        radius: const Radius.circular(circleSize));
+    if (offset > 0) {
+      final Path path = Path();
+      path.moveTo(middleW - circleSize, originH);
 
-    //draw lowwer circle
-    path.moveTo(
-        middleW + circleSize - value * scaleRatio * 2, originH + offset);
-    path.arcToPoint(
-        Offset(middleW - circleSize + value * scaleRatio * 2, originH + offset),
-        radius: Radius.circular(value * scaleRatio));
-    path.close();
-    canvas.drawPath(path, painter);
+      path.cubicTo(
+          middleW - circleSize,
+          originH,
+          middleW - circleSize + value * scaleRatio,
+          originH + offset / 5,
+          middleW - circleSize + value * scaleRatio * 2,
+          originH + offset);
+
+      path.lineTo(
+          middleW + circleSize - value * scaleRatio * 2, originH + offset);
+
+      path.cubicTo(
+          middleW + circleSize - value * scaleRatio * 2,
+          originH + offset,
+          middleW + circleSize - value * scaleRatio,
+          originH + offset / 5,
+          middleW + circleSize,
+          originH);
+
+      path.moveTo(middleW - circleSize, originH);
+      path.arcToPoint(Offset(middleW + circleSize, originH),
+          radius: const Radius.circular(circleSize));
+
+      path.moveTo(
+          middleW + circleSize - value * scaleRatio * 2, originH + offset);
+      path.arcToPoint(
+          Offset(
+              middleW - circleSize + value * scaleRatio * 2, originH + offset),
+          radius: Radius.circular(value * scaleRatio));
+
+      path.close();
+      canvas.drawPath(path, painter);
+    }
   }
 
   @override

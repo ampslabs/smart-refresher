@@ -38,6 +38,12 @@ const List<IndicatorEntry> _headers = <IndicatorEntry>[
     route: AppRoutes.ios17Header,
   ),
   IndicatorEntry(
+    name: 'WaterDropHeader',
+    tagline: 'Classic droplet stretch effect',
+    icon: 'mdi:water',
+    route: AppRoutes.waterDropHeader,
+  ),
+  IndicatorEntry(
     name: 'GlassHeader',
     tagline: 'Frosted glass floating panel',
     icon: 'mdi:star-outline',
