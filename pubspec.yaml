@@ -1,6 +1,6 @@
 name: smart_refresher
 description: A powerful Flutter widget providing pull-to-refresh and infinite loading for scrollable content.
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/ampslabs/smart-refresher
 repository: https://github.com/ampslabs/smart-refresher
 issue_tracker: https://github.com/ampslabs/smart-refresher/issues

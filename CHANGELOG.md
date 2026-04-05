@@ -1,3 +1,19 @@
+## 1.0.1
+
+### Security & Maintenance
+- **Vulnerability Patches**: Resolved several high-severity security vulnerabilities in the documentation project (`doc/`) by updating transitive dependencies (`defu`, `picomatch`, `h3`, `smol-toml`).
+- **Dependency Updates**: Updated `iconify_sdk` to `1.0.0` and `flutter_lints` to `6.0.0` in the example application.
+- **CI/CD Reliability**: Fixed integration failures in the example project by adding missing `flutter_driver` dependencies and suppressing internal lint warnings for the test extension.
+
+### Added
+- **WaterDropHeader Showcase**: Added a dedicated screen in the example application to demonstrate the `WaterDropHeader` in action.
+- **Improved Authentic Droplet Effect**: Enhanced the `WaterDropHeader` to accurately replicate the original "dropping" animation. The droplet now stretches, "breaks" away from the base, and falls during the refresh trigger, providing a more polished and nostalgic experience.
+
+### Refactoring & Quality
+- **Accessibility Fix**: Resolved a regression in `WaterDropHeader` by consolidating `Semantics` widgets, ensuring screen readers correctly announce status changes.
+- **Code Formatting**: Applied global `dart format` across the entire library and example projects.
+- **Test Verification**: Confirmed 100% pass rate for the full test suite (174/174 tests).
+
 ## 1.0.0
 
 ### Added
