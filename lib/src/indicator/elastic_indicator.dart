@@ -30,11 +30,11 @@ class _ElasticHeaderState extends RefreshIndicatorState<ElasticHeader> {
   @override
   void onOffsetChange(double offset) {
     super.onOffsetChange(offset);
-    
+
     // Calculate stretch factor based on overscroll distance
     // We start stretching after the initial offset
     final double newFactor = 1.0 + (offset / widget.height).clamp(0.0, 2.0);
-    
+
     if (newFactor != _stretchFactor) {
       setState(() {
         _stretchFactor = newFactor;

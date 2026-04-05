@@ -5,7 +5,7 @@ import 'package:smart_refresher/smart_refresher.dart';
 void main() {
   testWidgets('ElasticHeader stretches during pull-down', (tester) async {
     final RefreshController refreshController = RefreshController();
-    
+
     await tester.pumpWidget(MaterialApp(
       home: Scaffold(
         body: SmartRefresher(
@@ -32,14 +32,16 @@ void main() {
 
     // Verify Content exists
     expect(find.text('Elastic Content'), findsOneWidget);
-    
+
     // Verify Transform exists
-    final Transform transform = tester.widget(find.descendant(
-      of: find.byType(ElasticHeader),
-      matching: find.byType(Transform),
-    ).first);
+    final Transform transform = tester.widget(find
+        .descendant(
+          of: find.byType(ElasticHeader),
+          matching: find.byType(Transform),
+        )
+        .first);
     final Matrix4 matrix = transform.transform;
-    
+
     // The scale factor should be greater than 1.0 (scaling on Y axis)
     // newFactor = 1.0 + (150 / 100) = 2.5
     expect(matrix.storage[5], 2.5);
