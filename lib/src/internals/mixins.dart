@@ -118,6 +118,7 @@ mixin RefresherSliverComposer on State<SmartRefresher> {
       }
       body = CustomScrollView(
         controller: scrollController,
+        // ignore: deprecated_member_use
         cacheExtent: cacheExtent,
         key: key,
         scrollDirection: scrollDirection ?? Axis.vertical,
