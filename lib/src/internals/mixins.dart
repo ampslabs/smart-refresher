@@ -101,6 +101,7 @@ mixin RefresherSliverComposer on State<SmartRefresher> {
 
       if (childView is ScrollView) {
         primary = primary ?? childView.primary;
+        // ignore: deprecated_member_use
         cacheExtent = cacheExtent ?? childView.cacheExtent;
         key = key ?? childView.key;
         semanticChildCount = semanticChildCount ?? childView.semanticChildCount;
@@ -118,6 +119,7 @@ mixin RefresherSliverComposer on State<SmartRefresher> {
       }
       body = CustomScrollView(
         controller: scrollController,
+        // ignore: deprecated_member_use
         cacheExtent: cacheExtent,
         key: key,
         scrollDirection: scrollDirection ?? Axis.vertical,

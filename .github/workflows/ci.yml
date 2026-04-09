@@ -61,5 +61,5 @@ jobs:
       - name: SBOM generation dry-run
         if: matrix.flutter.label == 'stable'
         run: |
-          dart pub global activate cyclonedx_dart
-          dart pub global run cyclonedx_dart:make -o sbom.json
+          npm install -g @cyclonedx/cdxgen
+          cdxgen -t dart -o sbom.json
