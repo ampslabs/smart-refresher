@@ -22,8 +22,10 @@ dependencies:
   # pull_to_refresh: ^2.0.0
   
   # Add this:
-  smart_refresher: ^1.0.0
+  smart_refresher: ^1.2.0
 ```
+
+> **Requirements (v1.2.0+):** Flutter `>= 3.47.0` and Dart SDK `>= 3.12.0`. If you're on older Flutter, stay on `smart_refresher ^1.0.x`. `material_ui` and `cupertino_ui` are resolved automatically as dependencies of `smart_refresher` 1.2.0+.
 
 ### 2. Update Imports
 

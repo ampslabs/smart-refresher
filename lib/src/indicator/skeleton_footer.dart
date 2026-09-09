@@ -3,7 +3,7 @@
  *   createTime:2026-03-11
  */
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'package:smart_refresher/src/internals/enums.dart';
 import 'package:smart_refresher/src/internals/indicator_wrap.dart';

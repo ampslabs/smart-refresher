@@ -21,6 +21,7 @@ analyzer:
     - "**/*.g.dart"                   # generated files
     - "**/*.freezed.dart"
     - example/**                      # don't lint the example app as strictly
+    - build/**
 
 linter:
   rules:
@@ -36,7 +37,6 @@ linter:
     null_closures: true
     prefer_null_aware_operators: true
     unnecessary_nullable_for_final_variable_declarations: true
-    avoid_null_checks_in_equality_operators: true
 
     # ─── Code Style ──────────────────────────────────────────────
     prefer_single_quotes: true

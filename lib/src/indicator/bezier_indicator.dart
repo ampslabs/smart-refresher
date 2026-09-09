@@ -5,7 +5,7 @@
  */
 
 import 'package:smart_refresher/smart_refresher.dart';
-import 'package:flutter/material.dart'
+import 'package:material_ui/material_ui.dart'
     hide RefreshIndicator, RefreshIndicatorState;
 import 'dart:math' as math;
 import 'package:flutter/physics.dart';
@@ -195,7 +195,7 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
       label: label,
       hint: widget.semanticsHint,
       child: AnimatedBuilder(
-        builder: (_, __) {
+        builder: (_, _) {
           return Stack(
             children: <Widget>[
               Positioned(
@@ -204,7 +204,7 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
                 left: 0,
                 right: 0,
                 child: AnimatedBuilder(
-                  builder: (_, __) {
+                  builder: (_, _) {
                     return ClipPath(
                       clipper: _BezierDismissPainter(
                           value: _bezierDismissCtl.value,
@@ -484,7 +484,7 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader>
                   ),
                 )
               : AnimatedBuilder(
-                  builder: (_, __) {
+                  builder: (_, _) {
                     return SizedBox(
                       height: widget.circleRadius * 2,
                       child: CustomPaint(

@@ -8,7 +8,7 @@ import 'dart:async';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smart_refresher/smart_refresher.dart';
-import 'package:flutter/material.dart'
+import 'package:material_ui/material_ui.dart'
     hide RefreshIndicator, RefreshIndicatorState;
 import 'data_source.dart';
 import 'test_indicator.dart';

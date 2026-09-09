@@ -5,11 +5,11 @@
  */
 
 import 'dart:async';
-import 'package:flutter/material.dart'
+import 'package:material_ui/material_ui.dart'
     hide RefreshIndicatorState, RefreshIndicator;
 import 'package:flutter/foundation.dart';
 import 'package:smart_refresher/smart_refresher.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 
 /// A refresh header that provides a waterdrop effect, similar to the one used in the iOS QQ app.
 class WaterDropHeader extends RefreshIndicator {

@@ -22,7 +22,7 @@ A Flutter package that provides pull-to-refresh and infinite-scroll loading for 
 - **Global defaults** via `RefreshConfiguration` — set indicator, trigger distances, and scroll behaviour for the whole app
 - **Complex layout support** — Works with `center` slivers, bidirectional scrolling, and pinned `SliverAppBar`s
 - **WASM compatible** — Fully optimized for Flutter's WASM web target
-- Flutter 3.27+ compatible, null-safe, zero external dependencies
+- Flutter **3.47+** / Dart **3.12+** compatible — built on the decoupled [`material_ui`](https://pub.dev/packages/material_ui) and [`cupertino_ui`](https://pub.dev/packages/cupertino_ui) design packages, null-safe
 
 ---
 
@@ -55,7 +55,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  smart_refresher: ^1.0.0
+  smart_refresher: ^1.2.0
 ```
 
 Then run:
@@ -63,6 +63,17 @@ Then run:
 ```bash
 flutter pub get
 ```
+
+### Requirements (v1.2.0+)
+
+`smart_refresher` 1.2.0+ follows Flutter's decoupled design-system packages and requires:
+
+- **Flutter** `>= 3.47.0`
+- **Dart SDK** `>= 3.12.0`
+
+The `material_ui` (`^1.1.1`) and `cupertino_ui` (`^1.0.2`) packages are declared as direct dependencies and are resolved automatically — no manual setup is needed.
+
+> **On older Flutter versions?** Use `smart_refresher ^1.0.x`, which targets Flutter 3.27+.
 
 ---
 

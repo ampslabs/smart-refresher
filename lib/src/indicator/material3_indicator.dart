@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'
+import 'package:material_ui/material_ui.dart'
     hide RefreshIndicator, RefreshIndicatorState;
 
 import 'package:smart_refresher/src/internals/indicator_wrap.dart';

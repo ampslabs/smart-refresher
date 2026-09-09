@@ -4,14 +4,14 @@
  *   createTime:2018-05-14 5:39 PM
  */
 
-import 'package:flutter/material.dart'
+import 'package:material_ui/material_ui.dart'
     hide RefreshIndicator, RefreshIndicatorState;
 import 'package:smart_refresher/src/smart_refresher.dart';
 import 'package:smart_refresher/src/internals/enums.dart';
 import 'package:smart_refresher/src/internals/indicator_wrap.dart';
 import 'package:smart_refresher/src/internals/refresh_localizations.dart';
 import 'package:smart_refresher/src/theming/indicator_theme.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter/foundation.dart';
 
 /// The direction that the icon should be placed relative to the text.

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart'
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
+import 'package:material_ui/material_ui.dart'
     hide RefreshIndicator, RefreshIndicatorState;
 import 'package:smart_refresher/src/smart_refresher.dart';
 import 'package:smart_refresher/src/indicator/classic_indicator.dart';
@@ -85,7 +86,9 @@ mixin RefresherSliverComposer on State<SmartRefresher> {
     if (childView is! Scrollable) {
       bool? primary = widget.primary;
       Key? key;
-      double? cacheExtent = widget.cacheExtent;
+      ScrollCacheExtent? scrollCacheExtent = widget.cacheExtent != null
+          ? ScrollCacheExtent.pixels(widget.cacheExtent!)
+          : null;
 
       Axis? scrollDirection = widget.scrollDirection;
       int? semanticChildCount = widget.semanticChildCount;
@@ -101,8 +104,7 @@ mixin RefresherSliverComposer on State<SmartRefresher> {
 
       if (childView is ScrollView) {
         primary = primary ?? childView.primary;
-        // ignore: deprecated_member_use
-        cacheExtent = cacheExtent ?? childView.cacheExtent;
+        scrollCacheExtent = scrollCacheExtent ?? childView.scrollCacheExtent;
         key = key ?? childView.key;
         semanticChildCount = semanticChildCount ?? childView.semanticChildCount;
         reverse = reverse ?? childView.reverse;
@@ -119,8 +121,7 @@ mixin RefresherSliverComposer on State<SmartRefresher> {
       }
       body = CustomScrollView(
         controller: scrollController,
-        // ignore: deprecated_member_use
-        cacheExtent: cacheExtent,
+        scrollCacheExtent: scrollCacheExtent,
         key: key,
         scrollDirection: scrollDirection ?? Axis.vertical,
         semanticChildCount: semanticChildCount,
