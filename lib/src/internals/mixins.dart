@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
+// Material UI re-exports ScrollCacheExtent starting from Flutter 3.48 beta,
+// but not on Flutter 3.47 stable.
+// ignore: unnecessary_import
 import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:material_ui/material_ui.dart'
     hide RefreshIndicator, RefreshIndicatorState;
