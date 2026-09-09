@@ -2,6 +2,17 @@
 title: Changelog
 description: History of changes to the smart_refresher package.
 ---
+
+## 1.2.0
+
+### Breaking Changes
+- **Flutter 3.47+ Migration**: Added support for the decoupled design system packages (`material_ui` and `cupertino_ui`). The package now imports `package:material_ui/material_ui.dart` and `package:cupertino_ui/cupertino_ui.dart` instead of the legacy in-framework `package:flutter/material.dart` and `package:flutter/cupertino.dart`.
+- **Minimum SDK Bump**: Raised the minimum Flutter version to `>=3.47.0` and Dart SDK to `>=3.12.0`. Consumers on older versions should use `smart_refresher` 1.0.x.
+- **New Dependencies**: `material_ui: ^1.1.1` and `cupertino_ui: ^1.0.2` are now required dependencies.
+
+### Changed
+- Replaced the deprecated `cacheExtent` API with the new `scrollCacheExtent` for `CustomScrollView` and `ScrollView` to support Flutter 3.47+.
+
 ## 1.0.0
 
 ### Added
