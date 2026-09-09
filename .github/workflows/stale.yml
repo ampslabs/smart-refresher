@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Run Stale Action
-        uses: actions/stale@v11.0.0 # v10.2.0
+        uses: actions/stale@v11.0.0 # v11.0.0
         with:
           # --- Timing ---
           days-before-stale: 3        # Days of inactivity before marking stale
