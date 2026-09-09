@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:smart_refresher/smart_refresher.dart';
 
 /// Demonstrates [Material3Header] with seeded light and dark Material 3 themes.
@@ -101,7 +101,7 @@ class _Material3PreviewListState extends State<_Material3PreviewList> {
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         itemCount: _items.length,
-        separatorBuilder: (_, __) => const Divider(height: 1.0),
+        separatorBuilder: (_, _) => const Divider(height: 1.0),
         itemBuilder: (BuildContext context, int index) {
           final ColorScheme colorScheme = Theme.of(context).colorScheme;
           return ListTile(

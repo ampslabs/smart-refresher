@@ -4,7 +4,7 @@
  * Time:  2019-08-29 09:41
  */
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:smart_refresher/src/indicator/classic_indicator.dart';
 import 'package:smart_refresher/src/smart_refresher.dart';
 

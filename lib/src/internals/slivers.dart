@@ -65,13 +65,12 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   /// Creates a [RenderSliverRefresh] object.
   RenderSliverRefresh(
       {required double refreshIndicatorExtent,
-      required bool hasLayoutExtent,
+      required this._hasLayoutExtent,
       RenderBox? child,
       this.paintOffsetY,
       this.refreshStyle})
       : assert(refreshIndicatorExtent >= 0.0),
-        _refreshIndicatorExtent = refreshIndicatorExtent,
-        _hasLayoutExtent = hasLayoutExtent {
+        _refreshIndicatorExtent = refreshIndicatorExtent {
     this.child = child;
   }
 

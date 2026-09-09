@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:smart_refresher/smart_refresher.dart';
 
 /// Demonstrates the `Ios17Header` inside a Cupertino-styled list.

@@ -5,7 +5,7 @@
  */
 
 import 'package:smart_refresher/smart_refresher.dart';
-import 'package:flutter/material.dart'
+import 'package:material_ui/material_ui.dart'
     hide RefreshIndicatorState, RefreshIndicator;
 
 class TestHeader extends RefreshIndicator {

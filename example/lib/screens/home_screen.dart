@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:iconify_sdk/iconify_sdk.dart';
 
 import '../app_router.dart';
